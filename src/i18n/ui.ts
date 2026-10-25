@@ -11,7 +11,7 @@ export const dict = {
   en: {
     "site.title": "The door was the VPN",
     "site.desc":
-      "Why VPN appliances are the most common way ransomware gets into Japanese organisations, drawn as a break-in report: the statistics, what happens after entry, the products, real cases and what to do.",
+      "Why VPN appliances are the most common way ransomware gets into Japanese organizations, drawn as a break-in report: the statistics, what happens after entry, the products, real cases and what to do.",
     "site.report": "Report",
     "site.rev": "Rev.",
     "nav.skip": "Skip to content",
