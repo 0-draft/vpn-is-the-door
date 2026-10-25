@@ -16,7 +16,8 @@ export default defineConfig({
     { name: "mobile", use: { ...devices["Pixel 7"] } },
   ],
   webServer: {
-    command: `pnpm exec astro preview --port ${port} --host 127.0.0.1`,
+    command: `node scripts/serve.ts`,
+    env: { PORT: String(port) },
     url: `${origin}/vpn-is-the-door/`,
     reuseExistingServer: !process.env.CI,
   },

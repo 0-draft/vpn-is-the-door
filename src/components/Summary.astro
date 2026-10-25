@@ -1,0 +1,59 @@
+---
+import { t } from "../i18n/ui";
+import type { Lang } from "../lib/paths";
+
+interface Props {
+  lang: Lang;
+  title?: string;
+}
+
+const { lang, title } = Astro.props;
+---
+
+<section class="summary" aria-label={title ?? t(lang, "summary")}>
+  <h2 class="summary-h">{title ?? t(lang, "summary")}</h2>
+  <div class="summary-body"><slot /></div>
+</section>
+
+<style>
+  .summary {
+    border: 2px solid var(--ink);
+    background: var(--sheet);
+    padding: 1.25rem clamp(1rem, 3vw, 2rem) 0.75rem;
+    margin-block: 2rem 2.5rem;
+  }
+  .summary-h {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin: 0 0 0.75rem;
+    color: var(--ink-2);
+    display: block;
+  }
+  .summary-body {
+    font-size: 1.3125rem;
+    line-height: 1.5;
+    max-inline-size: 60ch;
+  }
+  :global(:lang(ja)) .summary-body {
+    font-size: 1.1875rem;
+    line-height: 1.75;
+    max-inline-size: 36em;
+  }
+  @media (max-width: 45em) {
+    .summary-body {
+      font-size: 1.1875rem;
+    }
+    :global(:lang(ja)) .summary-body {
+      font-size: 1.0625rem;
+    }
+  }
+  .summary-body :global(ol),
+  .summary-body :global(ul) {
+    padding-inline-start: 1.2em;
+    margin: 0 0 0.75rem;
+  }
+  .summary-body :global(li) {
+    margin-block: 0.35em;
+  }
+</style>

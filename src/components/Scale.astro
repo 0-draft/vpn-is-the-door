@@ -1,0 +1,8 @@
+---
+interface Props {
+  s: "1:500" | "1:100" | "1:5";
+}
+const { s } = Astro.props;
+---
+
+<span class="scale" title={`S=${s}`}>S={s}</span>

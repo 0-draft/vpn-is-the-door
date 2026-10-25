@@ -37,6 +37,9 @@
       "style": {
         "noNonNullAssertion": "off",
         "noDescendingSpecificity": "off"
+      },
+      "complexity": {
+        "noImportantStyles": "off"
       }
     }
   },
