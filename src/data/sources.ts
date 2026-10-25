@@ -1,18 +1,12 @@
 import { z } from "zod";
-import raw from "./sources.json" with { type: "json" };
+import { type Source, SourceSchema } from "./source-schema";
 
-export const SourceSchema = z.object({
-  id: z.string().regex(/^[a-z0-9-]+$/),
-  publisher: z.object({ en: z.string().min(1), ja: z.string().min(1) }),
-  title: z.string().min(1),
-  date: z.string().regex(/^\d{4}(-\d{2}(-\d{2})?)?$/),
-  url: z.url().startsWith("https://"),
-  locator: z.string().optional(),
-});
+// One JSON file per chapter under ./sources so parallel edits don't collide.
+const files = import.meta.glob<{ default: unknown }>("./sources/*.json", { eager: true });
 
-export type Source = z.infer<typeof SourceSchema>;
-
-export const SOURCES: Source[] = z.array(SourceSchema).parse(raw);
+export const SOURCES: Source[] = Object.entries(files)
+  .sort(([a], [b]) => a.localeCompare(b))
+  .flatMap(([, m]) => z.array(SourceSchema).parse(m.default));
 
 const byId = new Map(SOURCES.map((s) => [s.id, s]));
 

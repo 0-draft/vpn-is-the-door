@@ -1,0 +1,129 @@
+---
+import Scale from "../components/Scale.astro";
+import { CHAPTERS, neighbours } from "../data/chapters";
+import { chapterLabel, t } from "../i18n/ui";
+import { type Lang, localePath } from "../lib/paths";
+import Base from "./Base.astro";
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  chapter: string;
+  parentTitle?: string | undefined;
+  parentPath?: string | undefined;
+}
+
+const { lang, title, description, chapter, parentTitle, parentPath } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const c = CHAPTERS.find((x) => x.id === chapter);
+const { prev, next } = c ? neighbours(c.id) : { prev: undefined, next: undefined };
+---
+
+<Base lang={lang} title={title} description={description} chapter={chapter}>
+  <article class="chapter">
+    <header class="ch-head">
+      <p class="ch-kicker">
+        {
+          parentTitle && parentPath ? (
+            <a href={localePath(lang, parentPath, base)}>{parentTitle}</a>
+          ) : (
+            c && <span class="num">{chapterLabel(lang, c.num)}</span>
+          )
+        }
+        {c?.scales.map((s) => <Scale s={s} />)}
+      </p>
+      <h1>{title}</h1>
+      <p class="ch-lede">{description}</p>
+    </header>
+    <div class="prose">
+      <slot />
+    </div>
+    {
+      c && !parentTitle && (
+        <nav class="ch-nav" aria-label={lang === "ja" ? "前後の章" : "Chapters"}>
+          {prev ? (
+            <a class="ch-prev" href={localePath(lang, prev.path, base)} rel="prev">
+              <span class="ch-nav-k">
+                {t(lang, "nav.prev")} · {chapterLabel(lang, prev.num)}
+              </span>
+              <span class="ch-nav-t">{prev.title[lang]}</span>
+            </a>
+          ) : (
+            <a class="ch-prev" href={localePath(lang, "/", base)} rel="prev">
+              <span class="ch-nav-k">{t(lang, "nav.prev")}</span>
+              <span class="ch-nav-t">{t(lang, "nav.home")}</span>
+            </a>
+          )}
+          {next && (
+            <a class="ch-next" href={localePath(lang, next.path, base)} rel="next">
+              <span class="ch-nav-k">
+                {t(lang, "nav.next")} · {chapterLabel(lang, next.num)}
+              </span>
+              <span class="ch-nav-t">{next.title[lang]}</span>
+            </a>
+          )}
+        </nav>
+      )
+    }
+  </article>
+</Base>
+
+<style>
+  .chapter {
+    max-inline-size: var(--wide);
+    margin-inline: auto;
+    padding: 2.5rem var(--gutter) 0;
+  }
+  .ch-head {
+    max-inline-size: 52rem;
+    margin-block-end: 2rem;
+  }
+  .ch-kicker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+    align-items: baseline;
+    margin: 0 0 0.75rem;
+    font-weight: 700;
+    color: var(--ink-3);
+    font-size: 0.9375rem;
+  }
+  .ch-lede {
+    margin: 1rem 0 0;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  :global(:lang(ja)) .ch-lede {
+    font-size: 1.125rem;
+    line-height: 1.75;
+  }
+  .ch-nav {
+    margin-block-start: 5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: 1rem;
+    border-block-start: 2px solid var(--ink);
+    padding-block-start: 1rem;
+  }
+  .ch-nav a {
+    display: grid;
+    gap: 0.2rem;
+    text-decoration: none;
+    color: var(--ink);
+    padding: 0.5rem 0;
+  }
+  .ch-next {
+    text-align: end;
+  }
+  .ch-nav-k {
+    font-size: 0.875rem;
+    color: var(--ink-3);
+  }
+  .ch-nav-t {
+    font-weight: 700;
+    font-size: 1.1875rem;
+    color: var(--instruct);
+  }
+</style>
