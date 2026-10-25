@@ -34,6 +34,9 @@ describe("paths", () => {
 
   it("links each page to its other-language twin", () => {
     expect(alternatePath("/vpn-is-the-door/", BASE)).toEqual({ lang: "ja", href: "/vpn-is-the-door/ja/" });
-    expect(alternatePath("/vpn-is-the-door/ja/deep/x/", BASE)).toEqual({ lang: "en", href: "/vpn-is-the-door/deep/x/" });
+    expect(alternatePath("/vpn-is-the-door/ja/deep/x/", BASE)).toEqual({
+      lang: "en",
+      href: "/vpn-is-the-door/deep/x/",
+    });
   });
 });
