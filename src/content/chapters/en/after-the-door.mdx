@@ -1,0 +1,41 @@
+---
+title: After the door opens
+description: Encryption is the last thing an intruder does, not the first. Everything that decides the damage happens in the hours before, and all of it goes back out through the same door.
+chapter: after
+path: /after-the-door/
+---
+
+import IntruderRoute from "../../../components/IntruderRoute.astro";
+import Step from "../../../components/Step.astro";
+import Summary from "../../../components/Summary.astro";
+
+<Summary lang="en">
+  <p>Ransomware is not one event. It is a sequence that starts at the VPN door and ends, often days later, with encryption. By the time screens go dark, the intruder already holds the master keys, has deleted the backups and has copied data out.</p>
+  <p>The decision this implies: plan for an intruder who is already inside. A backup they cannot reach and admin accounts they cannot reuse limit the damage even when the door fails.</p>
+</Summary>
+
+<IntruderRoute lang="en" n="2-1" caption="Minato Precision head office, intruder route">
+  <Step n={1} title="Monday, 07:40">
+    <p>The first person in finds the office printer still running. It has printed the same page all night: a ransom note. File shares will not open. The backup server shows nothing. To see how it got here, go back to the outer wall.</p>
+  </Step>
+  <Step n={2} title="They used the door">
+    <p>Minato Precision has a VPN appliance so staff and the maintenance contractor can work from outside. It is a door in the outer wall, open to anyone on the internet who can get past its lock.</p>
+    <p>The intruder did not break a window. They came through that door, either with a password that had leaked or through a flaw in the appliance itself.</p>
+  </Step>
+  <Step n={3} title="Reception never saw them">
+    <p>Email filtering and the security checks at the main entrance work like a reception desk. The VPN door opens into the corridor behind it. Nothing at reception sees who came in that way, and on the network they look like an employee working from home.</p>
+  </Step>
+  <Step n={4} title="The master keys open every door">
+    <p>The intruder heads for the IT room and the key safe: Active Directory, the system that says who may open which door. With an administrator's account, every inner door on the plan opens at once.</p>
+    <p>In the hospital cases in chapter 4, the same administrator password was shared across servers and nothing locked an account after repeated failures.</p>
+  </Step>
+  <Step n={5} title="The backups go first">
+    <p>Before encrypting anything, the intruder deletes or encrypts the backups so the company cannot simply restore. In 2025, 79 of the 99 Japanese victims that tried to restore from backup could not, and 48 found their backups encrypted too.</p>
+  </Step>
+  <Step n={6} title="The data leaves the same way">
+    <p>Files are copied out through the VPN door. This is what makes the second threat possible: pay, or the data is published. Restoring from backup does not undo a leak.</p>
+  </Step>
+  <Step n={7} title="Encryption is the last step">
+    <p>Only now does the intruder encrypt, usually at night or over a weekend when fewer people are watching. What happened in steps 2 to 6 decides how bad this is.</p>
+  </Step>
+</IntruderRoute>

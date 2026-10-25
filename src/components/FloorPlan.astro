@@ -84,7 +84,7 @@ const openingIds = ["vpn", "rdp", "mail", "other"] as const;
 function notes(l: Layout) {
   const rec = l.rooms.find((r) => r.id === "reception")!;
   const b = l.rooms.find((r) => r.id === "backup")!;
-  const w = l.name === "wide" ? 176 : 112;
+  const w = l.name === "wide" ? 176 : 122;
   const cx = rec.rect.x + rec.rect.w / 2;
   const cy = l.name === "wide" ? rec.rect.y + 106 : rec.rect.y + 118;
   return {
@@ -362,12 +362,10 @@ const ids = (l: Layout) => ({
   .plan .door .swing {
     transition: opacity 160ms var(--ease);
   }
-  .plan[data-doors="closed"] .door:not(.door-outer) .leaf,
-  .plan[data-doors="closed"] .door[data-door="vpn"] .leaf {
+  .plan[data-doors="closed"] .door .leaf {
     transform: rotate(var(--close));
   }
-  .plan[data-doors="closed"] .door:not(.door-outer) .swing,
-  .plan[data-doors="closed"] .door[data-door="vpn"] .swing {
+  .plan[data-doors="closed"] .door .swing {
     opacity: 0;
   }
   .plan[data-show~="door"] .door[data-door="vpn"] .leaf {

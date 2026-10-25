@@ -1,0 +1,16 @@
+---
+import { getCollection } from "astro:content";
+import ChapterPage from "../views/ChapterPage.astro";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("chapters", (e) => e.id.startsWith("en/"));
+  return entries.map((e) => ({
+    params: { path: e.data.path.replace(/^\/|\/$/g, "") },
+    props: { slug: e.id.slice(3) },
+  }));
+}
+
+const { slug } = Astro.props;
+---
+
+<ChapterPage lang="en" slug={slug} />

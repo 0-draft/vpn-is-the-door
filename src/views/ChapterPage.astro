@@ -1,0 +1,28 @@
+---
+import { getCollection, render } from "astro:content";
+import Chapter from "../layouts/Chapter.astro";
+import type { Lang } from "../lib/paths";
+
+interface Props {
+  lang: Lang;
+  slug: string;
+}
+
+const { lang, slug } = Astro.props;
+const all = await getCollection("chapters", (e) => e.id.startsWith(`${lang}/`));
+const entry = all.find((e) => e.id === `${lang}/${slug}`);
+if (!entry) throw new Error(`missing chapter ${lang}/${slug}`);
+const parent = entry.data.parent ? all.find((e) => e.id === `${lang}/${entry.data.parent}`) : undefined;
+const { Content } = await render(entry);
+---
+
+<Chapter
+  lang={lang}
+  title={entry.data.title}
+  description={entry.data.description}
+  chapter={entry.data.chapter}
+  parentTitle={parent?.data.title}
+  parentPath={parent?.data.path}
+>
+  <Content />
+</Chapter>

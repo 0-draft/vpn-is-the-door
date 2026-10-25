@@ -5,7 +5,8 @@
 //  - English strings in data files contain no Japanese
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
-import { SOURCES } from "../src/data/sources.ts";
+import { z } from "zod";
+import { SourceSchema } from "../src/data/source-schema.ts";
 
 const errors: string[] = [];
 const fail = (m: string) => errors.push(m);
@@ -17,10 +18,26 @@ function walk(dir: string): string[] {
   });
 }
 
+const SOURCES = readdirSync("src/data/sources")
+  .filter((f) => f.endsWith(".json"))
+  .flatMap((f) => {
+    const r = z.array(SourceSchema).safeParse(JSON.parse(readFileSync(join("src/data/sources", f), "utf8")));
+    if (!r.success) {
+      fail(`src/data/sources/${f}: ${r.error.message}`);
+      return [];
+    }
+    return r.data;
+  });
 const ids = new Set(SOURCES.map((s) => s.id));
-if (ids.size !== SOURCES.length) fail("duplicate source ids");
+if (ids.size !== SOURCES.length) {
+  const seen = new Set<string>();
+  for (const s of SOURCES) {
+    if (seen.has(s.id)) fail(`duplicate source id "${s.id}"`);
+    seen.add(s.id);
+  }
+}
 
-const files = walk("src").filter((f) => /\.(astro|mdx|ts|json)$/.test(f) && !f.endsWith("sources.json"));
+const files = walk("src").filter((f) => /\.(astro|mdx|ts|json)$/.test(f) && !f.includes("data/sources/"));
 const used = new Set<string>();
 const refRe =
   /(?:source|sources|src)=?\{?\s*[[:]?\s*"([a-z0-9-]+)"|source:\s*"([a-z0-9-]+)"|"source":\s*"([a-z0-9-]+)"|sources=\{\["([^"\]]+)"|<Cite id="([a-z0-9-]+)"/g;
