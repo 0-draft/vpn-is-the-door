@@ -1,0 +1,162 @@
+[
+  {
+    "term_en": "VPN",
+    "term_ja": "VPN（仮想プライベートネットワーク）",
+    "short_en": "An encrypted tunnel that lets you use the office network from outside.",
+    "short_ja": "社外から社内ネットワークを使うための暗号化された通り道。",
+    "long_en": "The VPN concentrator is internet-facing and, once you pass it, grants network-level access to the inside; NSA/CISA call remote access VPN servers entry points into protected networks.",
+    "long_ja": "VPN 装置はインターネットに常時公開され、通過すると社内ネットワークへの広いアクセスが得られる。NSA/CISA は「保護されたネットワークへの入口」と位置付けている。"
+  },
+  {
+    "term_en": "SSL-VPN",
+    "term_ja": "SSL-VPN",
+    "short_en": "A VPN you connect to through an HTTPS web portal.",
+    "short_ja": "HTTPS の Web ポータル経由で接続する VPN。",
+    "long_en": "The portal is a large web application on the appliance that anyone can reach before logging in; most VPN CVEs used by ransomware (e.g., CVE-2018-13379, CVE-2024-21762) sit in this component.",
+    "long_ja": "装置上の大きな Web アプリがログイン前から誰でも到達できる状態にある。ランサムウェアに悪用された VPN の CVE（CVE-2018-13379、CVE-2024-21762 など）の多くはこの部分にある。"
+  },
+  {
+    "term_en": "Edge device",
+    "term_ja": "エッジデバイス（境界機器）",
+    "short_en": "A device on the border between your network and the internet.",
+    "short_ja": "自組織のネットワークとインターネットの境目に置かれる機器。",
+    "long_en": "Firewalls, VPN gateways, routers and load balancers; usually cannot run EDR, and CISA BOD 26-02 (2026) orders US agencies to remove end-of-support ones.",
+    "long_ja": "ファイアウォール、VPN ゲートウェイ、ルーター、ロードバランサ等。EDR を入れられないことが多い。米 CISA は BOD 26-02（2026 年）でサポート切れ機器の撤去を連邦機関に命じた。"
+  },
+  {
+    "term_en": "Pre-authentication",
+    "term_ja": "認証前（プリオース）",
+    "short_en": "Something an attacker can do before logging in.",
+    "short_ja": "ログインする前の段階で攻撃者ができること。",
+    "long_en": "A pre-auth remote code execution bug on the VPN portal needs no credentials at all, which is why it is the most dangerous class for internet-facing appliances.",
+    "long_ja": "VPN ポータルの認証前リモートコード実行は認証情報が一切不要。インターネット公開機器で最も危険な脆弱性クラス。"
+  },
+  {
+    "term_en": "CVE",
+    "term_ja": "CVE（共通脆弱性識別子）",
+    "short_en": "An ID number for a publicly known security flaw.",
+    "short_ja": "公開された脆弱性に付けられる識別番号。",
+    "long_en": "Only an identifier; it says nothing about whether the flaw is being exploited. Pair it with KEV status and internet exposure to decide urgency.",
+    "long_ja": "番号にすぎず、実際に悪用されているかは分からない。緊急度は KEV 掲載の有無とインターネット露出で判断する。"
+  },
+  {
+    "term_en": "CVSS",
+    "term_ja": "CVSS（共通脆弱性評価システム）",
+    "short_en": "A 0-10 score for how severe a flaw is.",
+    "short_ja": "脆弱性の深刻度を 0〜10 で表す点数。",
+    "long_en": "Severity is not risk. CISA BOD 26-04 (June 2026) removed the CVSS-based prioritization requirement for US agencies in favour of exposure, KEV status, automatability and impact.",
+    "long_ja": "深刻度とリスクは別物。米 CISA の BOD 26-04（2026 年 6 月）は連邦機関の CVSS ベース優先度付けをやめ、露出・KEV・自動化可能性・影響度で判断する方式にした。"
+  },
+  {
+    "term_en": "KEV",
+    "term_ja": "KEV（既知の悪用された脆弱性カタログ）",
+    "short_en": "CISA's list of flaws known to be exploited in the wild.",
+    "short_ja": "米 CISA が公開する「実際に悪用が確認された脆弱性」の一覧。",
+    "long_en": "The best single patch-now signal; under BOD 26-04 some entries carry a forensic-triage flag requiring a compromise check, not just a patch.",
+    "long_ja": "「今すぐ直せ」の最も確かな指標。BOD 26-04 以降、一部の項目にはパッチだけでなく侵害有無の調査（フォレンジックトリアージ）を求めるフラグが付く。"
+  },
+  {
+    "term_en": "Zero-day",
+    "term_ja": "ゼロデイ",
+    "short_en": "A flaw attackers use before any fix exists.",
+    "short_ja": "修正プログラムが出る前に悪用される脆弱性。",
+    "long_en": "Patching cannot help until the vendor ships a fix; Ivanti CVE-2025-0282 was exploited as a zero-day. Defence relies on exposure reduction and monitoring.",
+    "long_ja": "修正が出るまでパッチでは防げない。Ivanti の CVE-2025-0282 はゼロデイとして悪用された。露出の削減と監視で備えるしかない。"
+  },
+  {
+    "term_en": "N-day",
+    "term_ja": "Nデイ",
+    "short_en": "A known flaw that has a fix, but the fix has not been applied yet.",
+    "short_ja": "修正済みだが、まだ適用されていない既知の脆弱性。",
+    "long_en": "Most VPN-led ransomware is n-day: Handa and Osaka were both breached via CVE-2018-13379 years after the fix.",
+    "long_ja": "VPN 経由のランサムウェアの多くは Nデイ。半田病院も大阪急性期も、修正から数年後に CVE-2018-13379 で侵入された。"
+  },
+  {
+    "term_en": "Patch",
+    "term_ja": "パッチ（修正プログラム）",
+    "short_en": "A vendor update that fixes a flaw.",
+    "short_ja": "メーカーが出す脆弱性の修正。",
+    "long_en": "Fixes the bug but does not evict an intruder, remove all implants, or un-steal credentials; pair it with credential resets and a compromise hunt.",
+    "long_ja": "穴は塞ぐが、侵入済みの攻撃者や仕込まれたバックドア、盗まれた認証情報はそのまま。認証情報のリセットと侵害調査をセットで行う。"
+  },
+  {
+    "term_en": "MFA",
+    "term_ja": "多要素認証（MFA）",
+    "short_en": "Logging in with a second proof in addition to a password.",
+    "short_ja": "パスワードに加えて別の要素でも本人確認するログイン方式。",
+    "long_en": "OTP and push can be phished or bypassed (OTP-protected SonicWall accounts were still breached in 2025); prefer phishing-resistant FIDO2 or certificate-based methods.",
+    "long_ja": "ワンタイムパスワードやプッシュ通知は突破され得る（2025 年には OTP 有効の SonicWall アカウントも侵入された）。FIDO2 や証明書など、フィッシングに強い方式を選ぶ。"
+  },
+  {
+    "term_en": "Session token",
+    "term_ja": "セッショントークン",
+    "short_en": "A ticket that keeps you logged in after you sign in.",
+    "short_ja": "ログイン後に「ログイン済み」を示す通行証。",
+    "long_en": "A stolen token or cookie skips the password and MFA entirely; VPN appliances cache session data, so revoke all sessions after a compromise.",
+    "long_ja": "盗まれるとパスワードも MFA も不要になる。VPN 装置はセッション情報を保持しているため、侵害後は全セッションを失効させる。"
+  },
+  {
+    "term_en": "Active Directory",
+    "term_ja": "Active Directory（AD）",
+    "short_en": "The Windows system that manages users, passwords and computers.",
+    "short_ja": "Windows のユーザー・パスワード・端末を一元管理する仕組み。",
+    "long_en": "VPNs often authenticate against AD through a bind account stored on the appliance; owning AD means owning the whole Windows estate.",
+    "long_ja": "VPN は装置に保存したバインド用アカウントで AD 認証することが多い。AD を奪われれば Windows 環境全体を奪われたのと同じ。"
+  },
+  {
+    "term_en": "Domain admin",
+    "term_ja": "ドメイン管理者",
+    "short_en": "An account that can control every Windows machine in the organization.",
+    "short_ja": "組織内の全 Windows 端末を操作できる最上位の管理者アカウント。",
+    "long_en": "The main prize of privilege escalation; usually obtained by dumping credentials or reusing shared local admin passwords, then used to push ransomware everywhere.",
+    "long_ja": "権限昇格の最終目標。認証情報のダンプや共通のローカル管理者パスワードの使い回しで奪われ、全台へのランサムウェア配布に使われる。"
+  },
+  {
+    "term_en": "Lateral movement",
+    "term_ja": "横展開（水平展開）",
+    "short_en": "Hopping from one compromised computer to others inside the network.",
+    "short_ja": "侵入した 1 台から社内の別の端末へ次々と移っていくこと。",
+    "long_en": "Typically RDP, SMB and remote service execution with stolen or shared credentials; shared Built-in Administrator passwords made it trivial at Handa and Osaka.",
+    "long_ja": "盗んだ、または共通の認証情報で RDP・SMB・リモートサービス実行を使うのが典型。半田病院と大阪急性期では共通の Built-in Administrator パスワードが横展開を容易にした。"
+  },
+  {
+    "term_en": "Ransomware",
+    "term_ja": "ランサムウェア",
+    "short_en": "Malware that locks your data and demands payment to unlock it.",
+    "short_ja": "データを暗号化して使えなくし、解除と引き換えに身代金を要求するマルウェア。",
+    "long_en": "Today it is human-operated and sold as a service (RaaS) to affiliates; encryption is the last step of an intrusion that started hours or days earlier.",
+    "long_ja": "現在は人が操作する攻撃で、RaaS としてアフィリエイトに提供される。暗号化は数時間〜数日前に始まった侵入の最終段階にすぎない。"
+  },
+  {
+    "term_en": "Double extortion",
+    "term_ja": "二重恐喝",
+    "short_en": "Stealing data and threatening to leak it, on top of encrypting it.",
+    "short_ja": "暗号化に加えて、盗んだデータを公開すると脅す手口。",
+    "long_en": "Backups solve encryption but not the leak threat; Akira, LockBit and others exfiltrate before encrypting, sometimes within hours of initial access.",
+    "long_ja": "バックアップがあっても暴露の脅しは防げない。Akira や LockBit などは暗号化の前にデータを持ち出し、初期侵入から数時間で行うこともある。"
+  },
+  {
+    "term_en": "ZTNA",
+    "term_ja": "ZTNA（ゼロトラストネットワークアクセス）",
+    "short_en": "Access to specific apps only, checking the user and device every time.",
+    "short_ja": "利用者と端末を毎回確認し、特定のアプリだけにアクセスを許す方式。",
+    "long_en": "Shrinks the blast radius of a stolen credential versus network-level VPN access, but ZTNA gateways are edge software too (Ivanti Neurons for ZTA was affected by CVE-2025-0282).",
+    "long_ja": "ネットワーク単位の VPN に比べ、認証情報を盗まれたときの被害範囲を狭められる。ただし ZTNA ゲートウェイもエッジのソフトウェアで、脆弱性はある（Ivanti Neurons for ZTA は CVE-2025-0282 の影響を受けた）。"
+  },
+  {
+    "term_en": "EDR",
+    "term_ja": "EDR（エンドポイント検知・対応）",
+    "short_en": "Security software that watches computers for attacker behavior and can stop it.",
+    "short_ja": "端末上の不審な振る舞いを監視し、攻撃を検知・封じ込めるセキュリティソフト。",
+    "long_en": "Usually cannot be installed on VPN appliances, and ransomware affiliates routinely try to uninstall or blind it (including via vulnerable drivers) before encrypting.",
+    "long_ja": "VPN 装置には通常インストールできない。攻撃者は暗号化の前に EDR の削除や無効化を試みるのが常套手段（脆弱なドライバの悪用を含む）。"
+  },
+  {
+    "term_en": "Dwell time",
+    "term_ja": "滞留時間（ドウェルタイム）",
+    "short_en": "How long attackers stay inside before they are discovered.",
+    "short_ja": "侵入されてから発見されるまでの期間。",
+    "long_en": "Sophos measured a 3-4 day median in ransomware cases, while Mandiant's global median rose to 14 days in 2025, partly due to persistence on edge devices with little telemetry.",
+    "long_ja": "Sophos はランサムウェア事案で中央値 3〜4 日と計測。Mandiant の全体中央値は 2025 年に 14 日へ伸びており、テレメトリの乏しいエッジ機器への潜伏が一因とされる。"
+  }
+]
