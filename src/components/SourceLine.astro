@@ -1,0 +1,44 @@
+---
+import { source } from "../data/sources";
+import { t } from "../i18n/ui";
+import type { Lang } from "../lib/paths";
+
+interface Props {
+  lang: Lang;
+  ids: string[];
+}
+
+const { lang, ids } = Astro.props;
+const items = ids.map((id) => source(id));
+---
+
+<p class="src">
+  <span class="src-k">{t(lang, "source")}:</span>
+  {
+    items.map((s, i) => (
+      <>
+        {i > 0 && <span aria-hidden="true">; </span>}
+        <span>
+          {s.publisher[lang]} <a href={s.url}>{lang === "ja" || /^[\x00-\x7F]*$/.test(s.title) ? s.title : `「${s.title}」`}</a>
+          {s.locator && <span class="src-loc"> ({s.locator})</span>}
+        </span>
+      </>
+    ))
+  }
+</p>
+
+<style>
+  .src {
+    margin: 0.35rem 0 0;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--ink-3);
+  }
+  .src-k {
+    color: var(--ink-2);
+    font-weight: 700;
+  }
+  .src-loc {
+    font-variant-numeric: tabular-nums;
+  }
+</style>

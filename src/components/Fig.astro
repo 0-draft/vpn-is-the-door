@@ -1,0 +1,108 @@
+---
+import { figLabel, t } from "../i18n/ui";
+import type { Lang } from "../lib/paths";
+import SourceLine from "./SourceLine.astro";
+
+interface Props {
+  lang: Lang;
+  n: string;
+  caption: string;
+  sources?: string[];
+  composite?: boolean;
+  nts?: boolean;
+  wide?: boolean;
+}
+
+const { lang, n, caption, sources = [], composite = false, nts = false, wide = false } = Astro.props;
+const capId = `fig-${n}-cap`;
+const hasData = Astro.slots.has("data");
+---
+
+<figure class:list={["fig", { "fig-wide": wide }]} id={`fig-${n}`} aria-labelledby={capId}>
+  <div class="fig-body"><slot /></div>
+  <figcaption id={capId}>
+    <span class="fig-n">{figLabel(lang, n)}</span>
+    <span class="fig-t">{caption}</span>
+    {
+      (composite || nts) && (
+        <span class="fig-tags">
+          {composite && <span class="fig-tag">{t(lang, "composite")}</span>}
+          {nts && <span class="fig-tag mono">{t(lang, "nts")}</span>}
+        </span>
+      )
+    }
+  </figcaption>
+  {sources.length > 0 && <SourceLine lang={lang} ids={sources} />}
+  {
+    hasData && (
+      <details class="fig-data">
+        <summary>{t(lang, "data")}</summary>
+        <div class="table-scroll" tabindex="0">
+          <slot name="data" />
+        </div>
+      </details>
+    )
+  }
+</figure>
+
+<style>
+  .fig {
+    margin: 2rem 0 2.5rem;
+    padding: 1.25rem clamp(0.75rem, 2vw, 1.5rem) 1rem;
+    background: var(--sheet);
+    border-block: 2px solid var(--ink);
+    max-inline-size: 100%;
+  }
+  .fig-body {
+    max-inline-size: 100%;
+  }
+  /* phones: figures run edge to edge so plan labels keep their size */
+  @media (max-width: 45em) {
+    .fig {
+      margin-inline: calc(-1 * var(--gutter));
+      max-inline-size: none;
+      padding-inline: 0.75rem;
+    }
+    .fig-body {
+      margin-inline: -0.5rem;
+    }
+  }
+  figcaption {
+    margin-block-start: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.75rem;
+    align-items: baseline;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  .fig-n {
+    font-weight: 700;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .fig-tags {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .fig-tag {
+    font-size: 0.875rem;
+    color: var(--ink-3);
+    border: 1px solid var(--line);
+    padding: 0 0.4em;
+  }
+  .fig-data {
+    margin-block-start: 0.75rem;
+    font-size: 0.9375rem;
+  }
+  .fig-data summary {
+    cursor: pointer;
+    color: var(--instruct);
+    inline-size: fit-content;
+  }
+  .fig-data :global(table) {
+    margin-block-start: 0.5rem;
+  }
+</style>

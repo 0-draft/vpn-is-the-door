@@ -1,0 +1,514 @@
+/* Tokens: research/design.md §6–§7. Red means the intruder and nothing else. */
+:root {
+  color-scheme: light;
+  --paper: #f4f5f3;
+  --sheet: #ffffff;
+  --ink: #17191c;
+  --ink-2: #4a5058;
+  --ink-3: #5e656d;
+  --line: #80878f;
+  --hair: #d3d7da;
+  --room: #eceeef;
+  --wall: #23272b;
+  --intruder: #e03a00;
+  --intruder-fill: #ff4b00;
+  --intruder-tint: #ffe9df;
+  --intruder-text: #c2340a;
+  --caution: #f2e700;
+  --caution-ink: #17191c;
+  --safe: #00764a;
+  --safe-fill: #00b06b;
+  --instruct: #1757c9;
+  --instruct-fill: #1971ff;
+  --marker: #fff6b0;
+
+  --font-en: "Public Sans", "BIZ UDPGothic", system-ui, sans-serif;
+  --font-ja: "BIZ UDPGothic", "Public Sans", sans-serif;
+  --font-mono: "Atkinson Hyperlegible Mono", "BIZ UDGothic", ui-monospace, monospace;
+  --font: var(--font-en);
+
+  --measure: 66ch;
+  --wide: 76rem;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper: #101214;
+    --sheet: #171a1d;
+    --ink: #e9ebed;
+    --ink-2: #aeb4ba;
+    --ink-3: #8e959c;
+    --line: #6e767e;
+    --hair: #2b3034;
+    --room: #1f2327;
+    --wall: #c9ced3;
+    --intruder: #ff5a1f;
+    --intruder-fill: #ff5a1f;
+    --intruder-tint: #3a1a10;
+    --intruder-text: #ff7a4d;
+    --caution-ink: #111315;
+    --safe: #45d198;
+    --safe-fill: #2fc488;
+    --instruct: #86afff;
+    --instruct-fill: #5c95ff;
+    --marker: rgba(242, 231, 0, 0.16);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #101214;
+  --sheet: #171a1d;
+  --ink: #e9ebed;
+  --ink-2: #aeb4ba;
+  --ink-3: #8e959c;
+  --line: #6e767e;
+  --hair: #2b3034;
+  --room: #1f2327;
+  --wall: #c9ced3;
+  --intruder: #ff5a1f;
+  --intruder-fill: #ff5a1f;
+  --intruder-tint: #3a1a10;
+  --intruder-text: #ff7a4d;
+  --caution-ink: #111315;
+  --safe: #45d198;
+  --safe-fill: #2fc488;
+  --instruct: #86afff;
+  --instruct-fill: #5c95ff;
+  --marker: rgba(242, 231, 0, 0.16);
+}
+
+:root:lang(ja) {
+  --font: var(--font-ja);
+  --measure: 38em;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 1.125rem;
+  line-height: 1.6;
+  font-kerning: normal;
+}
+
+:lang(ja) body,
+body:lang(ja) {
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 45em) {
+  body {
+    font-size: 1.0625rem;
+  }
+  :lang(ja) body,
+  body:lang(ja) {
+    font-size: 1rem;
+  }
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font);
+  color: var(--ink);
+  margin: 0;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(2.125rem, 1.6rem + 2.2vw, 2.875rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: clamp(1.5625rem, 1.3rem + 1vw, 1.875rem);
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+h3 {
+  font-size: clamp(1.1875rem, 1.1rem + 0.3vw, 1.3125rem);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+:lang(ja) h1 {
+  font-size: clamp(1.75rem, 1.4rem + 1.6vw, 2.375rem);
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+:lang(ja) h2 {
+  font-size: clamp(1.4375rem, 1.25rem + 0.8vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.45;
+}
+:lang(ja) h3 {
+  font-size: clamp(1.125rem, 1.05rem + 0.3vw, 1.25rem);
+  line-height: 1.5;
+}
+
+p,
+li,
+dd,
+td,
+th,
+figcaption {
+  overflow-wrap: anywhere;
+}
+
+p {
+  margin: 0 0 1em;
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--instruct);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--instruct);
+  outline-offset: 2px;
+}
+
+code,
+kbd,
+samp,
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  letter-spacing: 0;
+}
+
+:not(pre) > code {
+  background: var(--room);
+  padding: 0.05em 0.3em;
+  border-radius: 2px;
+}
+
+pre {
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  border: 1px solid var(--hair);
+  background: var(--sheet);
+  max-inline-size: 100%;
+}
+
+.num,
+table {
+  font-family: var(--font-en);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+:lang(ja) table {
+  font-family: var(--font-ja);
+}
+:lang(ja) table .num {
+  font-family: var(--font-en);
+}
+
+table {
+  border-collapse: collapse;
+  inline-size: 100%;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+th,
+td {
+  text-align: start;
+  vertical-align: top;
+  padding: 0.5rem 0.75rem 0.5rem 0;
+  border-block-end: 1px solid var(--hair);
+}
+th {
+  font-weight: 700;
+  border-block-end: 2px solid var(--ink);
+}
+td.num,
+th.num {
+  text-align: end;
+}
+
+hr {
+  border: 0;
+  border-block-start: 1px solid var(--hair);
+  margin: 3rem 0;
+}
+
+mark {
+  background: none;
+  color: inherit;
+  box-shadow: inset 0 -0.4em 0 var(--marker);
+}
+
+:target {
+  scroll-margin-block-start: 6rem;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Prose blocks keep the reading measure; figures may run wider. */
+.prose > * {
+  max-inline-size: var(--measure);
+}
+.prose > :is(figure, .wide, table, .table-scroll, .cut, .summary, .scrolly, .explorer, .sandbox) {
+  max-inline-size: none;
+}
+.prose h2 {
+  margin-block: 3.5rem 1rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.prose h3 {
+  margin-block: 2.25rem 0.75rem;
+}
+.prose ul,
+.prose ol {
+  padding-inline-start: 1.25em;
+  margin: 0 0 1em;
+}
+.prose li {
+  margin-block: 0.25em;
+}
+.prose li::marker {
+  color: var(--ink-3);
+}
+.prose blockquote {
+  margin: 1.5rem 0;
+  padding: 0.25rem 0 0.25rem 1.25rem;
+  border-inline-start: 2px solid var(--ink);
+  color: var(--ink-2);
+}
+.prose blockquote p:last-child {
+  margin: 0;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  max-inline-size: 100%;
+  margin-block: 1.5rem 2rem;
+}
+
+/* Scale tag: S=1:500 / 1:100 / 1:5 marks how deep a section goes. */
+.scale {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--ink-3);
+  border: 1px solid currentColor;
+  padding: 0.3em 0.45em 0.25em;
+  white-space: nowrap;
+  vertical-align: 0.2em;
+}
+
+/* Diagram classes shared by every hand-drawn SVG. */
+svg.dg {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  max-inline-size: 100%;
+  overflow: visible;
+  font-family: var(--font);
+}
+.dg text {
+  fill: var(--ink);
+  font-size: 18px;
+}
+.dg .label {
+  fill: var(--ink-2);
+}
+.dg .muted {
+  fill: var(--ink-3);
+}
+.dg .mono {
+  font-family: var(--font-mono);
+  font-size: 16px;
+}
+.dg .wall {
+  fill: none;
+  stroke: var(--wall);
+  stroke-width: 8;
+  stroke-linejoin: miter;
+}
+.dg .iwall {
+  fill: none;
+  stroke: var(--wall);
+  stroke-width: 4;
+  stroke-linecap: square;
+}
+.dg .floor {
+  fill: var(--room);
+}
+.dg .gap {
+  fill: var(--room);
+  stroke: none;
+}
+.dg .gap-out {
+  fill: var(--sheet);
+  stroke: none;
+}
+.dg .leaf {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.dg .swing {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1;
+}
+.dg .glass {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1;
+}
+.dg .thick {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+.dg .thin {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1;
+}
+.dg .dash {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1;
+  stroke-dasharray: 5 4;
+}
+.dg .chain {
+  fill: none;
+  stroke: var(--ink-2);
+  stroke-width: 1;
+  stroke-dasharray: 12 3 2 3;
+}
+.dg .route {
+  fill: none;
+  stroke: var(--intruder);
+  stroke-width: 3;
+  stroke-dasharray: 8 4;
+  stroke-linecap: butt;
+}
+.dg .unit {
+  fill: var(--ink-2);
+}
+.dg .unit.hot {
+  fill: var(--intruder);
+}
+.dg .hot-text {
+  fill: var(--intruder-text);
+  font-weight: 700;
+}
+.dg .station circle {
+  fill: var(--sheet);
+  stroke: var(--intruder);
+  stroke-width: 1.5;
+}
+.dg .station text {
+  font-family: var(--font-en);
+  font-weight: 700;
+  font-size: 15px;
+  fill: var(--intruder-text);
+}
+.dg .safe-bar {
+  stroke: var(--safe);
+  stroke-width: 6;
+  stroke-linecap: butt;
+}
+.dg .safe-text {
+  fill: var(--safe);
+  font-weight: 700;
+}
+.dg .caution-tag rect {
+  fill: var(--caution);
+  stroke: var(--caution-ink);
+  stroke-width: 1;
+}
+.dg .caution-tag text {
+  fill: var(--caution-ink);
+  font-weight: 700;
+}
+
+/* Yellow is a filled tag with ink text, never yellow text. */
+.tag-caution,
+.tag-intruder,
+.tag-safe {
+  display: inline-block;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.3;
+  padding: 0.1em 0.45em;
+  border: 1px solid var(--caution-ink);
+  white-space: nowrap;
+}
+.tag-caution {
+  background: var(--caution);
+  color: var(--caution-ink);
+}
+.tag-intruder {
+  background: var(--intruder-fill);
+  color: var(--caution-ink);
+}
+.tag-safe {
+  background: var(--safe-fill);
+  color: var(--caution-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0s !important;
+    animation-duration: 0s !important;
+  }
+}
+:root[data-motion="off"] *,
+:root[data-motion="off"] *::before,
+:root[data-motion="off"] *::after {
+  transition-duration: 0s !important;
+  animation-duration: 0s !important;
+}

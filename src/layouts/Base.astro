@@ -1,0 +1,332 @@
+---
+import "../styles/global.css";
+import { CHAPTERS } from "../data/chapters";
+import { chapterLabel, SITE, t } from "../i18n/ui";
+import { alternatePath, type Lang, localePath } from "../lib/paths";
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  description?: string;
+  chapter?: string;
+}
+
+const { lang, title, description, chapter } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const siteTitle = t(lang, "site.title");
+const fullTitle = title ? `${title} · ${siteTitle}` : siteTitle;
+const desc = description ?? t(lang, "site.desc");
+const alt = alternatePath(Astro.url.pathname, base);
+const enHref = alt.lang === "en" ? alt.href : Astro.url.pathname;
+const jaHref = alt.lang === "ja" ? alt.href : Astro.url.pathname;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const home = localePath(lang, "/", base);
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={desc} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="en" href={new URL(enHref, Astro.site)} />
+    <link rel="alternate" hreflang="ja" href={new URL(jaHref, Astro.site)} />
+    <link rel="alternate" hreflang="x-default" href={new URL(enHref, Astro.site)} />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={lang === "ja" ? "ja_JP" : "en_US"} />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400..800&family=BIZ+UDPGothic:wght@400;700&family=Atkinson+Hyperlegible+Mono:wght@400;600&display=swap"
+    />
+    <script is:inline>
+      // Apply stored theme / motion before first paint.
+      try {
+        const th = localStorage.getItem("theme");
+        if (th === "light" || th === "dark") document.documentElement.dataset.theme = th;
+        if (localStorage.getItem("motion") === "off") document.documentElement.dataset.motion = "off";
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">{t(lang, "nav.skip")}</a>
+    <header class="masthead">
+      <div class="bar">
+        <a class="mark" href={home}>
+          <span class="mark-title">{siteTitle}</span>
+        </a>
+        <p class="report mono" aria-label={`${t(lang, "site.report")} ${SITE.report}`}>
+          <span>{SITE.report}</span>
+          <span>{t(lang, "site.rev")} {SITE.revision}</span>
+          <time datetime={SITE.updated}>{SITE.updated}</time>
+        </p>
+        <div class="controls">
+          <button type="button" class="ctl" data-theme-toggle aria-live="polite">
+            <span class="ctl-k">{t(lang, "nav.theme")}</span>
+            <span data-theme-label data-auto={t(lang, "nav.themeAuto")} data-light={t(lang, "nav.themeLight")} data-dark={t(lang, "nav.themeDark")}
+              >{t(lang, "nav.themeAuto")}</span
+            >
+          </button>
+          <label class="ctl">
+            <input type="checkbox" data-motion-toggle />
+            <span>{t(lang, "nav.motion")}</span>
+          </label>
+          <a class="ctl lang" href={alt.href} hreflang={alt.lang} lang={alt.lang} aria-label={t(lang, "nav.langLabel")}
+            >{t(lang, "nav.lang")}</a
+          >
+        </div>
+      </div>
+      <nav class="strip" aria-label={t(lang, "nav.chapters")}>
+        <ol>
+          <li>
+            <a href={home} aria-current={chapter === "home" ? "page" : undefined}>
+              <span class="strip-n">0</span>
+              <span class="strip-t">{t(lang, "nav.home")}</span>
+            </a>
+          </li>
+          {
+            CHAPTERS.map((c) => (
+              <li>
+                <a
+                  href={localePath(lang, c.path, base)}
+                  aria-current={chapter === c.id ? "page" : undefined}
+                  title={`${chapterLabel(lang, c.num)} ${c.title[lang]}`}
+                >
+                  <span class="strip-n">{c.num}</span>
+                  <span class="strip-t">{c.short[lang]}</span>
+                  <span class="strip-s mono">{c.scales.map((s) => `S=${s}`).join(" ")}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+      </nav>
+    </header>
+
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+
+    <footer class="foot">
+      <div class="foot-in">
+        <p>{t(lang, "foot.method")}</p>
+        <p>{t(lang, "foot.noaffil")}</p>
+        <ul class="foot-links">
+          <li><a href={localePath(lang, "/sources/", base)}>{t(lang, "nav.sources")}</a></li>
+          <li><a href={localePath(lang, "/glossary/", base)}>{t(lang, "nav.glossary")}</a></li>
+          <li><a href={SITE.repo}>{t(lang, "foot.source")}</a></li>
+        </ul>
+        <p class="mono foot-meta">
+          {SITE.report} · {t(lang, "foot.revised")}
+          <time datetime={SITE.updated}>{SITE.updated}</time> · {t(lang, "foot.license")}
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      const root = document.documentElement;
+      const order = ["auto", "light", "dark"] as const;
+      const btn = document.querySelector<HTMLButtonElement>("[data-theme-toggle]");
+      const label = document.querySelector<HTMLElement>("[data-theme-label]");
+      const show = () => {
+        const cur = root.dataset.theme ?? "auto";
+        if (label) label.textContent = label.dataset[cur] ?? cur;
+      };
+      show();
+      btn?.addEventListener("click", () => {
+        const cur = (root.dataset.theme ?? "auto") as (typeof order)[number];
+        const next = order[(order.indexOf(cur) + 1) % order.length] ?? "auto";
+        if (next === "auto") delete root.dataset.theme;
+        else root.dataset.theme = next;
+        try {
+          if (next === "auto") localStorage.removeItem("theme");
+          else localStorage.setItem("theme", next);
+        } catch {}
+        show();
+      });
+
+      const motion = document.querySelector<HTMLInputElement>("[data-motion-toggle]");
+      if (motion) {
+        motion.checked = root.dataset.motion === "off";
+        motion.addEventListener("change", () => {
+          if (motion.checked) root.dataset.motion = "off";
+          else delete root.dataset.motion;
+          try {
+            localStorage.setItem("motion", motion.checked ? "off" : "on");
+          } catch {}
+          root.dispatchEvent(new CustomEvent("motionchange"));
+        });
+      }
+    </script>
+  </body>
+</html>
+
+<style>
+  .skip {
+    position: absolute;
+    inset-inline-start: 1rem;
+    inset-block-start: -3rem;
+    background: var(--sheet);
+    padding: 0.5rem 0.75rem;
+    z-index: 10;
+  }
+  .skip:focus {
+    inset-block-start: 0.5rem;
+  }
+  .masthead {
+    background: var(--sheet);
+    border-block-end: 2px solid var(--ink);
+  }
+  .bar {
+    max-inline-size: var(--wide);
+    margin-inline: auto;
+    padding: 0.75rem var(--gutter) 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 1.5rem;
+  }
+  .mark {
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 1.125rem;
+    letter-spacing: -0.005em;
+  }
+  .report {
+    margin: 0;
+    display: flex;
+    gap: 0.75rem;
+    color: var(--ink-3);
+    font-size: 0.875rem;
+    flex-wrap: wrap;
+  }
+  .controls {
+    margin-inline-start: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    align-items: center;
+    font-size: 0.875rem;
+  }
+  .ctl {
+    font: inherit;
+    font-size: 0.875rem;
+    color: var(--ink-2);
+    background: none;
+    border: 0;
+    padding: 0.25rem 0;
+    display: inline-flex;
+    gap: 0.35rem;
+    align-items: center;
+    cursor: pointer;
+  }
+  .ctl-k {
+    color: var(--ink-3);
+  }
+  .ctl input {
+    accent-color: var(--ink);
+    inline-size: 1rem;
+    block-size: 1rem;
+    margin: 0;
+  }
+  .lang {
+    color: var(--instruct);
+    font-weight: 700;
+  }
+  .strip {
+    max-inline-size: var(--wide);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+    overflow-x: auto;
+  }
+  .strip ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 0;
+    min-inline-size: max-content;
+  }
+  .strip a {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+    column-gap: 0.4rem;
+    padding: 0.5rem 1rem 0.55rem 0;
+    margin-inline-end: 1rem;
+    color: var(--ink-3);
+    text-decoration: none;
+    font-size: 0.9375rem;
+    line-height: 1.3;
+    border-block-end: 3px solid transparent;
+    margin-block-end: -2px;
+  }
+  .strip a:hover {
+    color: var(--ink);
+  }
+  .strip a[aria-current="page"] {
+    color: var(--ink);
+    border-block-end-color: var(--ink);
+    font-weight: 700;
+  }
+  .strip-n {
+    font-family: var(--font-en);
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    grid-row: span 2;
+  }
+  .strip-s {
+    font-size: 0.75rem;
+    grid-column: 2;
+    color: var(--ink-3);
+    font-weight: 400;
+  }
+  /* Scale tags under the strip are a nice-to-have; drop them on narrow screens. */
+  @media (max-width: 45em) {
+    .strip-s {
+      display: none;
+    }
+    .report {
+      display: none;
+    }
+  }
+  main {
+    outline: none;
+  }
+  .foot {
+    margin-block-start: 6rem;
+    border-block-start: 2px solid var(--ink);
+    background: var(--sheet);
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+  }
+  .foot-in {
+    max-inline-size: var(--wide);
+    margin-inline: auto;
+    padding: 2rem var(--gutter) 3rem;
+  }
+  .foot-in p {
+    max-inline-size: var(--measure);
+  }
+  .foot-links {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+  }
+  .foot-meta {
+    color: var(--ink-3);
+    font-size: 0.875rem;
+  }
+</style>

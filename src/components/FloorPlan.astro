@@ -1,0 +1,472 @@
+---
+import { latest, pct } from "../data/stats";
+// The anchor figure: Minato Precision's head office as a JIS A 0150-style plan.
+// mode "tally": the NPA statistic stacked outside each opening (home, ch. 1).
+// mode "route": the intruder's route; which parts show is driven by tokens in
+//               the root's data-show attribute (set statically or by a script).
+import {
+  countLabel,
+  FIXTURE_LABEL,
+  OPENING_LABEL,
+  PLAN_NOTE,
+  ROOM_LABEL,
+  ROOM_LABEL_TALL,
+  TALLY_NAME,
+} from "../i18n/plan";
+import type { Lang } from "../lib/paths";
+import {
+  closeAngle,
+  doorEnds,
+  gapRect,
+  LAYOUTS,
+  type Layout,
+  type OpeningId,
+  type Pt,
+  polyline,
+  swingPath,
+  tallySquares,
+  WALL,
+} from "../lib/plan";
+
+interface Props {
+  lang: Lang;
+  mode: "tally" | "route";
+  uid: string;
+  show?: string;
+  doors?: "open" | "closed";
+  label: string;
+}
+
+const { lang, mode, uid, show = "", doors = "open", label } = Astro.props;
+const year = latest();
+const counts = year.counts;
+const fixtureIds = ["keys", "fileserver", "nas", "pcs"] as const;
+const stationNum = { s1: "1", s2: "2", s3: "3", s4: "4" } as const;
+const segOrder = ["in", "toKeys", "toBackup", "out"] as const;
+
+function lines(at: Pt, texts: readonly string[], size: number): { x: number; y: number; text: string }[] {
+  return texts.map((text, i) => ({ x: at[0], y: at[1] + i * Math.round(size * 1.25), text }));
+}
+
+function tallyLines(l: Layout, op: OpeningId) {
+  const t = l.tallies.find((x) => x.opening === op)!;
+  const c = counts[op] ?? 0;
+  return {
+    t,
+    squares: tallySquares(t, c),
+    // narrow side columns on the tall plan: count and share on separate lines
+    text: lines(
+      t.label,
+      l.name === "tall" && (op === "mail" || op === "other")
+        ? [...TALLY_NAME[op][lang], lang === "ja" ? `${c}件` : `${c} cases`, `${pct(c, year.n)}%`]
+        : [...TALLY_NAME[op][lang], countLabel(lang, c, pct(c, year.n))],
+      l.labelSize,
+    ),
+  };
+}
+
+function fixtureLabel(l: Layout, id: (typeof fixtureIds)[number]) {
+  const f = l.fixtures.find((x) => x.id === id)!;
+  const r = f.rect;
+  const texts = FIXTURE_LABEL[id][lang];
+  if (id === "keys") {
+    if (l.name === "wide")
+      return { anchor: "middle", lines: lines([r.x + r.w / 2, r.y + r.h + 24], texts, l.labelSize) };
+    return { anchor: "start", lines: lines([r.x + r.w + 8, r.y + 16], texts, l.labelSize) };
+  }
+  if (l.name === "tall") return { anchor: "middle", lines: [] };
+  return { anchor: "middle", lines: lines([r.x + r.w / 2, r.y + r.h / 2 + 6], texts, l.labelSize) };
+}
+
+const stationIds = ["s1", "s2", "s3", "s4"] as const;
+const openingIds = ["vpn", "rdp", "mail", "other"] as const;
+
+function notes(l: Layout) {
+  const rec = l.rooms.find((r) => r.id === "reception")!;
+  const b = l.rooms.find((r) => r.id === "backup")!;
+  const w = l.name === "wide" ? 176 : 112;
+  const cx = rec.rect.x + rec.rect.w / 2;
+  const cy = l.name === "wide" ? rec.rect.y + 106 : rec.rect.y + 118;
+  return {
+    bypass: {
+      rect: { x: cx - w / 2, y: cy - 16, w },
+      text: { x: cx, y: cy + 3, s: l.name === "tall" && lang === "en" ? "skips reception" : PLAN_NOTE.bypass[lang] },
+    },
+    wiped: { x: b.rect.x + b.rect.w / 2, y: b.rect.y + b.rect.h - 14, s: PLAN_NOTE.wiped[lang] },
+  };
+}
+
+const ids = (l: Layout) => ({
+  hatch: `${uid}-${l.name}-hatch`,
+  cross: `${uid}-${l.name}-cross`,
+  arrow: `${uid}-${l.name}-arrow`,
+  mask: (seg: string) => `${uid}-${l.name}-m-${seg}`,
+});
+---
+
+<div class="plan" data-plan={uid} data-mode={mode} data-show={show} data-doors={doors}>
+  {
+    LAYOUTS.map((l) => {
+      const id = ids(l);
+      const nt = notes(l);
+      const [vx, vy, vw, vh] = l.viewBox;
+      const o = l.outer;
+      return (
+        <svg
+          class={`dg plan-svg plan-${l.name}`}
+          viewBox={`${vx} ${vy} ${vw} ${vh}`}
+          width={vw}
+          height={vh}
+          role="img"
+          aria-label={label}
+          data-layout={l.name}
+        >
+          <defs>
+            <pattern id={id.hatch} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="0" y2="6" class="hatch-line" />
+            </pattern>
+            <pattern id={id.cross} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="0" y2="6" class="hatch-line" />
+              <line x1="0" y1="0" x2="6" y2="0" class="hatch-line" />
+            </pattern>
+            <marker id={id.arrow} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto">
+              <path d="M0 1.5 L10 5 L0 8.5 z" class="arrowhead" />
+            </marker>
+            {mode === "route" &&
+              segOrder.map((seg) => (
+                <mask id={id.mask(seg)} maskUnits="userSpaceOnUse" x={vx} y={vy} width={vw} height={vh}>
+                  <path d={polyline(l.route[seg])} class={`reveal reveal-${seg}`} pathLength="1" />
+                </mask>
+              ))}
+          </defs>
+          {l.rooms.map((r) => (
+            <rect class="floor" data-room={r.id} x={r.rect.x} y={r.rect.y} width={r.rect.w} height={r.rect.h} />
+          ))}
+          {mode === "route" &&
+            l.rooms
+              .filter((r) => r.id !== "corridor")
+              .map((r) => (
+                <rect
+                  class={`overlay overlay-${r.id}`}
+                  x={r.rect.x}
+                  y={r.rect.y}
+                  width={r.rect.w}
+                  height={r.rect.h}
+                  fill={`url(#${r.id === "backup" ? id.cross : id.hatch})`}
+                />
+              ))}
+          {l.fixtures.map((f) => (
+            <rect class={`fixture fixture-${f.id}`} x={f.rect.x} y={f.rect.y} width={f.rect.w} height={f.rect.h} />
+          ))}
+          <rect class="wall" x={o.x} y={o.y} width={o.w} height={o.h} />
+          {l.innerWalls.map(([a, b]) => (
+            <line class="iwall" x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} />
+          ))}
+          {l.windows.map((w) => {
+            const g = gapRect(w, WALL + 2);
+            const horiz = w.from[1] === w.to[1];
+            return (
+              <g class="window" data-opening={w.id}>
+                <rect class="gap-out" x={g.x} y={g.y} width={g.w} height={g.h} />
+                {[-4, 0, 4].map((k) =>
+                  horiz ? (
+                    <line class="glass" x1={w.from[0]} y1={w.from[1] + k} x2={w.to[0]} y2={w.to[1] + k} />
+                  ) : (
+                    <line class="glass" x1={w.from[0] + k} y1={w.from[1]} x2={w.to[0] + k} y2={w.to[1]} />
+                  ),
+                )}
+              </g>
+            );
+          })}
+          {l.doors.map((d, di) => {
+            const g = gapRect(d, (d.outer ? WALL : 4) + 2);
+            const { open } = doorEnds(d);
+            return (
+              <g
+                class={`door${d.outer ? " door-outer" : ""}`}
+                data-door={d.id}
+                style={`--hx:${d.hinge[0]}px;--hy:${d.hinge[1]}px;--close:${closeAngle(d)}deg;--d:${d.outer ? 0 : (di - 3) * 60}ms`}
+              >
+                <rect class={d.outer ? "gap-out" : "gap"} x={g.x} y={g.y} width={g.w} height={g.h} />
+                <path class="swing" d={swingPath(d)} />
+                <line class="leaf" x1={d.hinge[0]} y1={d.hinge[1]} x2={open[0]} y2={open[1]} />
+              </g>
+            );
+          })}
+          {l.rooms
+            .filter((r) => r.id !== "corridor" || l.name === "wide")
+            .map((r) => (
+              <text class={`room-name${r.id === "corridor" ? " muted" : ""}`} x={r.label[0]} y={r.label[1]} text-anchor="middle" font-size={l.labelSize}>
+                {(l.name === "tall" ? ROOM_LABEL_TALL[r.id]?.[lang] : undefined) ?? ROOM_LABEL[r.id][lang]}
+              </text>
+            ))}
+
+          {fixtureIds.map((fid) => {
+            const fl = fixtureLabel(l, fid);
+            return fl.lines.map((ln) => (
+              <text class={`fixture-label fixture-label-${fid}`} x={ln.x} y={ln.y} text-anchor={fl.anchor} font-size={l.labelSize}>
+                {ln.text}
+              </text>
+            ));
+          })}
+          {mode === "tally" &&
+            openingIds.map((op) => {
+              const tl = tallyLines(l, op);
+              return (
+                <g class={`tally tally-${op}`} data-tally={op}>
+                  {tl.squares.map((s) => (
+                    <rect class={`unit${op === "vpn" ? " hot" : ""}`} x={s.x} y={s.y} width="10" height="10" />
+                  ))}
+                  {tl.text.map((ln, i) => (
+                    <text
+                      class={op === "vpn" ? (i === tl.text.length - 1 ? "hot-text num" : "hot-text") : i === tl.text.length - 1 ? "label num" : "label"}
+                      x={ln.x}
+                      y={ln.y}
+                      text-anchor={tl.t.anchor}
+                      font-size={l.labelSize}
+                    >
+                      {ln.text}
+                    </text>
+                  ))}
+                </g>
+              );
+            })}
+          {mode === "route" && (
+            <g class="route-layer">
+              {openingIds.map((op) => {
+                const ol = l.openingLabels[op];
+                return (
+                  <g class={`opening-label opening-${op}`}>
+                    {lines(ol.at, OPENING_LABEL[op][lang], l.labelSize - 1).map((ln, i) => (
+                      <text class={i === 0 ? "" : "muted"} x={ln.x} y={ln.y} text-anchor={ol.anchor} font-size={l.labelSize - 1}>
+                        {ln.text}
+                      </text>
+                    ))}
+                  </g>
+                );
+              })}
+
+              <g class="bypass-note caution-tag">
+                <rect x={nt.bypass.rect.x} y={nt.bypass.rect.y} width={nt.bypass.rect.w} height="26" />
+                <text x={nt.bypass.text.x} y={nt.bypass.text.y} text-anchor="middle" font-size={l.labelSize - 3}>
+                  {nt.bypass.text.s}
+                </text>
+              </g>
+
+              {segOrder.map((seg) => (
+                <path
+                  class={`route route-${seg}${seg === "out" ? " route-exfil" : ""}`}
+                  d={polyline(l.route[seg])}
+                  mask={`url(#${id.mask(seg)})`}
+                  marker-end={`url(#${id.arrow})`}
+                />
+              ))}
+
+              <g class="wiped-note">
+                <text class="hot-text" x={nt.wiped.x} y={nt.wiped.y} text-anchor="middle" font-size={l.labelSize - 1}>
+                  {nt.wiped.s}
+                </text>
+              </g>
+
+              {stationIds.map((sid) => (
+                <g class={`station station-${sid}`} data-station={sid}>
+                  <circle cx={l.stations[sid][0]} cy={l.stations[sid][1]} r="13" />
+                  <text x={l.stations[sid][0]} y={l.stations[sid][1] + 5} text-anchor="middle">
+                    {stationNum[sid]}
+                  </text>
+                </g>
+              ))}
+            </g>
+          )}
+        </svg>
+      );
+    })
+  }
+</div>
+
+<style is:global>
+  .plan {
+    container-type: inline-size;
+    inline-size: 100%;
+  }
+  .plan-svg {
+    display: block;
+  }
+  .plan > .plan-tall {
+    max-inline-size: 31rem;
+    margin-inline: auto;
+  }
+  .plan > .plan-wide {
+    display: none;
+  }
+  @container (min-width: 820px) {
+    .plan > .plan-wide {
+      display: block;
+    }
+    .plan > .plan-tall {
+      display: none;
+    }
+  }
+  .plan .wall {
+    fill: none;
+    stroke: var(--wall);
+    stroke-width: 8;
+  }
+  .plan .iwall {
+    stroke: var(--wall);
+    stroke-width: 4;
+    stroke-linecap: square;
+  }
+  .plan .floor {
+    fill: var(--room);
+  }
+  .plan .gap {
+    fill: var(--room);
+  }
+  .plan .gap-out {
+    fill: var(--room);
+  }
+  .plan .fixture {
+    fill: var(--sheet);
+    stroke: var(--line);
+    stroke-width: 1;
+  }
+  .plan .fixture-keys {
+    stroke: var(--ink);
+    stroke-width: 2;
+  }
+  .plan .room-name {
+    fill: var(--ink-2);
+  }
+  .plan .fixture-label {
+    fill: var(--ink-2);
+  }
+  .plan .fixture-label-keys {
+    fill: var(--ink);
+    font-weight: 700;
+  }
+  .plan .hatch-line {
+    stroke: var(--intruder);
+    stroke-width: 1.5;
+  }
+  .plan .arrowhead {
+    fill: var(--intruder);
+  }
+
+  /* doors: leaf rotates about its hinge; closed = leaf back in the wall line */
+  .plan .door .leaf {
+    transform-box: view-box;
+    transform-origin: var(--hx) var(--hy);
+    transition: transform 160ms var(--ease);
+  }
+  .plan .door .swing {
+    transition: opacity 160ms var(--ease);
+  }
+  .plan[data-doors="closed"] .door:not(.door-outer) .leaf,
+  .plan[data-doors="closed"] .door[data-door="vpn"] .leaf {
+    transform: rotate(var(--close));
+  }
+  .plan[data-doors="closed"] .door:not(.door-outer) .swing,
+  .plan[data-doors="closed"] .door[data-door="vpn"] .swing {
+    opacity: 0;
+  }
+  .plan[data-show~="door"] .door[data-door="vpn"] .leaf {
+    transform: none;
+    transition-duration: 400ms;
+  }
+  .plan[data-show~="door"] .door[data-door="vpn"] .swing {
+    opacity: 1;
+  }
+  .plan[data-show~="keys"] .door:not(.door-outer) .leaf {
+    transform: none;
+  }
+  .plan[data-show~="keys"] .door:not(.door-outer) .swing {
+    opacity: 1;
+  }
+  /* inner doors flip open one after another (design §4.2 step 4) */
+  .plan[data-show~="keys"] .door:not(.door-outer) .leaf {
+    transition-delay: var(--d, 0ms);
+  }
+
+  /* route reveal: a mask draws each segment; tokens in data-show pick which */
+  .plan .reveal {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 14;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 600ms var(--ease);
+  }
+  .plan[data-show~="in"] .reveal-in,
+  .plan[data-show~="toKeys"] .reveal-toKeys,
+  .plan[data-show~="toBackup"] .reveal-toBackup,
+  .plan[data-show~="out"] .reveal-out {
+    stroke-dashoffset: 0;
+  }
+  .plan .route {
+    fill: none;
+    stroke: var(--intruder);
+    stroke-width: 3;
+    stroke-dasharray: 8 4;
+  }
+  .plan .route-exfil {
+    stroke-width: 2;
+    stroke-dasharray: 3 4;
+  }
+  .plan .route-layer > .route {
+    opacity: 0;
+    transition: opacity 120ms;
+  }
+  .plan[data-show~="in"] .route-in,
+  .plan[data-show~="toKeys"] .route-toKeys,
+  .plan[data-show~="toBackup"] .route-toBackup,
+  .plan[data-show~="out"] .route-out {
+    opacity: 1;
+  }
+
+  .plan .station,
+  .plan .bypass-note,
+  .plan .wiped-note,
+  .plan .overlay {
+    opacity: 0;
+    transition: opacity 160ms var(--ease);
+  }
+  .plan[data-show~="door"] .station-s1,
+  .plan[data-show~="in"] .station-s2,
+  .plan[data-show~="toKeys"] .station-s3,
+  .plan[data-show~="toBackup"] .station-s4,
+  .plan[data-show~="bypass"] .bypass-note,
+  .plan[data-show~="wiped"] .wiped-note {
+    opacity: 1;
+  }
+  .plan[data-show~="keys"] .fixture-keys {
+    fill: var(--intruder-tint);
+    stroke: var(--intruder);
+  }
+  .plan[data-show~="wiped"] .overlay-backup,
+  .plan[data-show~="encrypt"] .overlay {
+    opacity: 1;
+  }
+  .plan[data-show~="encrypt"] .floor:not([data-room="corridor"]) {
+    fill: var(--intruder-tint);
+  }
+  .plan .opening-label text {
+    fill: var(--ink-2);
+  }
+  .plan .opening-label .muted {
+    fill: var(--ink-3);
+  }
+  .plan .opening-vpn text {
+    fill: var(--intruder-text);
+    font-weight: 700;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .plan * {
+      transition: none !important;
+    }
+  }
+  :root[data-motion="off"] .plan * {
+    transition: none !important;
+  }
+</style>
