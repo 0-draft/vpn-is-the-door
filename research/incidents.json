@@ -1,0 +1,332 @@
+[
+  {
+    "org_en": "Tsurugi Town Handa Hospital (Tokushima)",
+    "org_ja": "つるぎ町立半田病院",
+    "country": "JP",
+    "attacked": "2021-10-31",
+    "disclosed": "2021-10-31 (press conference); expert-panel report 2022-06-07, published 2022-06-16",
+    "vector_en": "Fortinet FortiGate 60E VPN appliance installed for vendors' remote maintenance. The expert panel judged the VPN device the reasonable entry point. CVE-2018-13379 was left unpatched; the hospital's global IP, ID and password appeared in the September 2021 public dump of ~87,000 FortiGate credentials; no source-IP restriction on VPN or admin access. Logs did not survive, so the route is a reasoned conclusion, not forensically proven.",
+    "vector_ja": "リモート保守用の Fortinet FortiGate 60E（VPN装置）。有識者会議は「侵入経路は VPN 装置であると考えるのが合理的」と判断。CVE-2018-13379 が放置され、2021年9月に公開された約8.7万台分の認証情報に病院のグローバルIP・ID・パスワードが含まれていた。接続元IP制限なし。ログが無く経路は推定。",
+    "vectorStatus": "confirmed",
+    "cve": "CVE-2018-13379",
+    "after_en": "LockBit 2.0. Remote Desktop activity already present at 23:57 on 2021-10-30. Weak AD policy (5-char minimum passwords, no lockout, unchanged Administrator ID), shared built-in Administrator password, users in local Administrators, antivirus disabled; Mimikatz and PsExec noted by the fast-forensics vendor. 40 terminals affected (9 logon success, 15 encrypted, 16 both); 3 terminals logged on to the AD server. Backup server data from 2018 onward found physically deleted; offline backups up to 2018 survived.",
+    "after_ja": "LockBit 2.0。2021年10月30日23:57時点でリモートデスクトップ操作を確認。ADのパスワード最小5桁・ロックアウト無し・Administrator ID未変更、ビルトインAdministratorのパスワード共通、ウイルス対策停止。Mimikatz・PsExecの使用を指摘。端末40台が被害（ログオン成功9・暗号化15・両方16）。バックアップサーバーのデータは2018年以降物理的に削除、2018年までのオフラインバックアップは無事。",
+    "impact_en": "Electronic medical records unusable; emergency and new-patient intake stopped and surgery postponed — hospital functions effectively halted. Normal care resumed 2022-01-04 (~2 months). No ransom paid. The report itself gives no cost figure.",
+    "impact_ja": "電子カルテ停止、救急・新規患者受け入れ中止、手術延期で病院機能は事実上停止。2022年1月4日に通常診療再開（約2か月）。身代金は不払い。報告書に費用の記載なし。",
+    "sources": [
+      "https://www.handa-hospital.jp/topics/2022/0616/report_01.pdf",
+      "https://www.handa-hospital.jp/topics/2022/0616/report_02.pdf"
+    ]
+  },
+  {
+    "org_en": "Osaka General Medical Center",
+    "org_ja": "大阪急性期・総合医療センター",
+    "country": "JP",
+    "attacked": "2022-10-31",
+    "disclosed": "2022-10-31; investigation committee report 2023-03-28",
+    "vector_en": "Supply chain: a FortiGate VPN device ('Firewall Z') that the hospital's catering contractor's system builder had installed for remote maintenance. CVE-2018-13379 was present, and the device's global IP, ID and password were in the publicly leaked list; the committee found entry using those listed credentials 'reasonable' to assume. From the caterer's network the attacker used an always-on RDP connection into the hospital's catering server.",
+    "vector_ja": "サプライチェーン経由。給食委託事業者側にリモート保守用として設置されていた FortiGate（ファイアウォールZ / VPN機器）。CVE-2018-13379 が存在し、同機器のグローバルIP・ID・パスワードが公開リストに掲載。「公開されたリストにある ID、パスワードを使用して侵入されたと考えるのが合理的」。給食事業者から常時接続のRDPで病院の給食サーバーへ侵入。",
+    "vectorStatus": "confirmed",
+    "cve": "CVE-2018-13379",
+    "after_en": "Weak/shared built-in Administrator passwords at the caterer (cracked with a dictionary tool); hospital catering-server Administrator password cracked with Mimikatz; antivirus uninstalled; same ID/password on other servers enabled spread to the EMR and core systems; ~240 IPs enumerated, RDP attempted to ~70 IPs; Elbie (Phobos family) ransomware on servers (domain controllers scanned but not encrypted). No significant data transfer observed; leak judged very unlikely. VPN syslog lost when the vendor upgraded the firmware without a backup on 2022-10-31.",
+    "after_ja": "給食事業者側の共通・脆弱な管理者パスワードを辞書攻撃で突破、病院給食サーバーの管理者パスワードを Mimikatz で解析、ウイルス対策ソフトをアンインストール。ID・パスワード共通のため電子カルテ等の基幹サーバーへ横展開。約240IPを窃取、約70IPへRDP試行。ランサムウェア Elbie。顕著なデータ転送は観測されず漏洩可能性は極めて低い。10月31日夕方にファームウェア更新でVPN機器の Syslog が消失。",
+    "impact_en": "Core systems back after 43 days (2022-12-12); full clinical systems after 73 days (2023-01-11). ~2,200 in-hospital terminals showed traces of unauthorized access; all servers and terminals clean-installed. Nov 2022 new inpatients at 33.3% of the prior year. Estimated investigation/recovery cost 'several hundred million yen or more' plus lost revenue 'over 1 billion+ yen' (十数億円以上).",
+    "impact_ja": "基幹システム再稼働まで43日、全体復旧まで73日。院内約2,200台に不正アクセス痕跡、全サーバー・端末をクリーンインストール。2022年11月の新入院患者数は前年同月比33.3%。調査・復旧費用で数億円以上、逸失利益は十数億円以上を見込む。",
+    "sources": [
+      "https://www.gh.opho.jp/pdf/report_v01.pdf",
+      "https://www.gh.opho.jp/pdf/reportgaiyo_v01.pdf"
+    ]
+  },
+  {
+    "org_en": "Nagoya Harbor Transportation Association — Nagoya United Terminal System (NUTS)",
+    "org_ja": "名古屋港運協会（名古屋港統一ターミナルシステム NUTS）",
+    "country": "JP",
+    "attacked": "2023-07-04",
+    "disclosed": "2023-07-05; association report 2023-07-26; MLIT committee interim summary 2023",
+    "vector_en": "The association stated a vulnerability was confirmed in a 'remote connection device' and unauthorized access is believed to have come through it. The MLIT committee, which could not determine the route definitively because logs were encrypted, judged it 'appropriate' to view the maintenance VPN device as the entry point; the VPN had no source-IP restriction (anyone with ID/password could connect), and vulnerabilities in the VPN device and physical servers published months earlier were unpatched. USB and NAT routes were also listed as candidates.",
+    "vector_ja": "協会は「リモート接続機器の脆弱性が確認されており、そこから不正なアクセスを受けたと考えられます」と公表。国交省委員会はログ暗号化で断定不可としつつ「VPN 機器からの侵入が行われたものと見ることが適切」と判断。保守用VPNはIP制限なし、VPN機器・物理サーバーの脆弱性も未対応。USB・NAT経由も候補として列挙。",
+    "vectorStatus": "confirmed",
+    "cve": null,
+    "after_en": "All 8 physical servers and all virtual servers (45) in the data center encrypted; malware also found in backup data (only 3 days of backups kept; dev/test environments not backed up). Ransom note printed on the system printer with no amount; attacker not contacted. No sign of data leakage found.",
+    "after_ja": "データセンター内の物理サーバー8台と全仮想サーバー（45台）が暗号化。バックアップデータからもウイルス検出（バックアップは直近3日分のみ、開発・評価環境は対象外）。脅迫文に金額記載なし、攻撃者へ連絡せず。情報漏洩の形跡なし。",
+    "impact_en": "All container terminals at Japan's largest port stopped from ~06:30 on 07-04 until 18:15 on 07-06 (~2.5 days). 37 vessels' cargo schedules affected (up to ~24h delay); ~20,000 containers' gate-in/out affected (estimate).",
+    "impact_ja": "名古屋港の全コンテナターミナルが7月4日6:30頃から7月6日18:15まで停止（約2.5日）。荷役に影響した船舶37隻（最大24時間程度の遅延）、搬入・搬出に影響したコンテナ約2万本（推計）。",
+    "sources": [
+      "https://meikoukyo.com/wp-content/uploads/2023/07/0bb9d9907568e832da8f400e529efc99.pdf",
+      "https://www.mlit.go.jp/kowan/content/001633384.pdf"
+    ]
+  },
+  {
+    "org_en": "Kantsu Co., Ltd. (logistics outsourcing)",
+    "org_ja": "株式会社関通",
+    "country": "JP",
+    "attacked": "2024-09-12",
+    "disclosed": "2024-09-13; 3rd report 2024-09-28",
+    "vector_en": "Company notice: intrusion 'from the connection point with external networks' (外部ネットワークとの接続口). In a 2025 interview, a Kantsu information-systems manager said preliminary forensics found the cause was 'server intrusion due to leaked VPN credentials'. A Nikkei xTECH interview headline with the president instead says 'VPN device vulnerability' (paywalled, not read). VPN as the door is stated by the company's own people; credentials-vs-vulnerability is inconsistent across interviews.",
+    "vector_ja": "自社発表は「外部ネットワークとの接続口からの侵入」。2025年のインタビューで情報システム担当者が「VPN認証情報の漏洩によるサーバー侵入が原因」と説明。日経クロステックの社長インタビュー見出しは「VPN装置の脆弱性」（有料記事、本文未確認）。VPNが入口である点は社内関係者の発言、認証情報か脆弱性かは食い違い。",
+    "vectorStatus": "confirmed",
+    "cve": null,
+    "after_en": "Akira ransomware; per the IT staff interview, all servers were encrypted. The company discarded its environment and rebuilt from scratch (450 PCs, 8 servers replaced).",
+    "after_ja": "ランサムウェア Akira。担当者によればサーバーは全て暗号化。環境を全て廃棄しゼロから再構築（PC450台・サーバー8台を入れ替え）。",
+    "impact_en": "Shipping stopped/delayed for client brands; inventory system felt recovered ~1.5 months later. Losses recorded over ¥1.7 billion (¥300M asset write-offs, ¥400M recovery, ~¥1B customer compensation) per the interview.",
+    "impact_ja": "委託元の出荷停止・遅延。在庫システムの実質復旧は約1.5か月後。インタビューによれば固定資産除却約3億円・復旧費約4億円・顧客補償約10億円、合計17億円以上の損失計上。",
+    "sources": [
+      "https://www.kantsu.com/news/6615/",
+      "https://www.softbank.jp/business/content/blog/202510/kantsu-ransomware-it",
+      "https://xtech.nikkei.com/atcl/nxt/column/18/01156/102000074/"
+    ]
+  },
+  {
+    "org_en": "Okayama Psychiatric Medical Center",
+    "org_ja": "岡山県精神科医療センター",
+    "country": "JP",
+    "attacked": "2024-05-13 (initial intrusion); 2024-05-19 (encryption)",
+    "disclosed": "2024-05-20; investigation report 2025-02-13",
+    "vector_en": "Maintenance SSL-VPN appliance (Cisco ASA 5506-X, ASA 9.9(2)40, end of support 2023-05-31) in the data center. No source-IP restriction; ID/password 'administrator/P@ssw0rd' on the SSL-VPN, reused as the Administrator password on every Windows machine; device unpatched since 2018 installation with multiple vulnerabilities previously used in ransomware attacks. Report lists three possible causes: dictionary attack on the SSL-VPN, credentials bought from an initial access broker, or exploitation of the SSL-VPN vulnerability. Syslog (4 MB, in-memory) had been overwritten.",
+    "vector_ja": "データセンターの保守用SSL-VPN装置（Cisco ASA 5506-X、ASA 9.9(2)40、2023/5/31サポート終了）。接続元IP制限なし。ID/PWは administrator/P@ssw0rd で全Windows機の管理者と共通。2018年設置以降、未修正で過去にランサムウェア攻撃で使われた脆弱性が複数存在。初期侵入原因は①辞書攻撃②IABから購入した資格情報③脆弱性悪用のいずれかと推測。Syslogは上書きで消失。",
+    "vectorStatus": "confirmed",
+    "cve": null,
+    "after_en": "First intrusion 2024-05-13 02:41 (RDP); network scans, backup discovery and deletion, theft of AD user/computer information, LSASS credential dumping on AD server (05-18/19), antivirus stopped and deleted, Office documents stolen from shared folders; encryption 05-19 13:10–17:34 via admin shares (C$). Encrypted: 23 virtual servers, shared storage, 3 hypervisor hosts (ESXi/vSphere), 6 other physical servers, 244 HIS terminals; shared storage data totally lost. Offline backup had not actually been taken.",
+    "after_ja": "2024年5月13日2:41に初期侵入（RDP）。ネットワークスキャン、バックアップの探索・削除、AD情報窃取、ADサーバーでLSASSから認証情報窃取、ウイルス対策の停止・削除、共有フォルダーの文書窃取。5月19日13:10〜17:34に管理共有(C$)経由で暗号化。仮想サーバー23台・共有ストレージ・仮想基盤3台・物理6台・端末244台が暗号化、共有ストレージは全喪失。オフラインバックアップは正しく取得されていなかった。",
+    "impact_en": "EMR down at the hospital and its clinic; paper charts used, care never stopped. Personal data of up to 40,000 people (names, addresses, DOB, diagnoses) leaked, confirmed by Okayama prefectural police. Full EMR recovery ~3 months; data restored from a surviving data-warehouse server.",
+    "impact_ja": "本院・診療所の電子カルテが停止、紙カルテで診療継続。氏名・住所・生年月日・病名等、最大40,000人分の個人情報漏洩（岡山県警が確認）。電子カルテ完全復旧まで約3か月、暗号化を免れたDWHから復元。",
+    "sources": [
+      "https://www.okayama-pmc.jp/home/consultation/er9dkox7/lromw3x9/",
+      "https://www.okayama-pmc.jp/wp-content/uploads/2025/02/24bb9b94f7eb10eff58b605c01c384ad.pdf"
+    ]
+  },
+  {
+    "org_en": "ASKUL Corporation",
+    "org_ja": "アスクル株式会社",
+    "country": "JP",
+    "attacked": "2025-06-05 (initial intrusion); 2025-10-19 (ransomware)",
+    "disclosed": "2025-10-19; investigation results (13th report) 2025-12-12",
+    "vector_en": "ID and password of an administrator account issued to an outsourcing contractor — the one account where MFA had 'exceptionally' not been applied — leaked by unknown means and used to get in 'from outside the company'. Askul's own report does not literally say 'VPN'; it notes the VPN appliance vendor's late-Sept 2025 vulnerability showed no exploitation traces. Press (IT Leaders) describes the entry as 'via VPN'. Logs from the time were deleted.",
+    "vector_ja": "例外的に多要素認証を適用していなかった業務委託先向け管理者アカウントのID・パスワードが何らかの方法で漏洩し、「社外より初期侵入」。報告書本文に「VPN経由」の明記はなく、VPN機器ベンダが2025年9月末に公表した脆弱性の悪用痕跡は確認されなかったと記載。報道（IT Leaders）は「VPN経由」と表現。当時のログは削除済み。",
+    "vectorStatus": "confirmed",
+    "cve": null,
+    "after_en": "Recon and privilege-escalation attempts June–Oct 9 (all failed); from July 9 EDR/security software disabled, lateral movement across logistics and internal systems, ransomware staged; multiple ransomware strains, some undetectable by EDR signatures then; 10-19 timed detonation encrypted servers and deleted backup files (backups in same data center also encrypted); a cloud inquiry-management account compromised 10-22 and data stolen. Data published on leak site 10-30, 11-10, 12-02.",
+    "after_ja": "6月〜10月9日に管理者権限取得を狙うログイン試行（全て失敗）。7月9日以降、脆弱性対策ソフトを無効化して物流・社内システムに侵入拡大しランサムウェア配置。複数種のランサムウェア使用。10月19日に一斉起動しサーバー暗号化とバックアップファイル削除。10月22日に外部クラウドの問い合わせ管理システムも侵害。10/30・11/10・12/2にリークサイトで公開。",
+    "impact_en": "ASKUL, Soloel Arena and LOHACO order/shipping stopped from 10-19; web orders resumed 12-03. ~740,000 records leaked (~590,000 business customers, ~132,000 consumer customers, ~15,000 business partners, ~2,700 staff). No contact with attacker, no ransom.",
+    "impact_ja": "10月19日から ASKUL・ソロエルアリーナ・LOHACO の受注出荷停止、12月3日にWeb受注再開。流出約74万件（事業所向け顧客約59万・個人向け約13.2万・取引先約1.5万・役員社員約2,700）。攻撃者と接触せず身代金不払い。",
+    "sources": [
+      "https://pdf.irpocket.com/C0032/PDLX/O3bg/N4O3.pdf",
+      "https://it.impress.co.jp/articles/-/28741"
+    ]
+  },
+  {
+    "org_en": "Asahi Group Holdings",
+    "org_ja": "アサヒグループホールディングス",
+    "country": "JP",
+    "attacked": "~2025-09-19 (initial intrusion, approx.); 2025-09-29 (ransomware)",
+    "disclosed": "2025-09-29; investigation results 2025-11-27; prevention measures 2026-02-18",
+    "vector_en": "An external attacker entered via 'network equipment located at a Group site' about 10 days before the outage (exact date not identified). Asahi has not disclosed the device type, location, or whether a vulnerability or credentials were used. Its remediation includes 'full abolition of remote-access VPN devices to prevent re-entry from network equipment'.",
+    "vector_ja": "システム障害の約10日前に「アサヒグループ内の拠点にあるネットワーク機器を経由」して侵入（日時は特定できず）。機器の種類・拠点・脆弱性か認証情報かは非公表。再発防止策に「ネットワーク機器からの再侵入を防ぐためのリモートアクセスVPN装置の全面廃止」。",
+    "vectorStatus": "confirmed",
+    "cve": null,
+    "after_en": "Reached the main data center, exploited a password weakness to seize administrator rights, used the stolen account to explore and repeatedly intrude/scout servers mainly outside business hours; on 09-29 ransomware executed simultaneously, encrypting multiple running servers and some PCs; data from some PCs exfiltrated. Backup system paused to protect backup data; recovery from verified backups.",
+    "after_ja": "主要データセンターに入り込み、パスワードの脆弱性をついて管理者権限を奪取。奪取アカウントでネットワーク内部を探索し、主に業務時間外に複数サーバーへの侵入と偵察を反復。9月29日にランサムウェアを一斉実行し稼働中のサーバーと一部PCを暗号化。一部PCの情報が窃取。バックアップシステムを一時停止し、安全確認済みのバックアップから復旧。",
+    "impact_en": "Order and shipping systems in Japan stopped; manual processing for months; ~2 months to contain. Up to ~1.914 million personal records possibly exposed (four categories; overlap not stated); as of 2026-02-18 confirmed leaks: 5,117 current/former employees and 110,396 business-partner contacts. Annual results delayed. Asahi did not name an attacker (Qilin claimed it).",
+    "impact_ja": "国内の受注・出荷システムが停止し手作業対応が長期化、封じ込めに約2か月。漏えいのおそれ最大約191.4万件（4区分合計、重複の有無は非公表）。2026年2月18日時点で漏えい確認は従業員等5,117件・取引先関係110,396件。決算発表延期。アサヒは攻撃者名を公表していない（Qilinが犯行声明）。",
+    "sources": [
+      "https://www.asahigroup-holdings.com/newsroom/detail/20251127-0104.html",
+      "https://www.asahigroup-holdings.com/newsroom/detail/20251127-0204.html",
+      "https://www.asahigroup-holdings.com/newsroom/detail/20260218-0101.html"
+    ]
+  },
+  {
+    "org_en": "Anabuki Kosan / Anabuki Group (incl. Anabuki Housing Service)",
+    "org_ja": "穴吹興産（あなぶきグループ、穴吹ハウジングサービス含む）",
+    "country": "JP",
+    "attacked": "2026-02-03 (detected)",
+    "disclosed": "2026-02-04; Anabuki Kosan 4th report 2026-04-03; Anabuki Housing Service 5th report 2026-04",
+    "vector_en": "Anabuki Kosan: external forensics found unauthorized access to the internal network 'by an attack exploiting a vulnerability in our communications equipment' (当社通信機器). Device type and CVE not disclosed. Anabuki Housing Service attributes its own breach to the attack on the group company's communications equipment.",
+    "vector_ja": "穴吹興産：外部専門機関の調査で「当社通信機器の脆弱性を悪用した攻撃により、社内ネットワークへの不正アクセスが行われた」と判明。機器種別・CVEは非公表。穴吹ハウジングサービスはグループ会社の通信機器への攻撃を起点と説明。",
+    "vectorStatus": "confirmed",
+    "cve": null,
+    "after_en": "Mainly outside business hours, attempted logins to multiple servers using Remote Desktop etc., illegitimately seized administrator rights, expanded across the whole network, deployed ransomware to multiple servers and encrypted files; personal and internal data confirmed on a dark-web leak site.",
+    "after_ja": "業務時間外を中心にリモートデスクトップ等で複数サーバーへのログインを試行、管理者権限を不正に奪取してネットワーク全体に侵入範囲を拡大、複数サーバーにランサムウェアを展開し暗号化。ダークウェブのリークサイトで個人情報・社内情報の一部漏洩を確認。",
+    "impact_en": "Kosan: real-estate customers, job candidates, staff data possibly leaked; core business continued. Anabuki Housing Service (press, from its notices): ~210,000 files exfiltrated from a file server; 7,237 Matsuyama municipal-housing residents' records leaked; confirmed total reported as 207,773 (secondary). Plan: full infra replacement, cloud-native, zero trust.",
+    "impact_ja": "穴吹興産：不動産顧客・採用候補者・役職員情報の一部が漏洩のおそれ、主要業務は継続。穴吹ハウジングサービス（報道）：ファイルサーバーから約21万ファイル流出、松山市営住宅入居者7,237件漏えい、確定207,773件（二次情報）。対策としてインフラ全面刷新・クラウドネイティブ移行・ゼロトラスト。",
+    "sources": [
+      "https://www.anabuki.ne.jp/cms_upload/news/429/20260403_higaihassei4.pdf",
+      "https://www.anabuki-housing.co.jp/news/content.php?news_id=525",
+      "https://internet.watch.impress.co.jp/docs/news/2102873.html"
+    ]
+  },
+  {
+    "org_en": "YCC Information System (Yamagata)",
+    "org_ja": "株式会社YCC情報システム",
+    "country": "JP",
+    "attacked": "2026-04-02",
+    "disclosed": "2026-04-03; 5th report 2026-05-20",
+    "vector_en": "Credentials of a network device's administrator account were 'guessed or obtained through the attacker's authentication attempts etc.' and used to enter the internal network (presumed by external investigators). Device type not disclosed; VPN not mentioned.",
+    "vector_ja": "「ネットワーク機器の管理者アカウントに係る認証情報が、攻撃者による認証試行等により推測または取得され」、その認証情報で内部ネットワークに侵入したと推定。機器種別は非公表、VPNの記載なし。",
+    "vectorStatus": "confirmed",
+    "cve": null,
+    "after_en": "Encryption of the file server began ~06:50 on 2026-04-02; mail and business PCs on a separate environment unaffected. Access to client-entrusted data on the file server cannot be ruled out; no clear trace of transmission outside.",
+    "after_ja": "2026年4月2日6:50頃からファイルサーバーの暗号化開始。メール等の情報系・業務PCは別環境で影響なし。受託情報へのアクセス可能性は否定できないが、外部送信の明確な痕跡なし。",
+    "impact_en": "Municipal/utility clients notified possible exposure; Yamagata City alone ~500,000 records (city announcement via press); Nikkei counts ~20 organizations and >1 million records overall (press).",
+    "impact_ja": "委託元の自治体等が漏えいのおそれを公表。山形市だけで約50万件（報道）。日経調べで影響組織約20、延べ100万件超（報道）。",
+    "sources": [
+      "https://www.yamagata-ycc.co.jp/news/20260520-1/",
+      "https://internet.watch.impress.co.jp/docs/news/2102758.html",
+      "https://xtech.nikkei.com/atcl/nxt/column/18/00001/11806/"
+    ]
+  },
+  {
+    "org_en": "Seidensha Electronics",
+    "org_ja": "精電舎電子工業株式会社",
+    "country": "JP",
+    "attacked": "2026-04-08 (intrusion); 2026-04-22 (encryption)",
+    "disclosed": "2026-05-07; follow-up 2026-07-21",
+    "vector_en": "'On 2026-04-08 a third party intruded into the internal network from the VPN.' Whether via credentials or a vulnerability is not stated. The VPN device ('the VPN device that was the attack origin') was disconnected.",
+    "vector_ja": "「2026年4月8日 第三者がVPNから社内ネットワークに侵入しました。」認証情報か脆弱性かは記載なし。「攻撃起点となったVPN装置も遮断」。",
+    "vectorStatus": "confirmed",
+    "cve": null,
+    "after_en": "Logged into the Active Directory server, presumably capturing employee credentials; network scanning and intrusion into multiple servers; most servers and several PCs encrypted on 04-22 (~2 weeks after entry). Data on the AD server judged transferred externally.",
+    "after_ja": "アクティブディレクトリサーバーにログインし社員の認証情報を取得したとみられる。複数サーバーへ侵入し、4月22日にサーバーのほとんどとPC複数台を暗号化（侵入から約2週間）。ADサーバー上のデータは外部へ転送されたと判断。",
+    "impact_en": "Entire existing internal network isolated from 04-22 and the VPN device cut off; EDR installed on uninfected PCs and 24h external SOC monitoring started.",
+    "impact_ja": "4月22日以降既存社内ネットワークを全遮断しVPN装置も遮断。感染未確認PCへEDR導入、外部SOCによる24時間監視開始。",
+    "sources": [
+      "https://www.sedeco.co.jp/news/detail/?itemid=111&dispmid=567",
+      "https://scan.netsecurity.ne.jp/article/2026/08/07/55886.html"
+    ]
+  },
+  {
+    "org_en": "Ryomo Systems",
+    "org_ja": "株式会社両毛システムズ",
+    "country": "JP",
+    "attacked": "2026-08-12",
+    "disclosed": "2026-08-15; 3rd report 2026-09-25",
+    "vector_en": "'On 08-12 an external third party misused an account on network connection equipment (VPN) and intruded into the internal network' (company 3rd report, as quoted by ScanNetSecurity). How the account was obtained and MFA status not disclosed. Official page could not be fetched directly from this environment.",
+    "vector_ja": "「8月12日に外部の第三者がネットワーク接続機器（VPN）のアカウントを悪用し、社内ネットワークに侵入」（第3報、ScanNetSecurity引用）。アカウント入手経路・MFA有無は非公表。公式ページは本環境から直接取得できず。",
+    "vectorStatus": "confirmed",
+    "cve": null,
+    "after_en": "Anomaly detected by internal monitoring 08-14; external experts confirmed a ransomware attack; traces of unauthorized access on some servers; sales, transaction and personal data possibly leaked.",
+    "after_ja": "8月14日に死活監視で異常検知。外部専門機関がランサムウェア攻撃と確認。一部サーバーに不正アクセス痕跡、営業・取引・個人情報に漏えいのおそれ。",
+    "impact_en": "Clients (municipalities, gas utilities) announced possible exposure of data held by Ryomo, e.g. Daito Gas ~124,000, Isesaki City 3,789 (secondary). SafePay claimed it (press; company has not named attacker).",
+    "impact_ja": "委託元（自治体・ガス会社）が漏えいのおそれを公表（大東ガス約12.4万件、伊勢崎市3,789件など、二次情報）。SafePayが犯行声明（報道）。",
+    "sources": [
+      "https://www.ryomo.co.jp/news/202609_02.html",
+      "https://scan.netsecurity.ne.jp/article/2026/10/15/56461.html"
+    ]
+  },
+  {
+    "org_en": "Washington Hotel Corporation",
+    "org_ja": "ワシントンホテル株式会社",
+    "country": "JP",
+    "attacked": "2026-02-13",
+    "disclosed": "2026-02-14; final report 2026-09-07",
+    "vector_en": "UNVERIFIED: secondary summaries of the final report say intrusion came via 'external connection equipment' (外部接続機器). Device type not stated; the final report itself was not read for this file.",
+    "vector_ja": "未検証：最終報の二次要約で「外部接続機器」経由とされる。機器種別不明、最終報原文は未確認。",
+    "vectorStatus": "unverified",
+    "cve": null,
+    "after_en": "Some servers encrypted; no clear trace of data theft; restored from backup (secondary).",
+    "after_ja": "一部サーバー暗号化、情報窃取の明確な痕跡なし、バックアップから復旧（二次情報）。",
+    "impact_en": "Card terminals unusable at some hotels; employee/former-employee data possibly exposed (secondary).",
+    "impact_ja": "一部ホテルでクレジットカード端末が使用不可、従業員・退職者情報に漏えいの可能性（二次情報）。",
+    "sources": [
+      "https://scan.netsecurity.ne.jp/article/2026/09/25/56299.html",
+      "https://rocket-boys.co.jp/security-measures-lab/washington-hotel-incident-final-report/"
+    ]
+  },
+  {
+    "org_en": "Colonial Pipeline Company",
+    "org_ja": "コロニアル・パイプライン",
+    "country": "US",
+    "attacked": "2021-05-07 (discovered)",
+    "disclosed": "2021-05-08; CEO Senate testimony 2021-06-08",
+    "vector_en": "CEO Joseph Blount testified: 'we believe the attacker exploited a legacy virtual private network (VPN) profile that was not intended to be in use', and that it 'only had single-factor authentication'. He said the company was 'still trying to determine how the attackers gained the needed credentials'. The claim that the password was found in a leaked-password batch comes from Mandiant via press, not from Colonial — UNVERIFIED.",
+    "vector_ja": "CEOが上院で証言：使用を想定していなかったレガシーVPNプロファイルが悪用されたとみられ、そのVPNは単要素認証のみだった。認証情報の入手経路は調査中と証言。「パスワードが漏洩パスワード群に含まれていた」はMandiant発の報道で、Colonial自身の発言ではない（未検証）。",
+    "vectorStatus": "confirmed",
+    "cve": null,
+    "after_en": "DarkSide ransomware on IT systems; Colonial proactively shut down pipeline operations.",
+    "after_ja": "ITシステムが DarkSide ランサムウェアに感染。予防的にパイプライン操業を停止。",
+    "impact_en": "Largest US East Coast fuel pipeline halted for ~5 days (restart began 2021-05-12). Ransom of 75 BTC (~$4.4M) paid 05-08; DOJ later seized 63.7 BTC (~$2.3M).",
+    "impact_ja": "米東海岸最大の燃料パイプラインが約5日停止（5月12日再開開始）。75BTC（約440万ドル）を支払い、司法省が63.7BTC（約230万ドル）を押収。",
+    "sources": [
+      "https://www.hsgac.senate.gov/imo/media/doc/Testimony-Blount-2021-06-08.pdf",
+      "https://www.bankinfosecurity.com/colonial-ceo-at-senate-hearing-details-ransomware-attack-a-16836",
+      "https://www.washingtonpost.com/business/2021/06/08/colonial-pipeline-ceo-blount-congress/"
+    ]
+  },
+  {
+    "org_en": "Boeing Distribution Inc. (Boeing parts & distribution)",
+    "org_ja": "ボーイング（部品・流通事業 Boeing Distribution Inc.）",
+    "country": "US",
+    "attacked": "2023-10 (late)",
+    "disclosed": "Boeing statement 2023-11-01; CISA AA23-325A 2023-11-21",
+    "vector_en": "Joint CISA/FBI/MS-ISAC/ASD advisory, with information Boeing shared: 'Boeing observed LockBit 3.0 affiliates exploiting CVE-2023-4966, to obtain initial access to Boeing Distribution Inc.' Citrix Bleed in Citrix NetScaler ADC/Gateway lets attackers bypass passwords and MFA by hijacking legitimate sessions.",
+    "vector_ja": "CISA等の共同勧告（Boeing提供情報）：LockBit 3.0 のアフィリエイトが CVE-2023-4966（Citrix Bleed、NetScaler ADC/Gateway）を悪用して Boeing Distribution Inc. に初期侵入。セッション乗っ取りでパスワードとMFAを回避。",
+    "vectorStatus": "confirmed",
+    "cve": "CVE-2023-4966",
+    "after_en": "Session hijack, credential harvesting, lateral movement; AnyDesk and Splashtop RMM, batch/PowerShell scripts (advisory TTPs).",
+    "after_ja": "セッション乗っ取り、認証情報収集、横展開。AnyDesk・Splashtop、Batch/PowerShellスクリプトの使用（勧告記載）。",
+    "impact_en": "Boeing: 'cyber incident impacting elements of our parts and distribution business'; 'does not affect flight safety'. LockBit later posted ~45 GB of data it claimed was Boeing's (press).",
+    "impact_ja": "Boeing「部品・流通事業の一部に影響するサイバーインシデント」「飛行安全には影響しない」。LockBitが約45GBのデータを公開（報道）。",
+    "sources": [
+      "https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-325a",
+      "https://techcrunch.com/2023/11/02/boeing-cyber-incident-ransomware-gang-claims-data-theft/",
+      "https://www.cybersecuritydive.com/news/boeing-files-leaked-claim/699579/"
+    ]
+  },
+  {
+    "org_en": "ICBC Financial Services (US)",
+    "org_ja": "中国工商銀行 米国証券子会社（ICBC FS）",
+    "country": "US",
+    "attacked": "2023-11-08",
+    "disclosed": "2023-11-09",
+    "vector_en": "UNVERIFIED. ICBC FS stated only that it 'experienced a ransomware attack'. Citrix Bleed link comes from a researcher's Shodan evidence of an unpatched NetScaler and a Treasury message citing LockBit 3.0 and 'two tactics that target users of services managed by Citrix', which Treasury said it had not fully established as the access vector.",
+    "vector_ja": "未検証。ICBC FS はランサムウェア攻撃を受けたとのみ発表。Citrix Bleed との関連は研究者のShodan観測と、財務省が「確定していない」とした業界向けメッセージに基づく。",
+    "vectorStatus": "unverified",
+    "cve": "CVE-2023-4966 (unconfirmed)",
+    "after_en": "LockBit 3.0 (per Treasury message reported by press). Impacted systems disconnected and isolated.",
+    "after_ja": "LockBit 3.0（財務省メッセージの報道）。影響システムを切断・隔離。",
+    "impact_en": "Disrupted US Treasury market trades; parent injected capital to settle ~$9 billion of trades with BNY Mellon (press).",
+    "impact_ja": "米国債市場の取引決済に混乱、約90億ドルの未決済取引の決済のため親会社が資本注入（報道）。",
+    "sources": [
+      "https://www.computerweekly.com/news/366559532/US-government-reinforces-ICBC-hack-link-to-Citrix-Bleed",
+      "https://www.computerweekly.com/news/366559013/Ransomware-attack-on-major-Chinese-lender-disrupts-financial-markets"
+    ]
+  },
+  {
+    "org_en": "US CISA — Chemical Security Assessment Tool (Ivanti Connect Secure campaign, ED 24-01)",
+    "org_ja": "米CISA（化学施設セキュリティ評価ツール CSAT、Ivanti Connect Secure 大規模悪用）",
+    "country": "US",
+    "attacked": "2024-01-23 to 2024-01-26",
+    "disclosed": "CISA statement 2024-03; CSAT notification 2024-06",
+    "vector_en": "CISA's own Ivanti Connect Secure appliance in front of CSAT: 'a malicious actor installed an advanced webshell on the Ivanti device'. Context: Emergency Directive 24-01 (2024-01-19) on 'widespread and active exploitation' of Ivanti Connect Secure/Policy Secure (CVE-2023-46805 auth bypass, CVE-2024-21887 command injection; CVE-2024-22024 added later); agencies ordered to disconnect all instances by 2024-02-02. CISA did not name the CVE used against itself.",
+    "vector_ja": "CISA自身のCSAT前段の Ivanti Connect Secure に高度なWebシェルを設置された。背景：緊急指令ED 24-01（2024/1/19）が Ivanti Connect Secure/Policy Secure の「広範かつ活発な悪用」（CVE-2023-46805、CVE-2024-21887、後にCVE-2024-22024）に対応、2月2日までに全機器の切断を命令。CISA自身への攻撃に使われたCVEは非公表。",
+    "vectorStatus": "confirmed",
+    "cve": "CVE-2023-46805; CVE-2024-21887 (ED 24-01 scope; CISA did not specify for CSAT)",
+    "after_en": "Webshell could execute commands/write files; potential unauthorized access to Top-Screen surveys, Security Vulnerability Assessments, Site Security Plans, Personnel Surety Program submissions, CSAT user accounts. No evidence of exfiltration found. Not ransomware.",
+    "after_ja": "Webシェルでコマンド実行・ファイル書き込みが可能。Top-Screen調査、脆弱性評価、施設保安計画、人員審査提出物、CSATアカウントへの不正アクセスの可能性。データ持ち出しの証拠なし。ランサムウェアではない。",
+    "impact_en": "Two CISA systems taken offline; incident met the FISMA 'major incident' threshold.",
+    "impact_ja": "CISAの2システムをオフライン化。FISMAの「重大インシデント」基準に該当。",
+    "sources": [
+      "https://www.cisa.gov/topics/critical-infrastructure-security-and-resilience/chemical-security/assessment-tool-csat-ivanti-notification",
+      "https://www.cisa.gov/news-events/directives/ed-24-01-mitigate-ivanti-connect-secure-and-ivanti-policy-secure-vulnerabilities",
+      "https://www.cybersecuritydive.com/news/cisa-attacked-ivanti-cve-exploits/709893/"
+    ]
+  },
+  {
+    "org_en": "MITRE Corporation (NERVE research network)",
+    "org_ja": "MITRE（研究用ネットワーク NERVE）",
+    "country": "US",
+    "attacked": "2024-01 (from)",
+    "disclosed": "2024-04-19",
+    "vector_en": "MITRE: a threat actor 'exploited one of our Virtual Private Networks (VPNs) through two Ivanti Connect Secure zero-day vulnerabilities, and skirted past our multi-factor authentication using session hijacking'. CVE numbers are from press reporting of the same two zero-days.",
+    "vector_ja": "MITRE発表：Ivanti Connect Secure の2件のゼロデイでVPNを悪用され、セッション乗っ取りで多要素認証を回避された。",
+    "vectorStatus": "confirmed",
+    "cve": "CVE-2023-46805; CVE-2024-21887",
+    "after_en": "Lateral movement into VMware infrastructure with a compromised admin account; backdoors and web shells; credential harvesting; data exfiltration via C2. MITRE said it had followed vendor and government advice to upgrade/replace/harden Ivanti but 'did not detect the lateral movement into our VMware infrastructure'. Nation-state, not ransomware.",
+    "after_ja": "侵害した管理者アカウントでVMware基盤へ横展開、バックドア・Webシェル設置、認証情報収集、C2経由でデータ窃取。国家支援アクターによる攻撃でランサムウェアではない。",
+    "impact_en": "Compromise of an unclassified R&D network; no evidence core enterprise network or partners affected at disclosure.",
+    "impact_ja": "非機密の研究開発ネットワークが侵害。公表時点で基幹ネットワーク・パートナーへの影響は確認されず。",
+    "sources": [
+      "https://www.mitre.org/news-insights/impact-story/mitre-concludes-its-internal-cyber-attack-investigation",
+      "https://www.helpnetsecurity.com/2024/04/22/mitre-breached/"
+    ]
+  }
+]
