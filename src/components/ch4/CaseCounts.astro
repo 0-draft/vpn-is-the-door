@@ -1,0 +1,101 @@
+---
+// How many of the cases name each kind of opening, split Japan / outside Japan.
+import { CASES, OPENINGS, type Opening, openingCounts } from "../../data/cases";
+import type { Lang } from "../../lib/paths";
+import { openingTag } from "./labels";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const ja = lang === "ja";
+const jp = openingCounts(CASES.filter((c) => c.region === "jp"));
+const gl = openingCounts(CASES.filter((c) => c.region === "global"));
+const all = openingCounts();
+const NAME: Record<Opening, string> = ja
+  ? {
+      vpn: "VPN 機器",
+      rdp: "リモートデスクトップ",
+      "network-device-unspecified": "ネットワーク機器・通信機器・リモート接続機器",
+      other: "アカウントのみ",
+    }
+  : {
+      vpn: "VPN appliance",
+      rdp: "Remote desktop",
+      "network-device-unspecified": "Network, communications or remote connection device",
+      other: "Account only",
+    };
+const rows = OPENINGS.filter((o) => all[o] > 0);
+const notRansom = CASES.filter((c) => c.kind === "not-ransomware").length;
+---
+
+<div class="table-scroll" tabindex="0" role="region" aria-label={ja ? "侵入口の内訳" : "Ways in, counted"}>
+  <table class="cc">
+    <thead>
+      <tr>
+        <th scope="col">{ja ? "組織が述べた侵入口" : "Way in, as the organization stated it"}</th>
+        <th scope="col" class="num">{ja ? "日本" : "Japan"}</th>
+        <th scope="col" class="num">{ja ? "海外" : "Outside Japan"}</th>
+        <th scope="col" class="num">{ja ? "計" : "Total"}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        rows.map((o) => {
+          const tag = openingTag(lang, o);
+          return (
+            <tr>
+              <th scope="row">
+                {NAME[o]}
+                {tag && (
+                  <>
+                    {" "}
+                    <span class="tag-caution">{tag}</span>
+                  </>
+                )}
+              </th>
+              <td class="num">{jp[o]}</td>
+              <td class="num">{gl[o]}</td>
+              <td class="num">{all[o]}</td>
+            </tr>
+          );
+        })
+      }
+      <tr class="cc-total">
+        <th scope="row">{ja ? "計" : "Total"}</th>
+        <td class="num">{CASES.filter((c) => c.region === "jp").length}</td>
+        <td class="num">{CASES.filter((c) => c.region === "global").length}</td>
+        <td class="num">{CASES.length}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<p class="cc-note">
+  {
+    ja
+      ? `うち${notRansom}件はランサムウェアではない（米国の政府機関と研究機関への侵入）。同じ種類の扉が使われたため載せている。`
+      : `${notRansom} of these are not ransomware (intrusions into a US government agency and a research organization). They are here because the same kind of door was used.`
+  }
+</p>
+
+<style>
+  .cc {
+    min-inline-size: 30rem;
+    max-inline-size: 44rem;
+  }
+  .cc th[scope="row"] {
+    font-weight: 400;
+    border-block-end: 1px solid var(--hair);
+  }
+  .cc-total th,
+  .cc-total td {
+    font-weight: 700;
+    border-block-start: 2px solid var(--ink);
+  }
+  .cc-note {
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+    max-inline-size: var(--measure);
+  }
+</style>

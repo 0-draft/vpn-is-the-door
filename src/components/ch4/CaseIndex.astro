@@ -1,0 +1,152 @@
+---
+// Fixed-field index of every case: organization / opening / product and CVE /
+// date found / impact / sources. Japan first, then outside Japan.
+import { type Case, ordered } from "../../data/cases";
+import type { Source } from "../../data/source-schema";
+import { source } from "../../data/sources";
+import { type Lang, localePath } from "../../lib/paths";
+import { openingName, openingTag } from "./labels";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const ja = lang === "ja";
+const base = import.meta.env.BASE_URL;
+const all = ordered();
+const groups: [string, Case[]][] = [
+  [ja ? "日本" : "Japan", all.filter((c) => c.region === "jp")],
+  [ja ? "海外" : "Outside Japan", all.filter((c) => c.region === "global")],
+];
+// one entry per publisher; several documents from the same body become [1] [2]
+function byPublisher(c: Case): [string, Source[]][] {
+  const m = new Map<string, Source[]>();
+  for (const id of c.sources) {
+    const s = source(id);
+    const k = s.publisher[lang];
+    m.set(k, [...(m.get(k) ?? []), s]);
+  }
+  return [...m];
+}
+const head = ja
+  ? ["組織", "侵入口", "製品・CVE", "判明日", "影響", "出典"]
+  : ["Organization", "Way in", "Product, CVE", "Found", "Impact", "Sources"];
+---
+
+<div class="table-scroll" tabindex="0" role="region" aria-label={ja ? "事例の一覧" : "Index of cases"}>
+  <table class="ci">
+    <thead>
+      <tr>{head.map((h) => <th scope="col">{h}</th>)}</tr>
+    </thead>
+    {
+      groups.map(([g, list]) => (
+        <tbody>
+          <tr class="ci-group">
+            <th scope="rowgroup" colspan="6">{g}</th>
+          </tr>
+          {list.map((c) => {
+            const tag = openingTag(lang, c.opening);
+            return (
+              <tr>
+                <th scope="row" class="ci-org">
+                  <a href={localePath(lang, `/cases/${c.slug}/`, base)}>{c.org[lang]}</a>
+                  <span class="ci-sub">{c.sector[lang]}</span>
+                  {c.kind === "not-ransomware" && <span class="ci-sub">{c.kindNote[lang]}</span>}
+                </th>
+                <td>
+                  <span class={c.opening === "vpn" ? "ci-vpn" : undefined}>{openingName(lang, c)}</span>
+                  {tag && (
+                    <>
+                      {" "}
+                      <span class="tag-caution">{tag}</span>
+                    </>
+                  )}
+                  {c.openingQualifier && <span class="ci-sub">{c.openingQualifier[lang]}</span>}
+                </td>
+                <td>
+                  {c.product ? c.product[lang] : "—"}
+                  {c.cve.map((v) => (
+                    <span class="ci-cve mono">{v}</span>
+                  ))}
+                </td>
+                <td class="num ci-date">
+                  {c.detected ?? c.disclosed}
+                  {!c.detected && <span class="ci-sub">{ja ? "（公表日）" : "(disclosed)"}</span>}
+                </td>
+                <td>{c.impactShort[lang]}</td>
+                <td class="ci-src">
+                  {byPublisher(c).map(([pub, docs], i) => (
+                    <>
+                      {i > 0 && <span aria-hidden="true">; </span>}
+                      {docs.length === 1 ? (
+                        <a href={docs[0]?.url}>{pub}</a>
+                      ) : (
+                        <>
+                          {pub}
+                          {docs.map((d, k) => (
+                            <>
+                              {" "}
+                              <a href={d.url} title={d.title}>
+                                [{k + 1}]<span class="visually-hidden"> {d.title}</span>
+                              </a>
+                            </>
+                          ))}
+                        </>
+                      )}
+                    </>
+                  ))}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      ))
+    }
+  </table>
+</div>
+
+<style>
+  .ci {
+    min-inline-size: 58rem;
+    font-size: 0.9375rem;
+  }
+  .ci th[scope="col"] {
+    white-space: nowrap;
+  }
+  .ci-group th {
+    padding-block-start: 1.25rem;
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+    border-block-end: 1px solid var(--ink);
+  }
+  .ci-org {
+    font-weight: 700;
+    border-block-end: 1px solid var(--hair);
+    inline-size: 15rem;
+  }
+  .ci-sub {
+    display: block;
+    font-weight: 400;
+    font-size: 0.875rem;
+    color: var(--ink-3);
+  }
+  .ci-vpn {
+    font-weight: 700;
+    color: var(--intruder-text);
+  }
+  .ci-cve {
+    display: block;
+    white-space: nowrap;
+  }
+  .ci-date {
+    white-space: nowrap;
+    text-align: start;
+  }
+  .ci-src {
+    /* keeps the visually hidden link titles inside the scroll box */
+    position: relative;
+    font-size: 0.875rem;
+    inline-size: 11rem;
+  }
+</style>

@@ -1,0 +1,148 @@
+---
+// The 1:500 site block for one case: the building, and only the opening that was used.
+// VPN = a door in the outer wall, RDP = a window, an undisclosed device = the whole
+// edge marked, with a yellow tag. Drawn 1:1 (width = viewBox width) so text stays ≥14px.
+import type { Case } from "../../data/cases";
+import type { Lang } from "../../lib/paths";
+import { openingName, openingTag, wrap } from "./labels";
+
+interface Props {
+  lang: Lang;
+  c: Pick<Case, "opening" | "openingLabel">;
+  uid: string;
+  label: string;
+  size?: "small" | "large";
+}
+
+const { lang, c, uid, label, size = "small" } = Astro.props;
+const big = size === "large";
+const o = c.opening;
+const tag = openingTag(lang, o);
+const edge = o === "network-device-unspecified" || o === "other";
+
+// geometry
+const W = big ? 340 : 164;
+const H = big ? 200 : 120;
+const b = big ? { x: 150, y: 16, w: 184, h: 130 } : { x: 46, y: 10, w: 110, h: 76 };
+const wall = big ? 7 : 5;
+const opH = big ? 40 : 26;
+const oy = b.y + b.h / 2 - opH / 2; // top of the opening on the left wall
+const mid = oy + opH / 2;
+const r = opH; // door leaf length
+const arrowEnd = edge ? b.x - wall : b.x + (big ? 40 : 30);
+const name = wrap(openingName(lang, c), lang === "ja" ? 9 : 14);
+const tagW = big ? b.w : W - 4;
+const tagX = big ? b.x : 2;
+const tagY = b.y + b.h + (big ? 14 : 10);
+const marker = `cb-arrow-${uid}`;
+---
+
+<svg
+  class={`dg cb cb-${size}`}
+  viewBox={`0 0 ${W} ${H}`}
+  width={W}
+  height={H}
+  role="img"
+  aria-label={label}
+  data-opening={o}
+>
+  <defs>
+    <marker id={marker} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M0 1 L10 5 L0 9 z" class="cb-head" />
+    </marker>
+  </defs>
+  <rect class="floor" x={b.x} y={b.y} width={b.w} height={b.h} />
+  <rect class="cb-wall" x={b.x} y={b.y} width={b.w} height={b.h} stroke-width={wall} />
+  {
+    o === "vpn" && (
+      <g class="cb-door">
+        <rect class="gap-out" x={b.x - wall / 2 - 1} y={oy} width={wall + 2} height={opH} />
+        <path class="cb-swing" d={`M${b.x - r} ${oy} A${r} ${r} 0 0 1 ${b.x} ${oy + opH}`} />
+        <line class="cb-leaf" x1={b.x} y1={oy} x2={b.x - r} y2={oy} />
+      </g>
+    )
+  }
+  {
+    o === "rdp" && (
+      <g class="cb-window">
+        <rect class="gap-out" x={b.x - wall / 2 - 1} y={oy} width={wall + 2} height={opH} />
+        {[-wall / 2, 0, wall / 2].map((k) => (
+          <line class="cb-glass" x1={b.x + k} y1={oy} x2={b.x + k} y2={oy + opH} />
+        ))}
+      </g>
+    )
+  }
+  {edge && <line class="cb-edge" x1={b.x} y1={b.y} x2={b.x} y2={b.y + b.h} stroke-width={wall} />}
+  <line
+    class="route cb-route"
+    x1={big ? 6 : 4}
+    y1={mid}
+    x2={arrowEnd}
+    y2={mid}
+    marker-end={`url(#${marker})`}
+  />
+  {
+    big && (
+      <g class="cb-labels">
+        {name.map((t, i) => (
+          <text class="hot-text" x="6" y={mid + 30 + i * 20} font-size="16">
+            {t}
+          </text>
+        ))}
+        <text class="muted" x="6" y={b.y + 14} font-size="15">
+          {lang === "ja" ? "外部" : "Outside"}
+        </text>
+        <text class="label" x={b.x + b.w / 2 + 16} y={b.y + b.h - 16} text-anchor="middle" font-size="15">
+          {lang === "ja" ? "社内ネットワーク" : "Internal network"}
+        </text>
+      </g>
+    )
+  }
+  {
+    tag && (
+      <g class="caution-tag">
+        <rect x={tagX} y={tagY} width={tagW} height="24" />
+        <text x={tagX + tagW / 2} y={tagY + 17} text-anchor="middle" font-size="14">
+          {tag}
+        </text>
+      </g>
+    )
+  }
+</svg>
+
+<style>
+  .cb {
+    inline-size: auto;
+    max-inline-size: 100%;
+    overflow: visible;
+  }
+  .cb-wall {
+    fill: none;
+    stroke: var(--wall);
+  }
+  .cb-leaf {
+    stroke: var(--intruder);
+    stroke-width: 3;
+    stroke-linecap: round;
+  }
+  .cb-swing {
+    fill: none;
+    stroke: var(--intruder);
+    stroke-width: 1;
+  }
+  .cb-glass {
+    stroke: var(--intruder);
+    stroke-width: 1.5;
+  }
+  .cb-edge {
+    stroke: var(--intruder);
+    stroke-dasharray: 6 4;
+  }
+  .cb-route {
+    stroke-width: 2.5;
+    stroke-dasharray: 6 3;
+  }
+  .cb-head {
+    fill: var(--intruder);
+  }
+</style>
