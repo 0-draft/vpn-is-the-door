@@ -1,5 +1,6 @@
 // Compare the door schedule (src/data/doors.json) with the live CISA KEV catalog.
 //   node scripts/check-kev.ts [kev.json]
+// Exit 0: no drift. 1: a listed row drifted. 2: the catalog could not be read.
 // Fails when a listed CVE left KEV or its date/ransomware flag changed. Also lists
 // remote-access CVEs added to KEV after our pinned catalogVersion, as candidates
 // to research (not added automatically: every row needs primary sources).
@@ -36,9 +37,21 @@ const doors = JSON.parse(readFileSync("src/data/doors.json", "utf8")) as {
   excluded: { cve: string }[];
 };
 const file = process.argv[2];
-const kev: Kev = file
-  ? JSON.parse(readFileSync(file, "utf8"))
-  : await (await fetch(KEV_URL, { headers: { "user-agent": "vpn-is-the-door kev check" } })).json();
+// Exit 2 when the catalog cannot be read, so CI tells "KEV unreachable" apart from drift (exit 1).
+async function load(): Promise<Kev> {
+  try {
+    if (file) return JSON.parse(readFileSync(file, "utf8"));
+    const res = await fetch(KEV_URL, { headers: { "user-agent": "vpn-is-the-door kev check" } });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const body = (await res.json()) as Kev;
+    if (!Array.isArray(body.vulnerabilities)) throw new Error("no vulnerabilities array");
+    return body;
+  } catch (e) {
+    console.error(`cannot read the KEV catalog: ${(e as Error).message}`);
+    process.exit(2);
+  }
+}
+const kev = await load();
 
 const byId = new Map(kev.vulnerabilities.map((v) => [v.cveID, v]));
 const drift: string[] = [];

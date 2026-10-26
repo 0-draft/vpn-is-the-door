@@ -33,7 +33,12 @@ jobs:
         id: kev
         env:
           REPORT_FILE: kev-report.md
-        run: node scripts/check-kev.ts || true
+        # exit 1 = drift (reported below); exit 2 = KEV unreachable (fail here)
+        run: |
+          set +e
+          node scripts/check-kev.ts
+          code=$?
+          if [ "$code" -gt 1 ]; then exit "$code"; fi
       - name: Open or update the drift issue
         if: steps.kev.outputs.drift != '0' || steps.kev.outputs.candidates != '0'
         env:
