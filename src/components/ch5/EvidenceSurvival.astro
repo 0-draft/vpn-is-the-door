@@ -94,7 +94,7 @@ const sums = Object.fromEntries(ACTIONS.map((a) => [a, summary(lang, a)]));
   for (const root of document.querySelectorAll<HTMLElement>("[data-evs]")) {
     const sums = JSON.parse(root.dataset.sums ?? "{}") as Record<Action, string>;
     const out = root.querySelector<HTMLElement>(".evs-sum");
-    const radios = [...root.querySelectorAll<HTMLInputElement>('input[name={`${uid}-action`}]')];
+    const radios = [...root.querySelectorAll<HTMLInputElement>('input[type="radio"]')];
     const set = (a: Action, push: boolean) => {
       root.dataset.action = a;
       for (const r of radios) r.checked = r.value === a;
