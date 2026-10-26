@@ -1,0 +1,80 @@
+---
+// This page's own revision history (design §3: real dates, revisions at the foot of each page).
+import { revisionsFor } from "../data/revisions";
+import { type Lang, localePath, stripBase, stripLocale } from "../lib/paths";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const path = stripLocale(stripBase(Astro.url.pathname, base));
+const revs = revisionsFor(path);
+const ja = lang === "ja";
+---
+
+<aside class="revs" aria-labelledby="page-revs-h" data-pagefind-ignore>
+  <h2 id="page-revs-h" class="revs-h">{ja ? "このページの改訂履歴" : "Revisions to this page"}</h2>
+  <ol class="revs-list">
+    {
+      revs.map((r) => (
+        <li>
+          <a class="revs-n mono" href={`${localePath(lang, "/sources/", base)}#rev-${r.rev}`}>
+            {ja ? `改訂 ${r.rev}` : `Rev. ${r.rev}`}
+          </a>
+          <time class="revs-d mono" datetime={r.date}>
+            {r.date}
+          </time>
+          <span class="revs-c">{r.change[lang]}</span>
+        </li>
+      ))
+    }
+  </ol>
+</aside>
+
+<style>
+  .revs {
+    margin-block-start: 4rem;
+    border-block-start: 1px solid var(--hair);
+    padding-block-start: 1rem;
+    max-inline-size: 52rem;
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+  }
+  .revs-h {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem;
+    color: var(--ink-2);
+  }
+  .revs-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.35rem;
+  }
+  .revs-list li {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    gap: 0 0.75rem;
+    align-items: baseline;
+  }
+  .revs-n,
+  .revs-d {
+    font-size: 0.875rem;
+    white-space: nowrap;
+  }
+  .revs-d {
+    color: var(--ink-3);
+  }
+  @media (max-width: 30em) {
+    .revs-list li {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+    .revs-c {
+      grid-column: 1 / -1;
+    }
+  }
+</style>
