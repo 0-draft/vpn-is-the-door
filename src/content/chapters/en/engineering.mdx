@@ -1,0 +1,56 @@
+---
+title: For engineers
+description: The door at S=1:5. What answers before login, why a patch does not evict an intruder, and which evidence survives a reboot. Ends with ten questions to answer about your own appliance.
+chapter: engineering
+path: /engineering/
+order: 0
+---
+
+import Fig from "../../../components/Fig.astro";
+import Scale from "../../../components/Scale.astro";
+import SectionCut from "../../../components/SectionCut.astro";
+import SourceLine from "../../../components/SourceLine.astro";
+import Summary from "../../../components/Summary.astro";
+import DoorMap from "../../../components/ch5/DoorMap.astro";
+
+<Summary lang="en">
+  <p>This chapter takes the VPN appliance apart. Each of its three pages covers one part of the door: the code that answers before anyone logs in, the access that outlives a patch, and the logs that disappear when the box is rebooted or upgraded.</p>
+  <p>The decision it implies: whoever runs the appliance should be able to answer the ten questions at the end of this page from records. Each question nobody can answer is either a way in or a gap in the evidence after an incident.</p>
+</Summary>
+
+<SectionCut lang="en" />
+
+## <Scale s="1:5" /> Each page covers one part of the door
+
+[Chapter 3](../the-doors/) drew the VPN appliance as a door and named its parts. At this scale the metaphor gives way to the components. The intercom on the outer face is the web portal that answers before login. The keys hanging inside are the session cookies and tokens the appliance issues after login. The frame and hinges are the operating system, its daemons and its files. The camera above the door is the appliance's own logging. Fig. 5-1 keys each part to the page that covers it. The lock itself, authentication and MFA, is the subject of chapters 3 and 6.
+
+<Fig lang="en" n="5-1" caption="The door detail from outside, each part keyed to the page that covers it" nts>
+  <DoorMap lang="en" label="Door elevation with five keyed parts: A intercom, the pre-auth web portal; B lock, authentication; C issued keys inside the door, session cookies and tokens; D frame and hinges, the appliance OS and files; E camera, the appliance logs." />
+</Fig>
+
+- [The pre-auth surface](pre-auth-surface/): what an SSL-VPN appliance exposes before login, why that code is where the worst bugs are, and how to inventory and shrink it on your own addresses.
+- [Patching is not closing](patching-is-not-closing/): five ways an intruder's access survives the patch, and the order of work when a KEV entry names your appliance.
+- [Evidence before the reboot](evidence/): what the appliance logs, where it keeps it, and what a reboot, an upgrade or a factory reset erases.
+
+## <Scale s="1:5" /> Ten questions about your own appliance
+
+The table is a test of records. Each row gives the question, what a complete answer looks like, and the reported failure behind it. If an answer depends on one person's memory, treat it as missing.
+
+<div class="table-scroll" tabindex="0">
+
+| # | Question | A complete answer | Why it is on the list |
+| --- | --- | --- | --- |
+| 1 | Who owns the appliance, and who patches it under the contract? | A named person, and a contract clause that makes the vendor pass on advisories and apply fixes | The Osaka committee found the responsibility split between the hospital and its vendors undefined (p.14). Handa's reseller never passed the vulnerability notices on (technical volume, printed p.15). |
+| 2 | Which firmware version is running, and when was it installed? | The exact version string, checked against the vendor's PSIRT advisories | NPA: in 2025, 40 of the 71 victims who answered had an intrusion device with security patches missing. |
+| 3 | When does vendor support end for this model and version? | A date, and a funded replacement before it | CISA, FBI and the UK NCSC: "Maintain an inventory of all edge devices and their respective support timelines." |
+| 4 | Can the management interface be reached from the internet? | No. Only from a separate management network | CCCS: "network management interfaces (NMIs) should not be directly exposed to the Internet." |
+| 5 | What second factor do VPN users and administrators use? | No password-only accounts; phishing-resistant MFA for administrators | 39.8% of Japanese organizations NPA surveyed use ID and password only. Arctic Wolf saw logins to accounts with one-time passwords enabled. |
+| 6 | Which accounts are local to the box, and when were their passwords last set? | A list with dates; nothing carried over from an old unit | SonicWall traced its 2025 wave to "local user passwords" that "were carried over during the migration and not reset." |
+| 7 | Where do the logs go, and how long are they kept? | Off the box to a SIEM, kept longer than a zero-day stays undisclosed | NPA: only 25 of 102 ransomware victims in 2025 kept all their logs; 18 answers named an expired retention period. |
+| 8 | When was the appliance last checked for compromise, and with what? | A date, the tool, and a check that does not rely on the appliance alone | CISA: "Ivanti's internal and previous external ICT failed to detect compromise." |
+| 9 | After the last KEV entry for this product, were credentials reset? | Yes, with a date, covering local accounts, the LDAP bind account, RADIUS secrets and users | Fortinet, on the 87,000 leaked devices: "if the passwords were not reset, they remain vulnerable." |
+| 10 | Is there a plan to stop exposing network-level VPN access? | A dated plan that treats ZTNA gateways as edge software too | CCCS encourages organizations "to move from overreliance on boundary protections like edge devices". [CVE-2025-0282](https://nvd.nist.gov/vuln/detail/CVE-2025-0282) also affected Ivanti Neurons for ZTA gateways. |
+
+</div>
+
+<SourceLine lang="en" ids={["osaka-report-2023", "handa-report-tech", "npa-r8h1-data", "ch5-eos-factsheet", "ch5-cccs-itsm80101", "npa-leaflet-r7", "arcticwolf-akira-2025", "ch5-sonicwall-2025", "ch5-npa-r7-logs", "ch5-cisa-aa24-060b", "ch5-fortinet-87000"]} />

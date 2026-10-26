@@ -1,0 +1,204 @@
+---
+// Fig. 5-2 / 5-4: one request through an SSL-VPN appliance, top to bottom, with the
+// pre-auth zone shaded. variant="reduced" redraws the same appliance after the
+// surface is cut down (allow-list, management off the internet, unused modes off).
+import type { Lang } from "../../lib/paths";
+
+interface Props {
+  lang: Lang;
+  label: string;
+  variant?: "default" | "reduced";
+}
+
+const { lang, label, variant = "default" } = Astro.props;
+const ja = lang === "ja";
+const red = variant === "reduced";
+const ah = `pal-ah-${variant}`;
+const t = {
+  net: ja ? "インターネット上の誰でも" : "Anyone on the internet",
+  box: ja ? "VPN 機器" : "VPN appliance",
+  tls: ja ? "TLS の終端" : "TLS termination",
+  web1: ja ? "Web デーモンが全要求を解析" : "Web daemon parses every request",
+  web2: ja ? "例: FortiOS の sslvpnd" : "e.g. sslvpnd on FortiOS",
+  zone: ja ? "認証前: 誰にでも応答する" : "Pre-auth: answers anyone",
+  eps: ja
+    ? ["ログイン画面", "静的ファイル", "クライアント配布", "SAML・SSO", "クライアントレス", "管理画面"]
+    : ["Login portal", "Static files", "Client download", "SAML / SSO", "Clientless mode", "Management UI"],
+  exposed: ja ? "露出" : "exposed",
+  auth1: ja ? "認証" : "Authentication",
+  auth2: ja ? "パスワード、MFA、SAML、RADIUS" : "password, MFA, SAML, RADIUS",
+  mfa: ja ? "MFA: 素通り" : "MFA: not reached",
+  sess: ja ? "セッション Cookie を発行" : "Session cookie issued",
+  tun: ja ? "トンネル・社内資源へ" : "Tunnel, internal resources",
+  lan: ja ? "社内ネットワーク" : "Internal network",
+  os: ja ? "機器の OS（root のことが多い）" : "Appliance OS, often root",
+  allow: ja ? "接続元 IP の制限" : "Source-IP allow-list",
+  off: ja ? "インターネットから外す" : "off the internet",
+  disabled: ja ? "無効化" : "disabled",
+};
+const col = [26, 172];
+const rows = [270, 314, 358];
+const ep = (i: number) => ({ x: col[i % 2] as number, y: rows[Math.floor(i / 2)] as number });
+---
+
+<svg class="dg pal" viewBox="0 0 420 722" role="img" aria-label={label} data-variant={variant}>
+  <defs>
+    <marker id={ah} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" class="pal-ah"></path>
+    </marker>
+  </defs>
+
+  <rect class="pal-box" x="16" y="6" width="302" height="38"></rect>
+  <text x="167" y="31" text-anchor="middle">{t.net}</text>
+
+  <rect class="chain" x="4" y="66" width="412" height="588"></rect>
+  <text class="muted" x="14" y="88">{t.box}</text>
+
+  <line class="pal-flow" x1="167" y1="44" x2="167" y2="98" marker-end={`url(#${ah})`}></line>
+  {
+    red && (
+      <g>
+        <line class="safe-bar" x1="104" y1="56" x2="230" y2="56" />
+        <text class="safe-text pal-small" x="236" y="61">
+          {t.allow}
+        </text>
+      </g>
+    )
+  }
+
+  <rect class="pal-box" x="16" y="100" width="302" height="36"></rect>
+  <text x="167" y="124" text-anchor="middle">{t.tls}</text>
+  <line class="pal-flow" x1="167" y1="136" x2="167" y2="154" marker-end={`url(#${ah})`}></line>
+
+  <rect class="pal-box" x="16" y="156" width="302" height="58"></rect>
+  <text x="167" y="180" text-anchor="middle">{t.web1}</text>
+  <text class="mono label" x="167" y="203" text-anchor="middle">{t.web2}</text>
+  <line class="pal-flow" x1="167" y1="214" x2="167" y2="232" marker-end={`url(#${ah})`}></line>
+
+  <rect class="pal-zone" x="16" y="234" width="302" height="190"></rect>
+  <text class="pal-zone-t" x="26" y="258">{t.zone}</text>
+  {
+    t.eps.map((name, i) => {
+      const p = ep(i);
+      const cut = red && i >= 4;
+      return (
+        <g class:list={["pal-ep", { "pal-cut": cut }]}>
+          <rect x={p.x} y={p.y} width="136" height="34" />
+          <text x={p.x + 68} y={p.y + 23} text-anchor="middle">
+            {name}
+          </text>
+          {cut && (
+            <text class="safe-text pal-small" x={p.x + 68} y={p.y + 50} text-anchor="middle">
+              {i === 5 ? t.off : t.disabled}
+            </text>
+          )}
+        </g>
+      );
+    })
+  }
+  {
+    !red && (
+      <g class="caution-tag">
+        <rect x={ja ? 264 : 242} y="397" width={ja ? 44 : 66} height="20" />
+        <text class="pal-small" x={ja ? 271 : 248} y="412">
+          {t.exposed}
+        </text>
+      </g>
+    )
+  }
+  <line class="pal-flow" x1="167" y1="424" x2="167" y2="456" marker-end={`url(#${ah})`}></line>
+
+  <rect class="pal-box pal-lock" x="16" y="458" width="302" height="74"></rect>
+  <text x="167" y="482" text-anchor="middle">{t.auth1}</text>
+  <text class="label pal-small" x="167" y="503" text-anchor="middle">{t.auth2}</text>
+  {!red && <text class="muted pal-small" x="167" y="523" text-anchor="middle">{t.mfa}</text>}
+  <line class="pal-flow" x1="167" y1="532" x2="167" y2="550" marker-end={`url(#${ah})`}></line>
+
+  <rect class="pal-box" x="16" y="552" width="302" height="34"></rect>
+  <text x="167" y="575" text-anchor="middle">{t.sess}</text>
+  <line class="pal-flow" x1="167" y1="586" x2="167" y2="600" marker-end={`url(#${ah})`}></line>
+
+  <rect class="pal-box" x="16" y="602" width="302" height="34"></rect>
+  <text x="167" y="625" text-anchor="middle">{t.tun}</text>
+  <line class="pal-flow" x1="167" y1="636" x2="167" y2="674" marker-end={`url(#${ah})`}></line>
+
+  <rect class="pal-os" x="334" y="156" width="70" height="480"></rect>
+  <text class="label" transform="translate(362 396) rotate(-90)" text-anchor="middle">{t.os}</text>
+
+  <rect class="pal-box" x="16" y="676" width="388" height="38"></rect>
+  <text x="210" y="701" text-anchor="middle">{t.lan}</text>
+
+  {
+    !red && (
+      <g class="pal-route">
+        <path class="route" d="M318 300 H392 V672" />
+        <path class="pal-route-ah" d="M386 662 L392 674 L398 662 Z" />
+      </g>
+    )
+  }
+</svg>
+
+<style>
+  .pal {
+    max-inline-size: 30rem;
+    margin-inline: auto;
+  }
+  .pal text {
+    font-size: 16px;
+  }
+  .pal .pal-small {
+    font-size: 15px;
+  }
+  .pal .mono {
+    font-size: 15px;
+  }
+  .pal-box {
+    fill: var(--sheet);
+    stroke: var(--ink);
+    stroke-width: 1.5;
+  }
+  .pal-lock {
+    stroke-width: 2;
+  }
+  .pal-zone {
+    fill: var(--room);
+    stroke: var(--ink-2);
+    stroke-width: 1.5;
+    stroke-dasharray: 6 4;
+  }
+  .pal .pal-zone-t {
+    font-weight: 700;
+  }
+  .pal-ep rect {
+    fill: var(--sheet);
+    stroke: var(--ink);
+    stroke-width: 1;
+  }
+  .pal .pal-ep text {
+    font-size: 15px;
+  }
+  .pal-cut rect {
+    fill: none;
+    stroke: var(--line);
+    stroke-dasharray: 4 4;
+  }
+  .pal .pal-cut text:first-of-type {
+    fill: var(--ink-3);
+    text-decoration: line-through;
+  }
+  .pal-os {
+    fill: var(--room);
+    stroke: var(--ink);
+    stroke-width: 1.5;
+  }
+  .pal-flow {
+    stroke: var(--ink);
+    stroke-width: 2;
+  }
+  .pal-ah {
+    fill: var(--ink);
+  }
+  .pal-route-ah {
+    fill: var(--intruder);
+  }
+</style>

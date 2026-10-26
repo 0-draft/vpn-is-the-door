@@ -1,0 +1,177 @@
+---
+// Fig. 5-1: the door detail (chapter 3) seen from outside, with each part keyed
+// to the page of this chapter that covers it. Parts inside the door are hidden
+// lines (dashed), as on a drawing.
+import { type Lang, localePath } from "../../lib/paths";
+
+interface Props {
+  lang: Lang;
+  label: string;
+}
+
+const { lang, label } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const ja = lang === "ja";
+const href = (p: string) => localePath(lang, p, base);
+
+const keys = [
+  {
+    k: "A",
+    part: ja ? "インターホン" : "Intercom",
+    real: ja ? "認証前の Web ポータル" : "Pre-auth web portal",
+    page: ja ? "認証前に開いている面" : "The pre-auth surface",
+    path: "/engineering/pre-auth-surface/",
+  },
+  {
+    k: "B",
+    part: ja ? "錠" : "Lock",
+    real: ja ? "認証（パスワード、MFA、SAML）" : "Authentication (password, MFA, SAML)",
+    page: ja ? "第3章 建具表" : "Chapter 3, The doors",
+    path: "/the-doors/",
+  },
+  {
+    k: "C",
+    part: ja ? "合鍵（扉の内側）" : "Issued keys (inside)",
+    real: ja ? "セッション Cookie・トークン" : "Session cookies and tokens",
+    page: ja ? "パッチで扉は閉まらない" : "Patching is not closing",
+    path: "/engineering/patching-is-not-closing/",
+  },
+  {
+    k: "D",
+    part: ja ? "枠と蝶番" : "Frame and hinges",
+    real: ja ? "機器の OS、デーモン、ファイル" : "Appliance OS, daemons, files",
+    page: ja ? "パッチで扉は閉まらない" : "Patching is not closing",
+    path: "/engineering/patching-is-not-closing/",
+  },
+  {
+    k: "E",
+    part: ja ? "防犯カメラ" : "Camera",
+    real: ja ? "機器のログ" : "Appliance logs",
+    page: ja ? "再起動の前に証拠を残す" : "Evidence before the reboot",
+    path: "/engineering/evidence/",
+  },
+];
+const rowY = (i: number) => 334 + i * 78;
+---
+
+<svg class="dg doormap" viewBox="0 0 400 728" role="img" aria-label={label}>
+  <!-- ground and wall poché -->
+  <line class="thick" x1="12" y1="290" x2="388" y2="290"></line>
+  <path class="dm-wall" d="M60 290 V40 H330 V290 H260 V70 H90 V290 Z"></path>
+  <!-- door leaf -->
+  <rect class="dm-leaf" x="94" y="74" width="162" height="216"></rect>
+  <!-- D hinges -->
+  <rect class="dm-part" x="90" y="100" width="9" height="20"></rect>
+  <rect class="dm-part" x="90" y="240" width="9" height="20"></rect>
+  <!-- B lock: handle and cylinder -->
+  <line class="thick" x1="236" y1="180" x2="212" y2="180"></line>
+  <circle class="dm-part" cx="238" cy="196" r="6"></circle>
+  <!-- C key ring, inside: hidden line -->
+  <circle class="dash dm-hidden" cx="186" cy="146" r="12"></circle>
+  <line class="dash dm-hidden" x1="186" y1="158" x2="180" y2="188"></line>
+  <line class="dash dm-hidden" x1="190" y1="158" x2="200" y2="186"></line>
+  <!-- A intercom on the outer face of the pier -->
+  <rect class="dm-part" x="276" y="150" width="38" height="56"></rect>
+  <line class="thin" x1="284" y1="162" x2="306" y2="162"></line>
+  <line class="thin" x1="284" y1="170" x2="306" y2="170"></line>
+  <line class="thin" x1="284" y1="178" x2="306" y2="178"></line>
+  <circle class="dm-part" cx="295" cy="194" r="5"></circle>
+  <!-- E camera on the lintel -->
+  <line class="thick" x1="150" y1="40" x2="150" y2="28"></line>
+  <rect class="dm-part" x="132" y="12" width="44" height="18"></rect>
+  <circle class="dm-part" cx="176" cy="21" r="4"></circle>
+
+  <!-- callout marks and leaders -->
+  <g class="dm-mark">
+    <line class="thin" x1="314" y1="178" x2="352" y2="150"></line>
+    <rect x="352" y="134" width="24" height="24"></rect><text x="364" y="152" text-anchor="middle">A</text>
+    <line class="thin" x1="244" y1="196" x2="352" y2="232"></line>
+    <rect x="352" y="220" width="24" height="24"></rect><text x="364" y="238" text-anchor="middle">B</text>
+    <line class="thin" x1="174" y1="140" x2="124" y2="128"></line>
+    <rect x="100" y="116" width="24" height="24"></rect><text x="112" y="134" text-anchor="middle">C</text>
+    <line class="thin" x1="90" y1="250" x2="40" y2="250"></line>
+    <rect x="16" y="238" width="24" height="24"></rect><text x="28" y="256" text-anchor="middle">D</text>
+    <line class="thin" x1="132" y1="21" x2="40" y2="21"></line>
+    <rect x="16" y="9" width="24" height="24"></rect><text x="28" y="27" text-anchor="middle">E</text>
+  </g>
+  <text class="muted dm-note" x="200" y="314" text-anchor="middle">{ja ? "破線は扉の内側（隠れ線）" : "Dashed: inside the door (hidden line)"}</text>
+
+  <!-- key -->
+  {
+    keys.map((r, i) => (
+      <g class="dm-key">
+        <line class="hair" x1="12" y1={rowY(i) - 4} x2="388" y2={rowY(i) - 4} />
+        <g class="dm-mark">
+          <rect x="12" y={rowY(i) + 6} width="24" height="24" />
+          <text x="24" y={rowY(i) + 24} text-anchor="middle">
+            {r.k}
+          </text>
+        </g>
+        <text class="dm-real" x="48" y={rowY(i) + 23}>
+          {r.real}
+        </text>
+        <text class="label" x="48" y={rowY(i) + 45}>
+          {r.part}
+        </text>
+        <a href={href(r.path)}>
+          <text class="dm-link" x="48" y={rowY(i) + 67}>
+            {r.page}
+          </text>
+        </a>
+      </g>
+    ))
+  }
+</svg>
+
+<style>
+  .doormap {
+    max-inline-size: 32rem;
+    margin-inline: auto;
+  }
+  .doormap text {
+    font-size: 16px;
+  }
+  .dm-wall {
+    fill: var(--wall);
+  }
+  .dm-leaf {
+    fill: var(--room);
+    stroke: var(--ink);
+    stroke-width: 2;
+  }
+  .dm-part {
+    fill: var(--sheet);
+    stroke: var(--ink);
+    stroke-width: 1.5;
+  }
+  .dm-hidden {
+    stroke: var(--ink-2);
+    stroke-width: 1.5;
+  }
+  .dm-mark rect {
+    fill: var(--sheet);
+    stroke: var(--ink);
+    stroke-width: 1.5;
+  }
+  .doormap .dm-mark text {
+    font-family: var(--font-en);
+    font-weight: 700;
+  }
+  .doormap .dm-real {
+    font-weight: 700;
+  }
+  .doormap .dm-note {
+    font-size: 15px;
+  }
+  .hair {
+    stroke: var(--hair);
+    stroke-width: 1;
+  }
+  .doormap .dm-link {
+    fill: var(--instruct);
+    text-decoration: underline;
+  }
+  .doormap a:focus-visible {
+    outline: 2px solid var(--instruct);
+  }
+</style>
