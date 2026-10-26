@@ -1,0 +1,52 @@
+name: KEV drift
+
+# Weekly: compare the door schedule with CISA's live KEV catalog and keep one
+# open issue up to date when a listed row changed or new remote-access entries
+# need research. Rows are never added automatically.
+
+on:
+  schedule:
+    - cron: "23 0 * * 1"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: kev-drift
+  cancel-in-progress: false
+
+jobs:
+  check:
+    name: Compare doors.json with KEV
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+      - name: Check
+        id: kev
+        env:
+          REPORT_FILE: kev-report.md
+        run: node scripts/check-kev.ts || true
+      - name: Open or update the drift issue
+        if: steps.kev.outputs.drift != '0' || steps.kev.outputs.candidates != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          title="KEV drift: door schedule needs review"
+          num=$(gh issue list -R "$REPO" --state open --search "\"$title\" in:title" --json number --jq '.[0].number')
+          if [ -n "$num" ]; then
+            gh issue edit "$num" -R "$REPO" --body-file kev-report.md
+          else
+            gh issue create -R "$REPO" --title "$title" --body-file kev-report.md
+          fi
+      - name: Fail on drift in listed rows
+        if: steps.kev.outputs.drift != '0'
+        run: exit 1
