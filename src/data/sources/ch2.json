@@ -8,7 +8,7 @@
     "title": "調査報告書",
     "date": "2023-03-28",
     "url": "https://www.gh.opho.jp/pdf/report_v01.pdf",
-    "locator": "pp.11–12, 18–19, 36–41, 45–47"
+    "locator": "pp.11–12, 18–19, 36–41, 45–47; pp.11, 37, 45–46, 71"
   },
   {
     "id": "handa-report-main",
@@ -19,7 +19,7 @@
     "title": "徳島県つるぎ町立半田病院 コンピュータウイルス感染事案 有識者会議調査報告書",
     "date": "2022-06-07",
     "url": "https://www.handa-hospital.jp/topics/2022/0616/report_01.pdf",
-    "locator": "printed pp.6–7, 13, 16, 21–22"
+    "locator": "printed pp.6–7, 13, 16, 21–22; pp.6–9, 13, 21, 37–38"
   },
   {
     "id": "handa-report-tech",
@@ -30,7 +30,7 @@
     "title": "徳島県つるぎ町立半田病院 コンピュータウイルス感染事案 有識者会議調査報告書 技術編",
     "date": "2022-06-07",
     "url": "https://www.handa-hospital.jp/topics/2022/0616/report_02.pdf",
-    "locator": "printed pp.9–11, 14–15"
+    "locator": "printed pp.9–11, 14–15; pp.10–14"
   },
   {
     "id": "sophos-aar-2025",

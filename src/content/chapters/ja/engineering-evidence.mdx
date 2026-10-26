@@ -53,13 +53,13 @@ Logdesc=Application crashed and msg=[...] application:sslvpnd,[...], Signal 11 r
 
 問題は記録の置き場所にある。英国 NCSC は2026年、ネットワーク機器では防御側が「can have fewer tools available to them than the attacker」と書き、製造者は調査に必要な証拠を集める手段を正式に用意すべきだとした（「manufacturers should provide supported mechanisms for gathering the evidence needed to investigate incidents」）。それが揃うまでは、ログを機器の外へ出すのが防御側の仕事になる。
 
-<SourceLine lang="ja" ids={["ch5-jpcert-at-2026-0019", "ch5-ncsc-observability"]} />
+<SourceLine lang="ja" ids={["ch5-jpcert-at-2026-0019", "doors-ncsc-uk-observability"]} />
 
 ## <Scale s="1:5" /> ログを全て保全できた被害は102件中25件
 
 警察庁はランサムウェアの被害組織に、ログが残っていたかを尋ねている。2025年に全て保全できたのは4分の1だった。挙げられた原因のうち「犯人による削除」と「暗号化」は、手の届く場所にあるログに対して侵入者が行う操作である。「保存期間経過」は設定の問題である。
 
-<Fig lang="ja" n="5-8" caption="2025年のランサムウェア被害: ログの保全状況と、使えなくなった原因" sources={["ch5-npa-r7-logs"]}>
+<Fig lang="ja" n="5-8" caption="2025年のランサムウェア被害: ログの保全状況と、使えなくなった原因" sources={["npa-r7-data"]}>
   <LogBars lang="ja" label="棒グラフ。ログの保全状況102件: 全て保全25、一部利用不可64、利用不可8、ログ取得無5。使えなくなった原因（回答68件）: 犯人による削除20、暗号化20、保存期間経過18、誤削除3、その他7。" />
   <table slot="data">
     <thead><tr><th>項目</th><th class="num">件数</th></tr></thead>
@@ -101,7 +101,7 @@ Logdesc=Application crashed and msg=[...] application:sslvpnd,[...], Signal 11 r
 
 図5-10で作業を選ぶ。メモリ上のものは、どの作業でも消える。本体内のファイルは再起動ならたいてい残るが、更新ではそれを置く領域が置き換えられたり初期化されたりすることがある。2つの病院で起きたのはこれである。初期化はログと設定を消す。例外は侵入者が置いたファイルで、[パッチのページ](../patching-is-not-closing/)で挙げた勧告には、再起動や更新を、Ivanti では初期化まで生き延びた例がある。3つの作業のどれにも耐えるのは、すでに機器の外にある控えだけである。
 
-<Fig lang="ja" n="5-10" caption="再起動、ファームウェア更新、初期化の後に残る証拠。一般的な傾向であり、自機種についてはベンダーの資料で確かめる" sources={["osaka-report-2023", "handa-report-main", "ch5-coathanger", "ch5-cisa-ed-25-03", "ch5-cisa-aa24-060b"]}>
+<Fig lang="ja" n="5-10" caption="再起動、ファームウェア更新、初期化の後に残る証拠。一般的な傾向であり、自機種についてはベンダーの資料で確かめる" sources={["osaka-report-2023", "handa-report-main", "doors-mivd-coathanger", "doors-cisa-ed-25-03", "cisa-aa24-060b"]}>
   <EvidenceSurvival lang="ja" label="機器の証拠を置き場所別に示す。メモリ、フラッシュ・ディスク、本体の外。選んだ作業の後の各項目の状態。" />
   <table slot="data">
     <thead><tr><th>証拠</th>{ACTIONS.map((a) => <th>{ACTION_LABEL.ja[a]}</th>)}</tr></thead>
@@ -130,7 +130,7 @@ Logdesc=Application crashed and msg=[...] application:sslvpnd,[...], Signal 11 r
 
 </div>
 
-<SourceLine lang="ja" ids={["ch5-fortinet-symlink", "ch5-ncsc-forensics-spec", "ch5-ncsc-observability"]} />
+<SourceLine lang="ja" ids={["fortinet-psirt-2025-04", "ch5-ncsc-forensics-spec", "doors-ncsc-uk-observability"]} />
 
 ## <Scale s="1:5" /> 侵入者の手が届かない場所にログを置く
 
@@ -148,4 +148,4 @@ Logdesc=Application crashed and msg=[...] application:sslvpnd,[...], Signal 11 r
 
 </div>
 
-<SourceLine lang="ja" ids={["ch5-cccs-itsm80101", "ch5-ncsc-forensics-spec", "ch5-mandiant-citrixbleed", "ch5-mandiant-0282", "ch5-npa-r7-logs"]} />
+<SourceLine lang="ja" ids={["cccs-itsm-80-101", "ch5-ncsc-forensics-spec", "doors-mandiant-citrixbleed", "mandiant-ivanti-2025", "npa-r7-data"]} />

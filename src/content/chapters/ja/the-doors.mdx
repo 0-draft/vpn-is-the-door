@@ -54,7 +54,7 @@ VPN 機器は、社外で働く社員のために付けた扉である。扉と�
 
 VPN 機器は中の見えない箱である。社内のサーバならセキュリティソフトで見張り、ログを別の場所に集められる。多くの VPN 機器ではどちらもできず、欠陥がひとつあれば箱ごと渡してしまう。
 
-<Fig lang="ja" n="3-2" caption="社内のサーバと VPN 機器で、守る側が頼れるもの" sources={["doors-gtig-2024", "doors-volexity-ivanti-2024", "sophos-aar-2025", "doors-cisa-aa24-060b"]}>
+<Fig lang="ja" n="3-2" caption="社内のサーバと VPN 機器で、守る側が頼れるもの" sources={["doors-gtig-2024", "doors-volexity-ivanti-2024", "sophos-aar-2025", "cisa-aa24-060b"]}>
   <div class="table-scroll" tabindex="0">
     <table>
       <thead>
@@ -74,7 +74,7 @@ VPN 機器は中の見えない箱である。社内のサーバならセキュ�
 
 Google による2024年のゼロデイの分析は、これらの製品では欠陥を連鎖させる必要がほとんどなく、ひとつの欠陥「単独で」遠隔コード実行に至ると指摘する。この章の建具表にもバッファオーバーフローが多い。C のようにメモリを直接扱う言語で起きる種類の欠陥で、CISA と FBI は CVE-2025-0282 をその例に挙げている。成功すれば、攻撃者は機器全体と、そこに保存されたパスワードや鍵を握る。
 
-<SourceLine lang="ja" ids={["doors-gtig-2024", "doors-cisa-bo-alert", "doors-cisa-aa24-060b"]} />
+<SourceLine lang="ja" ids={["doors-gtig-2024", "doors-cisa-bo-alert", "cisa-aa24-060b"]} />
 
 ### セキュリティソフトが入らない
 
@@ -104,7 +104,7 @@ Google による2024年のゼロデイの分析は、これらの製品では欠
 
 サポートが終わった機器は修正を受けられないが、動き続けるので壁に残る。CISA、FBI、英国 NCSC は、国家を背景とする攻撃者がこうした機器を、サポート中の新しい環境に入るための入口として使うと警告している。大阪急性期・総合医療センターの事例では、侵入口の機器は調査の時点で FortiOS 5.4.2 のままだった。
 
-<SourceLine lang="ja" ids={["doors-eos-factsheet", "osaka-report-2023"]} />
+<SourceLine lang="ja" ids={["cisa-eos-edge-2026", "osaka-report-2023"]} />
 
 ## <Scale s="1:100" /> 認証前の欠陥は錠を通らない
 
@@ -166,7 +166,7 @@ Google による2024年のゼロデイの分析は、これらの製品では欠
 
 ## <Scale s="1:5" /> {ST.total}件中{ST.preauth}件はパスワードが要らない
 
-<Fig lang="ja" n="3-8" caption="建具表の行を製品系列ごとに並べる。塗りつぶしはログイン前に届くもの" sources={["cisa-kev", "doors-volexity-3400", "doors-cve-2025-0282"]}>
+<Fig lang="ja" n="3-8" caption="建具表の行を製品系列ごとに並べる。塗りつぶしはログイン前に届くもの" sources={["cisa-kev", "doors-volexity-3400", "cve-2025-0282"]}>
   <PreauthUnits lang="ja" />
 </Fig>
 
@@ -176,13 +176,13 @@ Google による2024年のゼロデイの分析は、これらの製品では欠
 
 錠が開くと、機器は利用者に鍵を渡す。セッション Cookie である。機器はその写しをメモリに持っている。CitrixBleed（CVE-2023-4966）と CitrixBleed 2（CVE-2025-5777）は、インターホンにある欠陥で、そのメモリの一部を鍵ごと返してしまう。
 
-<Fig lang="ja" n="3-9" caption="漏れたセッション Cookie がパスワードと多要素認証を飛ばす仕組み" sources={["doors-mandiant-citrixbleed", "doors-cisa-aa23-325a"]}>
+<Fig lang="ja" n="3-9" caption="漏れたセッション Cookie がパスワードと多要素認証を飛ばす仕組み" sources={["doors-mandiant-citrixbleed", "case-cisa-aa23-325a"]}>
   <SessionLanes lang="ja" />
 </Fig>
 
 Mandiant によれば、有効な Cookie があれば、ユーザー名もパスワードも多要素認証のトークンや端末もなしにセッションを張れる。CISA と FBI は CitrixBleed を LockBit 3.0 の実行者と結び付けた。SonicWall の CVE-2024-53704 は認証回避で同じ結果に至り、CVE-2026-0257 では機器が偽造された認証オーバーライド Cookie を信用した。Cookie はパッチの前に発行されたものなので、パッチを当てた機器もセッションを終わらせるまでは受け入れる。Tenable の CitrixBleed 2 の解説は、更新後に有効なセッションを終了させるという Citrix の推奨を載せている。
 
-<SourceLine lang="ja" ids={["doors-mandiant-citrixbleed", "doors-cisa-aa23-325a", "doors-tenable-citrixbleed2"]} />
+<SourceLine lang="ja" ids={["doors-mandiant-citrixbleed", "case-cisa-aa23-325a", "doors-tenable-citrixbleed2"]} />
 
 ## <Scale s="1:5" /> 漏れたパスワードはパッチの後も使える
 
@@ -212,7 +212,7 @@ Mandiant によれば、有効な Cookie があれば、ユーザー名もパス
 
 侵入者が枠に何かを残していくことがある。更新は、置き換える予定のソフトウェアを置き換える。攻撃者が足したものまで消えるとは限らない。
 
-<Fig lang="ja" n="3-11" caption="パッチや更新の後も侵害が残ったとベンダーまたは政府機関が述べた事例" sources={["doors-fortinet-symlink", "doors-fortinet-fg-ir-25-934", "doors-mivd-coathanger", "doors-cisa-aa24-060b", "doors-mandiant-0282", "doors-cisa-ed-25-03", "doors-ncsc-nl-citrix"]}>
+<Fig lang="ja" n="3-11" caption="パッチや更新の後も侵害が残ったとベンダーまたは政府機関が述べた事例" sources={["fortinet-psirt-2025-04", "doors-fortinet-fg-ir-25-934", "doors-mivd-coathanger", "cisa-aa24-060b", "mandiant-ivanti-2025", "doors-cisa-ed-25-03", "doors-ncsc-nl-citrix"]}>
   <div class="table-scroll" tabindex="0">
     <table>
       <thead>
@@ -232,7 +232,7 @@ Mandiant によれば、有効な Cookie があれば、ユーザー名もパス
 
 Ivanti の欠陥に対する CISA の対応は、「パッチ以上」が実際に何を指すかを示している。緊急指令 24-01 は連邦機関に対し、機器を切り離し、初期化して作り直し、機器上の証明書、鍵、パスワードをすべて失効させて再発行し、連携するドメインアカウントは侵害されたものとして扱うよう求めた。
 
-<SourceLine lang="ja" ids={["doors-cisa-ed-24-01"]} />
+<SourceLine lang="ja" ids={["case-cisa-ed-24-01"]} />
 
 ## <Scale s="1:5" /> 公表から悪用までは数日、多くは公表より前
 
@@ -261,7 +261,7 @@ Ivanti の欠陥に対する CISA の対応は、「パッチ以上」が実際�
 
 ゼロトラストネットワークアクセス（ZTNA）製品は、VPN の扉の置き換えとして売られることが多い。盗まれたログインで届く範囲は、ネットワーク全体からアプリケーション単位に変わる。ただしそのゲートウェイもインターネットの境界に置かれたソフトウェアで、同じ種類の欠陥を抱える。
 
-<Fig lang="ja" n="3-13" caption="CVE-2025-0282 の CVE レコードに挙がっている製品" sources={["doors-cve-2025-0282", "doors-mandiant-0282"]}>
+<Fig lang="ja" n="3-13" caption="CVE-2025-0282 の CVE レコードに挙がっている製品" sources={["cve-2025-0282", "mandiant-ivanti-2025"]}>
   <div class="table-scroll" tabindex="0">
     <table>
       <thead>

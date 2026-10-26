@@ -24,7 +24,7 @@
       "en": "The expert panel: the attacker \"is thought to have entered by exploiting a vulnerability in the virtual private network (VPN) device\" the hospital had installed, and \"it is reasonable to regard the VPN device as the entry route.\"",
       "ja": "有識者会議は「侵入経路としては導入している仮想プライベートネットワーク（…「VPN」という。）装置の脆弱性を悪用して侵入したものと思われる」とし、技術編で「侵入経路は VPN 装置であると考えるのが合理的である」と結論している。"
     },
-    "vectorSource": "case-handa-main",
+    "vectorSource": "handa-report-main",
     "cause": {
       "en": "A VPN appliance installed for vendors' remote maintenance was left unpatched, and its login details had already been published on the internet.",
       "ja": "業者のリモート保守のために置いた VPN 機器が修正されないまま使われ、そのログイン情報はすでにインターネット上に公開されていた。"
@@ -50,31 +50,31 @@
         "status": "stated",
         "en": "CVE-2018-13379 had not been fixed on the VPN appliance.",
         "ja": "VPN 機器の CVE-2018-13379 が修正されていなかった。",
-        "source": "case-handa-tech"
+        "source": "handa-report-tech"
       },
       {
         "status": "stated",
         "en": "The September 2021 dump of credentials for about 87,000 FortiGate devices contained the hospital's global IP address, ID and password.",
         "ja": "2021年9月に公開された約8.7万台分の FortiGate 認証情報に、病院のグローバル IP アドレス、ID、パスワードが含まれていた。",
-        "source": "case-handa-tech"
+        "source": "handa-report-tech"
       },
       {
         "status": "stated",
         "en": "No source-IP restriction was set, so any system on the internet could connect.",
         "ja": "接続元 IP アドレスの制限がなく、インターネット上のすべてのシステムから接続できた。",
-        "source": "case-handa-tech"
+        "source": "handa-report-tech"
       },
       {
         "status": "presumed",
         "en": "Entry through the VPN appliance. Logs and evidence did not survive, so this is the panel's reasoned conclusion, reached after weighing phishing, exposed RDP and insiders.",
         "ja": "有識者会議は侵入口を VPN 機器とした。ログと証跡が残っていないため、標的型メールや RDP の公開、内部犯行などと比べたうえでの推論である。",
-        "source": "case-handa-tech"
+        "source": "handa-report-tech"
       },
       {
         "status": "unknown",
         "en": "When the attacker first got in.",
         "ja": "最初に侵入された日時。",
-        "source": "case-handa-main"
+        "source": "handa-report-main"
       }
     ],
     "conclusion": {
@@ -102,7 +102,7 @@
           "ja": "セキュリティ情報を提供する事業者を選び、その責任を明確にする。"
         }
       ],
-      "sources": ["case-handa-tech", "case-handa-main"]
+      "sources": ["handa-report-tech", "handa-report-main"]
     },
     "events": [
       {
@@ -110,73 +110,73 @@
         "actor": { "en": "Intruder", "ja": "侵入者" },
         "event_en": "Remote Desktop activity on a hospital system, found later in the investigation.",
         "event_ja": "院内システムでリモートデスクトップ操作（後の調査で判明）。",
-        "source": "case-handa-main"
+        "source": "handa-report-main"
       },
       {
         "date": "2021-10-31",
         "actor": { "en": "Hospital", "ja": "病院" },
         "event_en": "Before dawn, several printers print a statement that data has been stolen and encrypted.",
         "event_ja": "未明、複数のプリンタがデータの窃取と暗号化を告げる文書を大量に印刷。",
-        "source": "case-handa-main"
+        "source": "handa-report-main"
       },
       {
         "date": "2021-10-31 00:30",
         "actor": { "en": "Hospital", "ja": "病院" },
         "event_en": "Fault in the electronic medical records confirmed; system staff called.",
         "event_ja": "電子カルテの不具合を確認し、システム担当者に通報。",
-        "source": "case-handa-main"
+        "source": "handa-report-main"
       },
       {
         "date": "2021-10-31 03:00",
         "actor": { "en": "Hospital", "ja": "病院" },
         "event_en": "System staff cut the medical-record network.",
         "event_ja": "到着したシステム担当者が電子カルテのネットワークを遮断。",
-        "source": "case-handa-main"
+        "source": "handa-report-main"
       },
       {
         "date": "2021-10-31 08:00",
         "actor": { "en": "Hospital", "ja": "病院" },
         "event_en": "Ransomware infection confirmed.",
         "event_ja": "ランサムウェア感染を確認。",
-        "source": "case-handa-main"
+        "source": "handa-report-main"
       },
       {
         "date": "2021-10-31 08:55",
         "actor": { "en": "Hospital", "ja": "病院" },
         "event_en": "Consults Tokushima Prefectural Police; damage report accepted.",
         "event_ja": "徳島県警察本部に相談し、被害届が受理される。",
-        "source": "case-handa-main"
+        "source": "handa-report-main"
       },
       {
         "date": "2021-10-31 10:00",
         "actor": { "en": "Hospital", "ja": "病院" },
         "event_en": "Disaster headquarters set up; care continues on paper under the business-continuity plan.",
         "event_ja": "災害対策本部を正式に発足。BCP に基づき紙で医療を続ける。",
-        "source": "case-handa-main"
+        "source": "handa-report-main"
       },
       {
         "date": "2021-11-03 15:00",
         "actor": { "en": "Not stated", "ja": "記載なし" },
         "event_en": "Firmware of the FortiGate VPN updated. The report notes that VPN logs were not checked or preserved first.",
         "event_ja": "FortiGate の VPN のファームウェアを更新。VPN のログの確認や保全は未確認と記録されている。",
-        "source": "case-handa-main"
+        "source": "handa-report-main"
       },
       {
         "date": "2022-01-04",
         "actor": { "en": "Hospital", "ja": "病院" },
         "event_en": "Medical-record system back; normal care resumes.",
         "event_ja": "電子カルテシステムが再稼働し、通常診療を再開。",
-        "source": "case-handa-main"
+        "source": "handa-report-main"
       },
       {
         "date": "2022-06-07",
         "actor": { "en": "Expert panel", "ja": "有識者会議" },
         "event_en": "Investigation report submitted.",
         "event_ja": "調査報告書を提出。",
-        "source": "case-handa-main"
+        "source": "handa-report-main"
       }
     ],
-    "sources": ["case-handa-main", "case-handa-tech"]
+    "sources": ["handa-report-main", "handa-report-tech"]
   },
   {
     "slug": "osaka-general-medical-center",
@@ -230,13 +230,13 @@
         "status": "stated",
         "en": "The contractor's VPN appliance had CVE-2018-13379, which allowed theft of the file holding the administrator ID and password.",
         "ja": "給食事業者の VPN 機器には CVE-2018-13379 があり、管理者の ID とパスワードを保存したファイルを窃取できた。",
-        "source": "case-ogmc-report"
+        "source": "osaka-report-2023"
       },
       {
         "status": "stated",
         "en": "The device's address, ID and password were on a publicly leaked list; the committee found entry with them \"reasonable\" to assume.",
         "ja": "同機器のアドレス、ID、パスワードは公開されたリストに載っており、委員会はそれを使った侵入を「合理的」と判断した。",
-        "source": "case-ogmc-report"
+        "source": "osaka-report-2023"
       },
       {
         "status": "stated",
@@ -254,7 +254,7 @@
         "status": "unknown",
         "en": "How long the attacker was inside. The VPN appliance's syslog was lost when its firmware was updated without a backup on the evening of October 31.",
         "ja": "侵入者が潜んでいた期間。10月31日夕方にバックアップを取らずにファームウェアを更新したため、VPN 機器の Syslog が失われた。",
-        "source": "case-ogmc-report"
+        "source": "osaka-report-2023"
       }
     ],
     "conclusion": {
@@ -304,42 +304,42 @@
         "actor": { "en": "Hospital", "ja": "病院" },
         "event_en": "Critical-care system fails.",
         "event_ja": "重症システムに障害。",
-        "source": "case-ogmc-report"
+        "source": "osaka-report-2023"
       },
       {
         "date": "2022-10-31 07:10",
         "actor": { "en": "Hospital", "ja": "病院" },
         "event_en": "Core systems fail.",
         "event_ja": "基幹システムに障害。",
-        "source": "case-ogmc-report"
+        "source": "osaka-report-2023"
       },
       {
         "date": "2022-10-31 07:45",
         "actor": { "en": "Help desk", "ja": "ヘルプデスク" },
         "event_en": "Staff arrive, find the failure and a ransom message.",
         "event_ja": "職員が出勤し、障害と身代金要求のメッセージを確認。",
-        "source": "case-ogmc-report"
+        "source": "osaka-report-2023"
       },
       {
         "date": "2022-10-31 08:30",
         "actor": { "en": "System vendor", "ja": "システムベンダー" },
         "event_en": "Ransomware infection confirmed; systems disconnected.",
         "event_ja": "ランサムウェア感染を確認し、遮断。",
-        "source": "case-ogmc-report"
+        "source": "osaka-report-2023"
       },
       {
         "date": "2022-10-31 08:50",
         "actor": { "en": "Hospital", "ja": "病院" },
         "event_en": "Senior staff convened; care switches to paper records.",
         "event_ja": "幹部職員を招集し、紙カルテ運用への切り替えを指示。",
-        "source": "case-ogmc-report"
+        "source": "osaka-report-2023"
       },
       {
         "date": "2022-10-31 17:00",
         "actor": { "en": "Hospital", "ja": "病院" },
         "event_en": "First notice posted on the website.",
         "event_ja": "ホームページに初報を掲載。",
-        "source": "case-ogmc-report"
+        "source": "osaka-report-2023"
       },
       {
         "date": "2022-10-31 18:00",
@@ -347,21 +347,21 @@
         "actor": { "en": "Contractor's system builder", "ja": "給食側の構築事業者" },
         "event_en": "Firmware of the VPN appliance updated without a backup; its logs are lost.",
         "event_ja": "VPN 機器のファームウェアをバックアップなしで更新し、ログが消失。",
-        "source": "case-ogmc-report"
+        "source": "osaka-report-2023"
       },
       {
         "date": "2022-12-12",
         "actor": { "en": "Hospital", "ja": "病院" },
         "event_en": "Core systems including the medical records restart (day 43).",
         "event_ja": "電子カルテを含む基幹システムが再稼働（43日目）。",
-        "source": "case-ogmc-report"
+        "source": "osaka-report-2023"
       },
       {
         "date": "2023-01-11",
         "actor": { "en": "Hospital", "ja": "病院" },
         "event_en": "All clinical systems restored (day 73).",
         "event_ja": "全体の診療システムが復旧（73日目）。",
-        "source": "case-ogmc-report"
+        "source": "osaka-report-2023"
       },
       {
         "date": "2023-03-28",
@@ -371,7 +371,7 @@
         "source": "case-ogmc-summary"
       }
     ],
-    "sources": ["case-ogmc-report", "case-ogmc-summary"]
+    "sources": ["osaka-report-2023", "case-ogmc-summary"]
   },
   {
     "slug": "nagoya-port",

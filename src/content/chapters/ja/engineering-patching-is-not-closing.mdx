@@ -26,7 +26,7 @@ import KevFlow from "../../../components/ch5/KevFlow.astro";
 
 図5-5の各段は、勧告や調査報告書に記録された失敗の型である。黒い縦線がパッチ、赤線が侵入者のアクセスを表す。赤線はパッチより前に始まり、パッチの後も続く。
 
-<Fig lang="ja" n="5-5" caption="侵入者のアクセスがパッチ後も残る5つの経路" sources={["npa-r8h1-data", "ch5-fortinet-87000", "jpcert-ir-2024q2", "ch5-mandiant-citrixbleed", "ch5-fortinet-symlink", "ch5-coathanger", "ch5-cisa-ed-25-03", "ch5-cisa-aa24-060b", "ch5-mandiant-0282", "ch5-jpcert-at-2025-0001"]} nts>
+<Fig lang="ja" n="5-5" caption="侵入者のアクセスがパッチ後も残る5つの経路" sources={["npa-r8h1-data", "doors-fortinet-87000", "jpcert-ir-2024q2", "doors-mandiant-citrixbleed", "fortinet-psirt-2025-04", "doors-mivd-coathanger", "doors-cisa-ed-25-03", "cisa-aa24-060b", "mandiant-ivanti-2025", "jpcert-at-2025-0001"]} nts>
   <FailureLanes lang="ja" label="5つの段。いずれも赤線がパッチの前に始まり、後まで続く。認証情報の窃取、セッションの窃取、更新を生き延びる常駐、だまされる整合性チェック、公表前の侵害。" />
 </Fig>
 
@@ -54,7 +54,7 @@ Mandiant は CVE-2025-0282 のゼロデイ悪用が2024年12月中旬に始ま�
 
 図5-6は作業を順に並べたものである。後の作業はどれも機器の状態を変えるので、保全を最初に置く。2つの分岐は、自機種向けの修正版がない場合と、調査で侵害を否定できない場合を扱う。
 
-<Fig lang="ja" n="5-6" caption="流れ図: 自社の VPN 機器が KEV に載った" sources={["ch5-cisa-aa24-060b", "ch5-fortinet-symlink", "ch5-netscaler-4966", "jpcert-ir-2024q2", "ch5-cisa-bod-26-04"]}>
+<Fig lang="ja" n="5-6" caption="流れ図: 自社の VPN 機器が KEV に載った" sources={["cisa-aa24-060b", "fortinet-psirt-2025-04", "ch5-netscaler-4966", "jpcert-ir-2024q2", "cisa-bod-26-04"]}>
   <KevFlow lang="ja" label="流れ図。開始: KEV に自社の機器が載った。1 保全: 設定、ログ、可能ならメモリ。判断: 自機種の修正版はあるか。はい: 2 ベンダーの正規イメージから更新。いいえ: 回避策か切断、更改を計画。どちらも 3 認証情報をすべて再設定、4 全セッションとトークンを失効、5 機器の内側を調べる、へ進む。判断: 侵害の兆候がある、または判断できないか。はい: 6 初期化または再構築、確認済みの設定を戻し、認証情報を改めて再設定。その後といいえの場合: 7 ベンダー、JPCERT/CC、警察に報告。" />
 </Fig>
 
@@ -86,4 +86,4 @@ Mandiant は CVE-2025-0282 のゼロデイ悪用が2024年12月中旬に始ま�
 
 </div>
 
-<SourceLine lang="ja" ids={["ch5-cisa-aa24-060b", "ch5-mandiant-0282", "ch5-jpcert-at-2026-0019", "ch5-sonicwall-2025", "ch5-netscaler-4966"]} />
+<SourceLine lang="ja" ids={["cisa-aa24-060b", "mandiant-ivanti-2025", "ch5-jpcert-at-2026-0019", "doors-sonicwall-2025", "ch5-netscaler-4966"]} />

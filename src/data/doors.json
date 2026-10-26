@@ -209,7 +209,7 @@
           "en": "Fortinet named it among the entry points for a symlink left behind after updating to fixed versions",
           "ja": "修正版へ更新した後も残るシンボリックリンクの侵入口の一つとして Fortinet が挙げた"
         },
-        "source": "doors-fortinet-symlink"
+        "source": "fortinet-psirt-2025-04"
       },
       "sources": [
         "https://nvd.nist.gov/vuln/detail/CVE-2023-27997",
@@ -257,7 +257,7 @@
           "en": "Fortinet named it among the entry points for a symlink left behind after updating to fixed versions",
           "ja": "修正版へ更新した後も残るシンボリックリンクの侵入口の一つとして Fortinet が挙げた"
         },
-        "source": "doors-fortinet-symlink"
+        "source": "fortinet-psirt-2025-04"
       },
       "sources": [
         "https://nvd.nist.gov/vuln/detail/CVE-2024-21762",
@@ -488,7 +488,7 @@
           "en": "CISA ordered agencies to disconnect, factory-reset and rebuild; persistence may survive factory resets",
           "ja": "CISA は連邦機関に切断、初期化、再構築を命じた。初期化しても潜伏が残る可能性がある"
         },
-        "source": "doors-cisa-aa24-060b"
+        "source": "cisa-aa24-060b"
       },
       "sources": [
         "https://nvd.nist.gov/vuln/detail/CVE-2023-46805",
@@ -538,7 +538,7 @@
           "en": "Same directive and advisory as CVE-2023-46805: rebuild and treat linked accounts as compromised",
           "ja": "CVE-2023-46805 と同じ指令と勧告。再構築し、連携するアカウントは侵害されたものとして扱う"
         },
-        "source": "doors-cisa-ed-24-01"
+        "source": "case-cisa-ed-24-01"
       },
       "sources": [
         "https://nvd.nist.gov/vuln/detail/CVE-2024-21887",
@@ -586,7 +586,7 @@
           "en": "Mandiant: the malware faked a successful upgrade and copied itself into the new partition during a real one",
           "ja": "Mandiant によれば、マルウェアは更新の成功を偽装し、本当の更新では新しい領域に自分を複製した"
         },
-        "source": "doors-mandiant-0282"
+        "source": "mandiant-ivanti-2025"
       },
       "sources": [
         "https://nvd.nist.gov/vuln/detail/CVE-2025-0282",
