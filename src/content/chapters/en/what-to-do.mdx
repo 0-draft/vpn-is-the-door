@@ -1,0 +1,133 @@
+---
+title: What to do
+description: No single control closes the VPN door. Each one stops the intruder at one point on the route and nowhere else, so the defense is a set of controls, each with an owner and a deadline.
+chapter: what
+path: /what-to-do/
+---
+
+import CloseTheDoor from "../../../components/ch6/CloseTheDoor.astro";
+import PatchClock from "../../../components/ch6/PatchClock.astro";
+import Fig from "../../../components/Fig.astro";
+import Scale from "../../../components/Scale.astro";
+import SectionCut from "../../../components/SectionCut.astro";
+import SourceLine from "../../../components/SourceLine.astro";
+import Summary from "../../../components/Summary.astro";
+import { HEADLINE } from "../../../data/stats";
+
+<Summary lang="en">
+  <p>Every control on this page works at one point on the intruder's route. A patch does nothing against a flaw exploited before the fix existed. MFA does nothing against a flaw that is reached before the login step. An offline backup undoes the encryption but not the leak.</p>
+  <p>The decision this implies: leadership names an owner for every internet-facing device, sets in days how long a fix may take, and pays for a backup the intruder cannot reach. The IT team and the engineers carry out the rest. [Fig. 6-5](#fig-6-5) at the end of the page lets you switch each control on and see where the route stops.</p>
+</Summary>
+
+## <Scale s="1:500" /> What leadership decides
+
+The intruder's clock and the company's clock do not match. Exploitation of a published flaw starts within days, and measured fixes take a month or more. A patch deadline is a business decision. It needs a named owner, and a standby unit or HA pair so that a reboot does not wait for sign-off.
+
+<Fig lang="en" n="6-1" caption="Days from disclosure: when exploitation starts, the CISA deadline, and how long fixes take" sources={["cisa-bod-26-04", "mandiant-tte-2023", "dbir-2025", "dbir-2026"]}>
+  <PatchClock lang="en" />
+  <table slot="data">
+    <thead><tr><th scope="col">Measure</th><th scope="col" class="num">Days</th><th scope="col">Source</th></tr></thead>
+    <tbody>
+      <tr><td>CISA's shortest remediation tier for US federal agencies</td><td class="num">3</td><td>CISA BOD 26-04 (2026-06-10)</td></tr>
+      <tr><td>Average time from disclosure to exploitation, 2023</td><td class="num">5</td><td>Mandiant, time-to-exploit analysis</td></tr>
+      <tr><td>Median time to remediate edge-device vulnerabilities</td><td class="num">32</td><td>Verizon 2025 DBIR, Executive Summary p.6</td></tr>
+      <tr><td>Median time to fully resolve CISA KEV vulnerabilities</td><td class="num">43</td><td>Verizon 2026 DBIR, Executive Summary p.9</td></tr>
+    </tbody>
+  </table>
+</Fig>
+
+CISA's three-day tier comes with a second requirement: a forensic triage of the device to check whether it was already compromised. The deadline and the compromise check belong in the same rule.
+
+<Fig lang="en" n="6-2" caption="Decisions for leadership, with the reason for each and who owns it" sources={["osaka-report-2023", "handa-report-tech", "cisa-bod-26-04", "dbir-2025", "npa-leaflet-r7", "cisa-aa24-109a", "cisa-eos-edge-2026", "npa-r7-data", "handa-report-main", "cve-2025-0282"]}>
+  <div class="table-scroll" tabindex="0">
+    <table>
+      <thead><tr><th scope="col">Decision</th><th scope="col">Why</th><th scope="col">Owner</th></tr></thead>
+      <tbody>
+        <tr><td>Name an owner for every device that faces the internet, including the remote-maintenance appliances that vendors install.</td><td>At the Osaka hospital, no contract said who was responsible for the catering vendor's VPN appliance. At Handa, the vendor never passed on the vulnerability notices.</td><td>CEO. Vendor contracts say who patches and who reports flaws.</td></tr>
+        <tr><td>Set a patch deadline in days for exploited flaws on internet-facing devices, with a compromise check attached.</td><td>CISA's tightest tier is 3 days. The measured median for edge devices is 32 days. NPA found 52% of Japanese organizations using VPN appliances had not applied the latest patch.</td><td>Leadership sets the deadline. The IT team reports against it.</td></tr>
+        <tr><td>Fund MFA for all remote access.</td><td>39.8% of Japanese organizations authenticate remote access with an ID and password alone (NPA). CISA reports Akira entering through VPNs that had no MFA.</td><td>Leadership funds it. The IT team rolls it out.</td></tr>
+        <tr><td>Replace edge devices that are out of support, on a funded schedule.</td><td>A device past end of support gets no more fixes. The Osaka entry device was still running firmware 5.4.2.</td><td>Leadership, as a capital budget line.</td></tr>
+        <tr><td>Pay for a backup copy the intruder cannot reach, and for regular restore tests.</td><td>In 2025, {HEADLINE.backupFail2025.failed} of {HEADLINE.backupFail2025.n} victims that tried to restore from backup could not. In {HEADLINE.backupFail2025.encrypted} cases the backups were encrypted too.</td><td>Leadership funds it. The IT team runs the tests.</td></tr>
+        <tr><td>Sign an incident-response retainer before an incident, and keep logs long enough to investigate.</td><td>Both hospitals lost their VPN logs when the firmware was upgraded before anyone preserved them. Neither investigation could fully reconstruct what happened on the appliance.</td><td>Leadership.</td></tr>
+        <tr><td>Plan the move away from network-wide VPN access, knowing that the replacement is also internet-facing software.</td><td>CVE-2025-0282, a pre-auth flaw in Ivanti Connect Secure, also affected Ivanti Neurons for ZTA gateways.</td><td>Leadership, with the IT lead.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</Fig>
+
+Zero-trust network access (ZTNA) products change what a stolen password reaches: one application instead of the whole network. They are still software that answers the internet, and they get CVEs and patches like any VPN.
+
+## <Scale s="1:100" /> What the IT team does
+
+The IT team turns the three decisions into routine work. Most of these items cost staff time more than money. In NPA's data for 2022 to 2025, the device used to get in was missing patches in {HEADLINE.unpatched.yes} of {HEADLINE.unpatched.n} cases. In the rest it was patched, and the intruder still got in.
+
+<Fig lang="en" n="6-3" caption="Work for the IT team, with the reason for each and who owns it" sources={["osaka-report-2023", "cisa-eos-edge-2026", "cisa-kev", "npa-r8h1-data", "jpcert-ir-2024q2", "cisa-aa24-109a", "handa-report-main"]}>
+  <div class="table-scroll" tabindex="0">
+    <table>
+      <thead><tr><th scope="col">Task</th><th scope="col">Why</th><th scope="col">Owner</th></tr></thead>
+      <tbody>
+        <tr><td>Keep a list of every internet-facing device: model, firmware version, end-of-support date, owner and maintaining vendor.</td><td>The Osaka committee found the asset inventory had not been done. CISA, FBI and NCSC ask for an inventory of edge devices and their support timelines.</td><td>IT team. Vendors supply the data for their devices.</td></tr>
+        <tr><td>Check the CISA KEV catalog and the vendors' advisories every working day, and patch to the deadline.</td><td>KEV lists flaws already used in attacks. NPA found missing patches on the entry device in {HEADLINE.unpatched.yes} of {HEADLINE.unpatched.n} cases.</td><td>IT team.</td></tr>
+        <tr><td>After any flaw in the VPN appliance, change every password it held and end all active sessions, even if it is already patched.</td><td>JPCERT/CC handled intrusions into patched SSL-VPN appliances made with credentials stolen before the patch.</td><td>IT team. Vendors reset their own accounts.</td></tr>
+        <tr><td>Turn on MFA for every VPN account. Delete the accounts nobody uses, contractors' accounts included.</td><td>CISA's Akira advisory names VPN access without MFA as an entry point. An account nobody uses is one nobody notices being used.</td><td>IT team.</td></tr>
+        <tr><td>Give administrators a separate admin account, and set a different local administrator password on every server.</td><td>At Osaka, one Built-In Administrator password shared across servers made lateral movement easy.</td><td>IT team.</td></tr>
+        <tr><td>Keep one backup copy offline or immutable, under separate credentials, and test a restore.</td><td>Osaka's critical-care backups were online only and could not be used. Offline tapes restored the rest. Handa recovered from offline backups.</td><td>IT team.</td></tr>
+        <tr><td>Before touching a suspect device, export its logs and configuration.</td><td>In both hospitals, the firmware upgrade erased the VPN logs the investigators needed.</td><td>IT team, with the vendor.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</Fig>
+
+NPA's data does not say how intruders got through the patched devices. JPCERT/CC documents one way: a password copied before the patch. The patch closes the hole. It does not cancel a password that was copied while the hole was open.
+
+<SectionCut lang="en" />
+
+## <Scale s="1:5" /> What engineers check
+
+At this scale the door is an appliance with a management plane, an authentication backend and a session store. Each check below names the component and the advisory behind it.
+
+<Fig lang="en" n="6-4" caption="Checks for engineers, with the component, the identifier and the evidence" sources={["cccs-itsm-80-101", "handa-report-tech", "fortinet-psirt-2025-04", "cisa-aa24-060b", "mandiant-ivanti-2025", "arcticwolf-akira-2025", "osaka-report-2023", "mitre-attack", "cve-2025-0282", "jpcert-at-2025-0001"]}>
+  <div class="table-scroll" tabindex="0">
+    <table>
+      <thead><tr><th scope="col">Check</th><th scope="col">Component and identifier</th><th scope="col">Evidence</th></tr></thead>
+      <tbody>
+        <tr><td>The management interface is not reachable from the internet. The portal is limited by source address where the use case allows it.</td><td>Management plane; CCCS ITSM.80.101</td><td>CCCS: network management interfaces "should not be directly exposed to the Internet." Handa's appliance accepted connections from any address.</td></tr>
+        <tr><td>After a VPN KEV: preserve, then upgrade from a clean image or factory reset. Reset local users, admin accounts, the LDAP/AD bind account, RADIUS shared secrets, certificates and API tokens. Revoke active sessions.</td><td>Credential store, session cache; <a href="https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-060b">AA24-060B</a></td><td>Fortinet found a symbolic link that kept read-only file access after the original flaws were fixed. Mandiant reports SPAWNANT persisting across Ivanti upgrades. CISA says to assume stored credentials are compromised.</td></tr>
+        <tr><td>Admin access uses phishing-resistant MFA. One-time codes alone are not treated as the finish line.</td><td>Authentication backend; T1078 Valid Accounts</td><td>Arctic Wolf saw OTP-protected SonicWall accounts logged into during the 2025 Akira campaign.</td></tr>
+        <tr><td>VPN users and vendors land in a restricted zone. No always-on RDP from vendor networks.</td><td>Address pool and firewall policy; T1021.001 Remote Desktop Protocol</td><td>At Osaka, always-on RDP from the vendor's server was the way into the hospital. The report found it was not actually needed.</td></tr>
+        <tr><td>Logs leave the appliance for a SIEM. Admin logons and configuration changes raise alerts.</td><td>syslog forwarding; CCCS ITSM.80.101</td><td>CCCS: "Enable centralized (off-device) logging" and alert on successful administrative log-ons and configuration changes.</td></tr>
+        <tr><td>Integrity is checked from outside, not only with the on-box tool.</td><td>Integrity Checker Tool (Ivanti); running-config baseline</td><td>CISA found Ivanti's internal and earlier external integrity checks missed the compromise.</td></tr>
+        <tr><td>Backup server credentials are separate from the domain, and backup jobs alert on deletion.</td><td>Backup service accounts; T1490 Inhibit System Recovery</td><td>Arctic Wolf describes Akira reading Veeam Backup &amp; Replication credentials before encrypting.</td></tr>
+        <tr><td>A ZTNA gateway gets the same patch deadline and log checks as the VPN it replaces.</td><td><a href="https://www.cve.org/CVERecord?id=CVE-2025-0282">CVE-2025-0282</a>, Ivanti Neurons for ZTA gateways before 22.7R2.3</td><td>The same pre-auth flaw as Connect Secure. JPCERT/CC confirmed exploitation in Japan from late December 2024, before the flaw was published.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</Fig>
+
+The procedure after a VPN KEV runs in a fixed order: preserve, then patch or rebuild, then reset credentials, then hunt behind the device. Patching first destroys the logs that show whether a credential reset and a hunt are needed.
+
+## <Scale s="1:100" /> Each control stops the route at one point
+
+The figure below is the plan from [chapter 2](../after-the-door/) with the whole route drawn. Choose how the intruder gets in, then switch on controls. A green bar marks where a control stops the route. Segments the intruder never reaches turn grey, and a note under the plan says why each control did or did not work.
+
+The scenarios are fixed. The stolen password belongs to a VPN account nobody uses any more. The pre-auth flaw is first exploited on day 5 after the fix is published, close to Mandiant's 2023 average. The zero-day is exploited before any fix exists, as JPCERT/CC reported for CVE-2025-0282 in Japan.
+
+<SourceLine lang="en" ids={["mandiant-tte-2023", "jpcert-at-2025-0001"]} />
+
+<Fig lang="en" n="6-5" caption="Close the door: Minato Precision head office, intruder route with controls" sources={["jpcert-ir-2024q2", "arcticwolf-akira-2025", "mandiant-tte-2023", "jpcert-at-2025-0001"]} composite nts>
+  <CloseTheDoor lang="en" label="Floor plan of the intruder's route with the selected controls applied. The text below the plan lists what each control did and what still happens." />
+  <table slot="data">
+    <thead><tr><th scope="col">Control</th><th scope="col">Stops the route at</th><th scope="col">Does not stop</th></tr></thead>
+    <tbody>
+      <tr><td>Patch within 3, 14 or 60 days</td><td>① the door, only if the patch lands before exploitation starts</td><td>A zero-day; a password stolen before the patch</td></tr>
+      <tr><td>MFA on the VPN</td><td>① the door, for a stolen password</td><td>A pre-auth flaw; a stolen session token</td></tr>
+      <tr><td>Remove unused accounts</td><td>① the door, when the stolen password belongs to an unused account</td><td>Any exploit; a password of an account in use</td></tr>
+      <tr><td>Tiered admin accounts</td><td>③ the key safe: the master keys stay in it</td><td>Entry; the leak of files the first account can read</td></tr>
+      <tr><td>Offline or immutable backup</td><td>④ the backups: they survive, so recovery is possible</td><td>Entry; the leak (double extortion still works)</td></tr>
+    </tbody>
+  </table>
+</Fig>
+
+Switch on every control and choose the zero-day: the intruder still gets in, and data the first account can read still leaves. Each control removes one part of the damage. None of them removes all of it.
+
+MFA in this figure stops a reused password. It does not stop a session token taken from the appliance, and the one-time codes in the Akira campaign did not stop logins. A backup in this figure makes encryption reversible. Data that has already left cannot be brought back.

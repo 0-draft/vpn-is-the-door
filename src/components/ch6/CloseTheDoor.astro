@@ -1,0 +1,560 @@
+---
+// 扉を閉める / Close the door (design §8.2). The chapter 2 plan with the whole
+// route drawn; each switch cuts it only where it really works. Decision logic
+// lives in src/lib/sandbox.ts. Green bars and the extra route pieces sit in an
+// overlay that shares the plan's viewBox (same grid cell, same container rules).
+import type { Lang } from "../../lib/paths";
+import { LAYOUTS, type Layout, type Pt, polyline } from "../../lib/plan";
+import {
+  ENTRIES,
+  type Entry,
+  EXPLOIT_DAY,
+  evaluate,
+  NO_CONTROLS,
+  PATCH_DAYS,
+  planState,
+  type Station,
+  summaryRows,
+} from "../../lib/sandbox";
+import FloorPlan from "../FloorPlan.astro";
+
+interface Props {
+  lang: Lang;
+  label: string;
+}
+
+const { lang, label } = Astro.props;
+const ja = lang === "ja";
+const initial = evaluate("password", NO_CONTROLS);
+const initialPlan = planState(initial);
+const rows = summaryRows(initial, lang);
+
+const ENTRY_LABEL: Record<Entry, { title: string; detail: string }> = ja
+  ? {
+      password: { title: "盗まれたパスワード", detail: "使われなくなった VPN アカウントのもの" },
+      preauth: { title: "認証前の脆弱性", detail: `修正版の公開から${EXPLOIT_DAY}日目に悪用が始まる` },
+      zeroday: { title: "認証前の脆弱性（ゼロデイ）", detail: "修正版が出る前に悪用が始まる" },
+    }
+  : {
+      password: { title: "Stolen password", detail: "for a VPN account nobody uses any more" },
+      preauth: { title: "Pre-auth vulnerability", detail: `exploited from day ${EXPLOIT_DAY} after the fix is out` },
+      zeroday: { title: "Pre-auth vulnerability (zero-day)", detail: "exploited before any fix exists" },
+    };
+
+const T = ja
+  ? {
+      entry: "侵入の手口",
+      controls: "対策",
+      patchA: "修正版の公開から",
+      patchB: "以内にパッチを適用",
+      days: (d: number) => `${d}日`,
+      patchSelect: "パッチ適用の期限",
+      mfa: "VPN に多要素認証",
+      unused: "使っていないアカウントの削除",
+      tiered: "管理者アカウントの分離",
+      backup: "オフラインまたは変更不能なバックアップ",
+      notes: "対策ごとの結果",
+      notesEmpty: "対策が1つも入っていない。経路は最後まで通る。",
+      outcome: "この組み合わせで起きること",
+      link: "この組み合わせへのリンク",
+      reset: "すべて外す",
+    }
+  : {
+      entry: "How they get in",
+      controls: "Controls",
+      patchA: "Patch within",
+      patchB: "of the fix",
+      days: (d: number) => `${d} days`,
+      patchSelect: "Patch deadline",
+      mfa: "MFA on the VPN",
+      unused: "Remove unused accounts",
+      tiered: "Tiered admin accounts",
+      backup: "Offline or immutable backup",
+      notes: "What each control did",
+      notesEmpty: "No controls are on. The route runs to the end.",
+      outcome: "What still happens",
+      link: "Link to this combination",
+      reset: "Clear all",
+    };
+
+// Overlay geometry per layout, placed off the station marks from plan.ts.
+interface Ov {
+  bars: Record<Station, [Pt, Pt]>;
+  stub: Pt[];
+  exfil: Pt[];
+}
+function overlay(l: Layout): Ov {
+  const s = l.stations;
+  const c = l.rooms.find((r) => r.id === "corridor")!.rect;
+  if (l.name === "wide") {
+    return {
+      bars: {
+        door: [
+          [s.s1[0] - 24, c.y + 4],
+          [s.s1[0] - 24, c.y + c.h - 4],
+        ],
+        keys: [
+          [s.s3[0] - 19, s.s3[1] - 18],
+          [s.s3[0] - 19, s.s3[1] + 18],
+        ],
+        backups: [
+          [s.s4[0] + 26, s.s4[1] - 18],
+          [s.s4[0] + 26, s.s4[1] + 18],
+        ],
+      },
+      stub: [l.route.in[0]!, [s.s1[0] + 18, s.s1[1]]],
+      exfil: [
+        [s.s2[0], s.s2[1] + 12],
+        [l.route.out.at(-1)![0], s.s2[1] + 12],
+      ],
+    };
+  }
+  return {
+    bars: {
+      door: [
+        [c.x + 2, s.s1[1] - 24],
+        [c.x + c.w - 2, s.s1[1] - 24],
+      ],
+      keys: [
+        [s.s3[0] - 14, s.s3[1] + 13],
+        [s.s3[0] - 14, s.s3[1] + 59],
+      ],
+      backups: [
+        [s.s4[0] - 18, s.s4[1] - 5],
+        [s.s4[0] - 18, s.s4[1] + 41],
+      ],
+    },
+    stub: [l.route.in[0]!, [s.s1[0], s.s1[1] + 18]],
+    exfil: [
+      [s.s2[0] + 14, s.s2[1]],
+      [s.s2[0] + 14, l.route.out.at(-1)![1]],
+    ],
+  };
+}
+const stationIds = ["door", "keys", "backups"] as const;
+---
+
+<div class="sandbox" data-sandbox data-lang={lang} data-cut="" data-grey="">
+  <form class="sb-controls" data-sb-form>
+    <fieldset class="sb-fs">
+      <legend>{T.entry}</legend>
+      {
+        ENTRIES.map((e) => (
+          <label class="sb-opt">
+            <input type="radio" name="entry" value={e} checked={e === "password"} />
+            <span>
+              <strong>{ENTRY_LABEL[e].title}</strong> <span class="sb-detail">{ENTRY_LABEL[e].detail}</span>
+            </span>
+          </label>
+        ))
+      }
+    </fieldset>
+    <fieldset class="sb-fs">
+      <legend>{T.controls}</legend>
+      <div class="sb-opt sb-patch">
+        <input type="checkbox" name="patch" id="sb-patch" />
+        <span>
+          <label for="sb-patch">{T.patchA}</label>
+          <select name="days" aria-label={T.patchSelect}>
+            {PATCH_DAYS.map((d) => <option value={d} selected={d === 14}>{T.days(d)}</option>)}
+          </select>
+          <label for="sb-patch">{T.patchB}</label>
+        </span>
+      </div>
+      {
+        (["mfa", "unused", "tiered", "backup"] as const).map((k) => (
+          <label class="sb-opt">
+            <input type="checkbox" name={k} />
+            <span>{T[k]}</span>
+          </label>
+        ))
+      }
+      <button type="reset" class="sb-reset">{T.reset}</button>
+    </fieldset>
+  </form>
+
+  <div class="sb-stage">
+    <FloorPlan lang={lang} mode="route" uid="close" show={initialPlan.show} doors="closed" label={label} />
+    <div class="plan sb-ov" aria-hidden="true">
+      {
+        LAYOUTS.map((l) => {
+          const o = overlay(l);
+          const [vx, vy, vw, vh] = l.viewBox;
+          return (
+            <svg class={`dg plan-svg plan-${l.name}`} viewBox={`${vx} ${vy} ${vw} ${vh}`} width={vw} height={vh}>
+              <defs>
+                <marker
+                  id={`sb-arrow-${l.name}`}
+                  viewBox="0 0 10 10"
+                  refX="9"
+                  refY="5"
+                  markerWidth="9"
+                  markerHeight="9"
+                  orient="auto"
+                >
+                  <path d="M0 1.5 L10 5 L0 8.5 z" class="sb-arrowhead" />
+                </marker>
+              </defs>
+              <path class="route sb-stub" d={polyline(o.stub)} marker-end={`url(#sb-arrow-${l.name})`} />
+              <path class="route sb-exfil" d={polyline(o.exfil)} marker-end={`url(#sb-arrow-${l.name})`} />
+              {stationIds.map((st) => (
+                <line
+                  class={`safe-bar sb-bar sb-bar-${st}`}
+                  x1={o.bars[st][0][0]}
+                  y1={o.bars[st][0][1]}
+                  x2={o.bars[st][1][0]}
+                  y2={o.bars[st][1][1]}
+                />
+              ))}
+            </svg>
+          );
+        })
+      }
+    </div>
+  </div>
+
+  <div class="sb-read">
+    <section class="sb-notes" aria-labelledby="sb-notes-h">
+      <h3 id="sb-notes-h" class="sb-h">{T.notes}</h3>
+      <ul data-sb-notes aria-live="polite">
+        <li class="sb-note sb-note-empty">{T.notesEmpty}</li>
+      </ul>
+    </section>
+    <section class="sb-outcome" aria-labelledby="sb-out-h">
+      <h3 id="sb-out-h" class="sb-h">{T.outcome}</h3>
+      <dl data-sb-outcome aria-live="polite">
+        {
+          rows.map((r) => (
+            <div class="sb-row" data-stage={r.stage} data-bad={String(r.bad)}>
+              <dt>{r.label}</dt>
+              <dd>{r.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <p class="sb-link"><a href="?entry=password" data-sb-link>{T.link}</a></p>
+    </section>
+  </div>
+</div>
+
+<script>
+  import type { Lang } from "../../lib/paths";
+  import {
+    type Controls,
+    type Entry,
+    evaluate,
+    fromQuery,
+    NOTE_STATION,
+    noteKind,
+    noteText,
+    type PatchDays,
+    planState,
+    type State,
+    summaryRows,
+    toQuery,
+  } from "../../lib/sandbox";
+
+  const STATION_MARK = { door: "1", keys: "3", backups: "4" } as const;
+
+  for (const root of document.querySelectorAll<HTMLElement>("[data-sandbox]")) {
+    const lang = (root.dataset.lang ?? "en") as Lang;
+    const form = root.querySelector<HTMLFormElement>("[data-sb-form]")!;
+    const plan = root.querySelector<HTMLElement>(".sb-stage > .plan[data-plan]")!;
+    const notesEl = root.querySelector<HTMLElement>("[data-sb-notes]")!;
+    const outEl = root.querySelector<HTMLElement>("[data-sb-outcome]")!;
+    const link = root.querySelector<HTMLAnchorElement>("[data-sb-link]")!;
+    const empty = notesEl.querySelector("li")!.cloneNode(true);
+    const el = (name: string) => form.elements.namedItem(name) as HTMLInputElement;
+    const days = form.elements.namedItem("days") as HTMLSelectElement;
+
+    const read = (): State => {
+      const entry = (form.querySelector<HTMLInputElement>("input[name=entry]:checked")?.value ?? "password") as Entry;
+      const controls: Controls = {
+        patch: el("patch").checked ? (Number(days.value) as PatchDays) : 0,
+        mfa: el("mfa").checked,
+        unused: el("unused").checked,
+        tiered: el("tiered").checked,
+        backup: el("backup").checked,
+      };
+      return { entry, controls };
+    };
+
+    const write = (s: State) => {
+      for (const r of form.querySelectorAll<HTMLInputElement>("input[name=entry]")) r.checked = r.value === s.entry;
+      el("patch").checked = s.controls.patch > 0;
+      if (s.controls.patch) days.value = String(s.controls.patch);
+      for (const k of ["mfa", "unused", "tiered", "backup"] as const) el(k).checked = s.controls[k];
+    };
+
+    const render = (s: State, push: boolean) => {
+      const o = evaluate(s.entry, s.controls);
+      const p = planState(o);
+      plan.dataset.show = p.show;
+      root.dataset.cut = o.cuts.join(" ");
+      root.dataset.grey = p.grey.join(" ");
+      root.toggleAttribute("data-limited", p.limitedExfil);
+
+      notesEl.replaceChildren(
+        ...(o.notes.length === 0
+          ? [empty.cloneNode(true)]
+          : o.notes.map((id) => {
+              const li = document.createElement("li");
+              li.className = `sb-note sb-note-${noteKind(id)}`;
+              const n = document.createElement("span");
+              n.className = "sb-st num";
+              n.setAttribute("aria-hidden", "true");
+              n.textContent = STATION_MARK[NOTE_STATION[id]];
+              li.append(n, document.createTextNode(noteText(id, lang, s.controls)));
+              return li;
+            })),
+      );
+
+      for (const r of summaryRows(o, lang)) {
+        const row = outEl.querySelector<HTMLElement>(`[data-stage="${r.stage}"]`);
+        if (!row) continue;
+        row.dataset.bad = String(r.bad);
+        row.querySelector("dd")!.textContent = r.value;
+      }
+
+      const q = toQuery(s);
+      link.href = `${location.pathname}${q}#fig-6-5`;
+      if (push) history.replaceState(history.state, "", `${location.pathname}${q}${location.hash}`);
+    };
+
+    form.addEventListener("change", (ev) => {
+      if (ev.target === days) el("patch").checked = true;
+      render(read(), true);
+    });
+    form.addEventListener("reset", () => {
+      // let the browser restore defaults first
+      setTimeout(() => render(read(), true), 0);
+    });
+    form.addEventListener("submit", (ev) => ev.preventDefault());
+
+    const start = fromQuery(location.search);
+    write(start);
+    render(start, false);
+  }
+</script>
+
+<style is:global>
+  .sandbox {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .sb-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+    gap: 1rem 2rem;
+  }
+  .sb-fs {
+    margin: 0;
+    padding: 0.75rem 1rem 1rem;
+    border: 1px solid var(--line);
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+  }
+  .sb-fs legend {
+    font-weight: 700;
+    padding-inline: 0.35rem;
+  }
+  .sb-opt {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.6rem;
+    align-items: baseline;
+    font-size: 1rem;
+    line-height: 1.45;
+    cursor: pointer;
+  }
+  .sb-opt input {
+    inline-size: 1.125rem;
+    block-size: 1.125rem;
+    margin: 0;
+    accent-color: var(--instruct);
+    transform: translateY(0.15em);
+  }
+  .sb-detail {
+    color: var(--ink-2);
+  }
+  .sb-patch label {
+    cursor: pointer;
+  }
+  .sb-patch select {
+    font: inherit;
+    font-size: 1rem;
+    margin-inline: 0.25rem;
+    padding: 0.1rem 0.25rem;
+    color: var(--ink);
+    background: var(--sheet);
+    border: 1px solid var(--line);
+  }
+  .sb-reset {
+    justify-self: start;
+    margin-block-start: 0.25rem;
+    font: inherit;
+    font-size: 0.9375rem;
+    color: var(--instruct);
+    background: none;
+    border: 1px solid var(--instruct);
+    padding: 0.2rem 0.6rem;
+    cursor: pointer;
+  }
+
+  .sb-stage {
+    display: grid;
+  }
+  .sb-stage > .plan {
+    grid-area: 1 / 1;
+  }
+  .sb-ov {
+    pointer-events: none;
+  }
+
+  /* overlay pieces appear only for the state that needs them */
+  .sb-ov .sb-bar,
+  .sb-ov .sb-stub,
+  .sb-ov .sb-exfil {
+    opacity: 0;
+    transition: opacity 160ms var(--ease);
+  }
+  .sb-ov .sb-arrowhead {
+    fill: var(--intruder);
+  }
+  .sb-ov .sb-exfil {
+    stroke-width: 2;
+    stroke-dasharray: 3 4;
+  }
+  .sb-ov .safe-bar {
+    stroke-width: 7;
+  }
+  .sandbox[data-cut~="door"] .sb-bar-door,
+  .sandbox[data-cut~="keys"] .sb-bar-keys,
+  .sandbox[data-cut~="backups"] .sb-bar-backups,
+  .sandbox[data-cut~="door"] .sb-stub,
+  .sandbox[data-limited] .sb-exfil {
+    opacity: 1;
+  }
+
+  /* segments the intruder never walks: grey, no arrowhead */
+  .sandbox[data-grey~="in"] .plan .route-in,
+  .sandbox[data-grey~="toKeys"] .plan .route-toKeys,
+  .sandbox[data-grey~="toBackup"] .plan .route-toBackup,
+  .sandbox[data-grey~="out"] .plan .route-out {
+    stroke: var(--line);
+    marker-end: none;
+  }
+  .sandbox[data-grey~="in"] .plan .station-s2 circle,
+  .sandbox[data-grey~="toKeys"] .plan .station-s3 circle,
+  .sandbox[data-grey~="toBackup"] .plan .station-s4 circle {
+    stroke: var(--line);
+  }
+  .sandbox[data-grey~="in"] .plan .station-s2 text,
+  .sandbox[data-grey~="toKeys"] .plan .station-s3 text,
+  .sandbox[data-grey~="toBackup"] .plan .station-s4 text {
+    fill: var(--ink-3);
+  }
+
+  /* cut at the door: the VPN door stays shut */
+  .sandbox[data-cut~="door"] .plan .door[data-door="vpn"] .leaf {
+    transform: rotate(var(--close));
+  }
+  .sandbox[data-cut~="door"] .plan .door[data-door="vpn"] .swing {
+    opacity: 0;
+  }
+  /* what the defense keeps is outlined in green */
+  .sandbox[data-cut~="keys"] .plan .fixture-keys,
+  .sandbox[data-cut~="backups"] .plan .fixture-nas {
+    stroke: var(--safe);
+    stroke-width: 2.5;
+  }
+  .sandbox[data-cut~="backups"] .plan .overlay-backup {
+    opacity: 0;
+  }
+  .sandbox[data-cut~="backups"] .plan .floor[data-room="backup"] {
+    fill: var(--room);
+  }
+
+  .sb-read {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    gap: 1rem 2.5rem;
+  }
+  .sb-h {
+    font-size: 1rem;
+    margin: 0 0 0.5rem;
+  }
+  .sb-notes ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+  .sb-note {
+    display: grid;
+    grid-template-columns: 1.75rem minmax(0, 1fr);
+    gap: 0.6rem;
+    align-items: baseline;
+    font-size: 1rem;
+    line-height: 1.5;
+    padding-inline-start: 0.6rem;
+    border-inline-start: 4px solid var(--line);
+  }
+  .sb-note-empty {
+    display: block;
+    color: var(--ink-2);
+  }
+  .sb-note-cut {
+    border-inline-start-color: var(--safe);
+  }
+  .sb-note-moot {
+    color: var(--ink-2);
+  }
+  .sb-st {
+    display: inline-grid;
+    place-items: center;
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+    border: 1.5px solid var(--line);
+    border-radius: 50%;
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+  .sb-note-cut .sb-st {
+    border-color: var(--safe);
+    color: var(--safe);
+  }
+  .sb-outcome dl {
+    margin: 0;
+    display: grid;
+    gap: 0;
+  }
+  .sb-row {
+    display: grid;
+    grid-template-columns: minmax(7rem, 2fr) minmax(0, 3fr);
+    gap: 0.75rem;
+    padding-block: 0.4rem;
+    border-block-end: 1px solid var(--hair);
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+  .sb-row dt {
+    font-weight: 700;
+  }
+  .sb-row dd {
+    margin: 0;
+    padding-inline-start: 0.6rem;
+    border-inline-start: 4px solid var(--safe);
+  }
+  .sb-row[data-bad="true"] dd {
+    border-inline-start-color: var(--intruder);
+    color: var(--intruder-text);
+    font-weight: 700;
+  }
+  .sb-link {
+    margin: 0.75rem 0 0;
+    font-size: 0.9375rem;
+  }
+</style>
