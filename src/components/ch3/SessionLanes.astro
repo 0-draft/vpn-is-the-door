@@ -1,0 +1,76 @@
+---
+// Fig. 3-9: the employee's login and the attacker's replay of the same
+// session cookie, side by side. Red marks the attacker's lane only.
+import type { Lang } from "../../lib/paths";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const ja = lang === "ja";
+const H = ja ? ["手順", "社員", "攻撃者"] : ["Step", "Employee", "Attacker"];
+const R: [string, string | null, string | null][] = ja
+  ? [
+      ["1", "錠でパスワードを入力する", null],
+      ["2", "多要素認証に応答する", null],
+      ["3", "機器がセッション Cookie を発行し、メモリに保持する", "span"],
+      ["4", "VPN 越しに仕事をする", "インターホンに要求を送る。メモリ読み出しの欠陥が Cookie を返す"],
+      ["5", null, "Cookie を提示する。機器はログイン済みのセッションとして扱う"],
+    ]
+  : [
+      ["1", "Enters a password at the lock", null],
+      ["2", "Answers the MFA prompt", null],
+      ["3", "The appliance issues a session cookie and keeps it in memory", "span"],
+      ["4", "Works through the VPN", "Sends requests to the intercom; the memory-read bug returns the cookie"],
+      ["5", null, "Presents the cookie. The appliance treats it as a logged-in session"],
+    ];
+---
+
+<div class="table-scroll" tabindex="0">
+  <table class="lanes">
+    <thead>
+      <tr>{H.map((h) => <th scope="col">{h}</th>)}</tr>
+    </thead>
+    <tbody>
+      {
+        R.map(([n, a, b]) => (
+          <tr>
+            <td class="num">{n}</td>
+            {b === "span" ? (
+              <td colspan="2" class="lane-box">
+                {a}
+              </td>
+            ) : (
+              <>
+                <td>{a ?? "—"}</td>
+                <td class:list={{ "lane-hot": b !== null }}>{b ?? "—"}</td>
+              </>
+            )}
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .lanes {
+    min-inline-size: 30rem;
+  }
+  .lanes td:nth-child(2),
+  .lanes td:nth-child(3) {
+    inline-size: 45%;
+  }
+  .lane-box {
+    text-align: center;
+    border: 2px solid var(--ink);
+    background: var(--room);
+  }
+  .lane-hot {
+    border-inline-start: 3px solid var(--intruder);
+    padding-inline-start: 0.75rem;
+    color: var(--intruder-text);
+    font-weight: 700;
+  }
+</style>

@@ -1,0 +1,320 @@
+---
+// The VPN door cut open (design §4.3). One elevation, five regions:
+// intercom = pre-auth portal, lock = authentication/MFA, keys = issued session
+// tokens, frame = appliance OS/daemons/management, camera = logs.
+// "metaphor" labels for the S=1:100 layer, "real" component names for S=1:5.
+// A route is drawn from the street through `path`; the explorer script changes
+// data-segs / data-hot / data-skip on the <svg> to show another row.
+import { type Part, segmentsFor } from "../../data/doors";
+import type { Lang } from "../../lib/paths";
+
+interface Props {
+  lang: Lang;
+  uid: string;
+  labels: "metaphor" | "real";
+  path?: Part[];
+  /** Grey comparison route to the lock (a stolen password meets MFA). */
+  compare?: boolean;
+  label: string;
+}
+
+const { lang, uid, labels, path = [], compare = false, label } = Astro.props;
+const segs = segmentsFor(path).join(" ");
+const hot = path.join(" ");
+const skip = path.length > 0 && !path.includes("lock");
+
+const LH = 22;
+type Block = { part: Part; y: number; from: [number, number]; via?: [number, number]; main: string[]; sub: string[] };
+const TEXT: Record<"metaphor" | "real", Record<Lang, Record<Part, [string[], string[]]>>> = {
+  metaphor: {
+    en: {
+      camera: [["Camera"], ["records little"]],
+      frame: [["Frame and hinges"], ["the box itself"]],
+      keys: [["Issued keys"], ["handed out after", "the lock opens"]],
+      intercom: [["Intercom"], ["answers before", "the lock"]],
+      lock: [["Lock"], ["password, MFA"]],
+    },
+    ja: {
+      camera: [["防犯カメラ"], ["記録は少ない"]],
+      frame: [["枠と蝶番"], ["扉を支える本体"]],
+      keys: [["合鍵"], ["錠が開いた後に", "渡す鍵"]],
+      intercom: [["インターホン"], ["錠より先に", "応答する"]],
+      lock: [["錠"], ["パスワード、", "多要素認証"]],
+    },
+  },
+  real: {
+    en: {
+      camera: [["Appliance logs"], ["camera"]],
+      frame: [["Appliance OS,", "daemons,", "management UI"], ["frame and hinges"]],
+      keys: [["Session tokens,", "stored credentials"], ["issued keys"]],
+      intercom: [["Pre-auth", "web portal"], ["intercom"]],
+      lock: [["Authentication,", "MFA"], ["lock"]],
+    },
+    ja: {
+      camera: [["機器のログ"], ["防犯カメラ"]],
+      frame: [["機器の OS、", "常駐プロセス、", "管理画面"], ["枠と蝶番"]],
+      keys: [["セッション", "トークン、", "保存認証情報"], ["合鍵"]],
+      intercom: [["認証前の", "Web ポータル"], ["インターホン"]],
+      lock: [["認証、", "多要素認証"], ["錠"]],
+    },
+  },
+};
+const T = TEXT[labels][lang];
+const blocks: Block[] = [
+  { part: "camera", y: 42, from: [144, 41], main: T.camera[0], sub: T.camera[1] },
+  { part: "frame", y: 128, from: [190, 128], main: T.frame[0], sub: T.frame[1] },
+  { part: "keys", y: 226, from: [136, 226], main: T.keys[0], sub: T.keys[1] },
+  { part: "intercom", y: 330, from: [238, 330], main: T.intercom[0], sub: T.intercom[1] },
+  { part: "lock", y: 440, from: [170, 362], via: [236, 434], main: T.lock[0], sub: T.lock[1] },
+];
+
+const SEG: Record<string, string> = {
+  "o-intercom": "M280 540 L250 540 L223 358",
+  "o-lock": "M280 540 L204 470 L170 382",
+  "o-keys": "M280 540 L230 450 L184 300 L138 266",
+  "intercom-keys": "M204 296 L188 268 L140 246",
+  "intercom-frame": "M221 278 L221 200 L194 160",
+  "lock-frame": "M164 316 L182 250 L182 172",
+  "lock-keys": "M150 316 L130 272",
+  "frame-camera": "M184 140 L184 84 L146 52",
+  "keys-frame": "M120 196 L120 116",
+};
+const origin =
+  labels === "real" ? (lang === "ja" ? "インターネット" : "Internet") : lang === "ja" ? "外の通り" : "Street";
+const skipText = lang === "ja" ? ["多要素認証:", "素通り"] : ["MFA:", "not reached"];
+const cmp =
+  lang === "ja"
+    ? { red: "認証前の欠陥: インターホンから枠へ", grey: "盗んだパスワード: 錠で多要素認証に当たる" }
+    : { red: "Pre-auth flaw: intercom to frame", grey: "Stolen password: meets MFA at the lock" };
+const H = compare ? 680 : 600;
+const arrow = `${uid}-arrow`;
+---
+
+<svg
+  class="dg door"
+  viewBox={`0 0 440 ${H}`}
+  role="img"
+  aria-label={label}
+  data-door={uid}
+  data-segs={segs}
+  data-hot={hot}
+  data-skip={skip ? "1" : undefined}
+>
+  <defs>
+    <marker id={arrow} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 1.5 L10 5 L0 8.5 z" class="door-arrowhead"></path>
+    </marker>
+  </defs>
+
+  <!-- wall face and ground -->
+  <rect class="floor" x="0" y="70" width="252" height="490"></rect>
+  <line class="thick" x1="0" y1="70" x2="252" y2="70"></line>
+  <line class="thick" x1="0" y1="560" x2="440" y2="560"></line>
+
+  <!-- camera -->
+  <g class="part part-camera" data-part="camera">
+    <rect class="hit ghost" x="86" y="24" width="62" height="50"></rect>
+    <line class="thin" x1="116" y1="52" x2="116" y2="70"></line>
+    <rect class="body" x="92" y="30" width="48" height="22"></rect>
+    <path class="body" d="M92 36 L80 44 L92 48 z"></path>
+  </g>
+
+  <!-- frame and hinges -->
+  <g class="part part-frame" data-part="frame">
+    <path class="hit body" d="M30 560 V90 H190 V560 H176 V104 H44 V560 Z"></path>
+    <rect class="hinge" x="38" y="140" width="12" height="32"></rect>
+    <rect class="hinge" x="38" y="310" width="12" height="32"></rect>
+    <rect class="hinge" x="38" y="480" width="12" height="32"></rect>
+  </g>
+
+  <!-- leaf -->
+  <rect class="leaf-face" x="44" y="104" width="132" height="456"></rect>
+  <rect class="thin" x="60" y="124" width="100" height="170"></rect>
+  <rect class="thin" x="60" y="392" width="100" height="148"></rect>
+
+  <!-- issued keys, hanging behind the leaf: hidden lines -->
+  <g class="part part-keys" data-part="keys">
+    <rect class="hit ghost" x="86" y="194" width="52" height="78"></rect>
+    <line class="hidden-line" x1="110" y1="198" x2="110" y2="210"></line>
+    <circle class="hidden-line" cx="110" cy="222" r="12"></circle>
+    <path class="hidden-line" d="M100 232 L94 262 M94 254 L100 254 M120 232 L126 262 M126 254 L120 254"></path>
+  </g>
+
+  <!-- lock -->
+  <g class="part part-lock" data-part="lock">
+    <rect class="hit body" x="146" y="318" width="24" height="62"></rect>
+    <circle class="thin" cx="158" cy="336" r="7"></circle>
+    <line class="thick" x1="158" y1="362" x2="130" y2="362"></line>
+  </g>
+
+  <!-- intercom on the outside wall -->
+  <g class="part part-intercom" data-part="intercom">
+    <rect class="hit body" x="204" y="280" width="34" height="76"></rect>
+    <line class="thin" x1="210" y1="292" x2="232" y2="292"></line>
+    <line class="thin" x1="210" y1="300" x2="232" y2="300"></line>
+    <line class="thin" x1="210" y1="308" x2="232" y2="308"></line>
+    <circle class="thin" cx="221" cy="336" r="6"></circle>
+  </g>
+
+  <!-- labels with leaders -->
+  {
+    blocks.map((b) => (
+      <g class={`door-label door-label-${b.part}`} data-label={b.part}>
+        <polyline
+          class="thin leader"
+          points={[b.from, ...(b.via ? [b.via] : []), [256, b.y - 6]].map((p) => p.join(",")).join(" ")}
+        />
+        {b.main.map((s, i) => (
+          <text class="lbl-main" x="262" y={b.y + i * LH}>
+            {s}
+          </text>
+        ))}
+        {b.sub.map((s, i) => (
+          <text class="muted lbl-sub" x="262" y={b.y + (b.main.length + i) * LH}>
+            {s}
+          </text>
+        ))}
+      </g>
+    ))
+  }
+
+  <!-- origin -->
+  <g class="door-origin">
+    <circle cx="280" cy="540" r="7"></circle>
+    <text x="294" y="546" class="lbl-sub">{origin}</text>
+  </g>
+
+  {compare && <path class="cmp-route" d={SEG["o-lock"]} />}
+  {compare && <line class="cmp-stop" x1="160" y1="390" x2="182" y2="384" />}
+
+  <!-- routes: all drawn, CSS shows the ones named in data-segs -->
+  {Object.entries(SEG).map(([k, d]) => <path class={`route seg seg-${k}`} data-seg={k} d={d} marker-end={`url(#${arrow})`} />)}
+
+  <g class="skip-tag caution-tag">
+    <rect x="52" y="396" width="116" height="52"></rect>
+    <text x="110" y="417" text-anchor="middle" class="lbl-sub">{skipText[0]}</text>
+    <text x="110" y="439" text-anchor="middle" class="lbl-sub">{skipText[1]}</text>
+  </g>
+
+  {
+    compare && (
+      <g class="door-legend">
+        <line class="route" x1="0" y1="604" x2="40" y2="604" />
+        <text x="50" y="610" class="lbl-sub">
+          {cmp.red}
+        </text>
+        <line class="cmp-route" x1="0" y1="646" x2="40" y2="646" />
+        <text x="50" y="652" class="lbl-sub">
+          {cmp.grey}
+        </text>
+      </g>
+    )
+  }
+</svg>
+
+<style is:global>
+  svg.door {
+    max-inline-size: 30rem;
+    margin-inline: auto;
+  }
+  .door text {
+    font-size: 18px;
+  }
+  .door .lbl-main {
+    font-weight: 700;
+    fill: var(--ink);
+  }
+  .door .lbl-sub {
+    font-size: 17px;
+  }
+  .door .body,
+  .door .leaf-face {
+    fill: var(--sheet);
+    stroke: var(--ink);
+    stroke-width: 2;
+  }
+  .door .hinge {
+    fill: var(--ink-2);
+  }
+  .door .hidden-line {
+    fill: none;
+    stroke: var(--ink-2);
+    stroke-width: 1.5;
+    stroke-dasharray: 4 3;
+  }
+  .door .part .hit {
+    transition:
+      fill 140ms var(--ease),
+      stroke 140ms var(--ease);
+  }
+  .door .ghost {
+    fill: transparent;
+    stroke: none;
+  }
+  .door .door-origin circle {
+    fill: var(--intruder);
+  }
+  .door[data-segs=""] .door-origin circle {
+    fill: var(--ink-2);
+  }
+  .door .door-arrowhead {
+    fill: var(--intruder);
+  }
+  .door .seg {
+    opacity: 0;
+    transition: opacity 140ms var(--ease);
+  }
+  .door .cmp-route {
+    fill: none;
+    stroke: var(--line);
+    stroke-width: 2;
+    stroke-dasharray: 6 4;
+  }
+  .door .cmp-stop {
+    stroke: var(--ink);
+    stroke-width: 4;
+  }
+  .door .skip-tag {
+    opacity: 0;
+    transition: opacity 140ms var(--ease);
+  }
+  .door[data-skip] .skip-tag {
+    opacity: 1;
+  }
+  .door[data-segs~="o-intercom"] .seg-o-intercom,
+  .door[data-segs~="o-lock"] .seg-o-lock,
+  .door[data-segs~="o-keys"] .seg-o-keys,
+  .door[data-segs~="intercom-keys"] .seg-intercom-keys,
+  .door[data-segs~="intercom-frame"] .seg-intercom-frame,
+  .door[data-segs~="lock-frame"] .seg-lock-frame,
+  .door[data-segs~="lock-keys"] .seg-lock-keys,
+  .door[data-segs~="frame-camera"] .seg-frame-camera,
+  .door[data-segs~="keys-frame"] .seg-keys-frame {
+    opacity: 1;
+  }
+  /* compromised region: JIS red at 20% plus a 2px intruder outline */
+  .door[data-hot~="intercom"] .part-intercom .hit,
+  .door[data-hot~="lock"] .part-lock .hit,
+  .door[data-hot~="keys"] .part-keys .hit,
+  .door[data-hot~="frame"] .part-frame .hit,
+  .door[data-hot~="camera"] .part-camera .hit {
+    fill: color-mix(in srgb, var(--intruder-fill) 20%, var(--sheet));
+    stroke: var(--intruder);
+    stroke-width: 2;
+  }
+  .door[data-hot~="intercom"] .door-label-intercom .lbl-main,
+  .door[data-hot~="lock"] .door-label-lock .lbl-main,
+  .door[data-hot~="keys"] .door-label-keys .lbl-main,
+  .door[data-hot~="frame"] .door-label-frame .lbl-main,
+  .door[data-hot~="camera"] .door-label-camera .lbl-main {
+    fill: var(--intruder-text);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .door * {
+      transition: none !important;
+    }
+  }
+  :root[data-motion="off"] .door * {
+    transition: none !important;
+  }
+</style>

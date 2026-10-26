@@ -1,0 +1,117 @@
+---
+// Fig. 3-8: one square per row of the door schedule, grouped by door mark.
+// Filled = reachable before login; outlined = needs a login on its own but
+// was exploited chained behind a pre-auth bug.
+import { PRODUCTS, VULNS } from "../../data/doors";
+import type { Lang } from "../../lib/paths";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const ja = lang === "ja";
+const groups = PRODUCTS.map((p) => ({ p, rows: VULNS.filter((v) => v.product === p.id) }));
+---
+
+<ul class="units">
+  {
+    groups.map(({ p, rows }) => {
+      const n = rows.filter((v) => v.preauth).length;
+      return (
+        <li class="units-row">
+          <span class="units-name">
+            <span class="mono units-mark">{p.mark}</span> {p.name[lang]}
+          </span>
+          <span class="units-sq">
+            {rows.map((v) => (
+              <a
+                href={`#${v.cve.toLowerCase()}`}
+                class:list={["unit-sq", { pre: v.preauth }]}
+                aria-label={`${v.cve}: ${v.preauth ? (ja ? "認証前" : "pre-auth") : ja ? "連鎖" : "chained"}`}
+              />
+            ))}
+          </span>
+          <span class="units-v num">{ja ? `${rows.length}件中${n}件` : `${n} of ${rows.length}`}</span>
+        </li>
+      );
+    })
+  }
+</ul>
+<p class="units-key">
+  <span class="units-k"><span class="unit-sq pre"></span> {ja ? "ログイン前に届く" : "reachable before login"}</span>
+  <span class="units-k"
+    ><span class="unit-sq"></span>
+    {ja ? "単独ではログインが要るが、認証前の欠陥の後ろで使われた" : "needs a login alone, used chained behind a pre-auth flaw"}</span
+  >
+</p>
+
+<style>
+  .units {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+  .units-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) 6rem;
+    gap: 0.75rem;
+    align-items: center;
+    padding-block: 0.3rem;
+    border-block-end: 1px solid var(--hair);
+  }
+  .units-name {
+    font-size: 0.9375rem;
+  }
+  .units-mark {
+    border: 1px solid var(--ink);
+    padding: 0 0.3em;
+  }
+  .units-sq {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .unit-sq {
+    display: inline-block;
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+    border: 2px solid var(--intruder);
+    background: var(--sheet);
+    vertical-align: middle;
+  }
+  .unit-sq.pre {
+    background: var(--intruder);
+  }
+  .units-v {
+    text-align: end;
+    font-size: 0.9375rem;
+  }
+  .units-key {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.6rem;
+    align-items: center;
+    margin: 0.75rem 0 0;
+    font-size: 0.875rem;
+    color: var(--ink-2);
+  }
+  .units-k {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: flex-start;
+  }
+  .units-k .unit-sq {
+    flex: none;
+  }
+  @media (max-width: 40em) {
+    .units-row {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+    .units-name {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

@@ -1,0 +1,1559 @@
+{
+  "catalogVersion": "2026.10.23",
+  "excluded": [
+    {
+      "cve": "CVE-2026-8452",
+      "reason": "CVSS, vendor bulletin and first-exploitation date are UNVERIFIED in the research; no primary source cited"
+    }
+  ],
+  "products": [
+    {
+      "id": "fortinet",
+      "mark": "SD-1",
+      "name": {
+        "en": "Fortinet FortiGate (FortiOS SSL-VPN)",
+        "ja": "Fortinet FortiGate（FortiOS SSL-VPN）"
+      }
+    },
+    {
+      "id": "ivanti",
+      "mark": "SD-2",
+      "name": {
+        "en": "Ivanti Connect Secure (formerly Pulse Connect Secure)",
+        "ja": "Ivanti Connect Secure（旧 Pulse Connect Secure）"
+      }
+    },
+    {
+      "id": "citrix",
+      "mark": "SD-3",
+      "name": {
+        "en": "Citrix NetScaler ADC / Gateway",
+        "ja": "Citrix NetScaler ADC / Gateway"
+      }
+    },
+    {
+      "id": "paloalto",
+      "mark": "SD-4",
+      "name": {
+        "en": "Palo Alto Networks GlobalProtect (PAN-OS)",
+        "ja": "Palo Alto Networks GlobalProtect（PAN-OS）"
+      }
+    },
+    {
+      "id": "sonicwall",
+      "mark": "SD-5",
+      "name": {
+        "en": "SonicWall SonicOS SSLVPN and SMA",
+        "ja": "SonicWall（SonicOS SSLVPN、SMA）"
+      }
+    },
+    {
+      "id": "cisco",
+      "mark": "SD-6",
+      "name": {
+        "en": "Cisco ASA / FTD remote access VPN",
+        "ja": "Cisco ASA / FTD（リモートアクセス VPN）"
+      }
+    },
+    {
+      "id": "checkpoint",
+      "mark": "SD-7",
+      "name": {
+        "en": "Check Point Quantum Security Gateway (Remote Access VPN)",
+        "ja": "Check Point Quantum Security Gateway（リモートアクセス VPN）"
+      }
+    }
+  ],
+  "vulns": [
+    {
+      "cve": "CVE-2018-13379",
+      "product": "fortinet",
+      "productDetail": "FortiOS SSL-VPN (FortiGate)",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 9.8,
+          "by": "NVD"
+        },
+        {
+          "score": 9.1,
+          "by": "Fortinet"
+        }
+      ],
+      "class": {
+        "en": "Path traversal: reads files it should not",
+        "ja": "パストラバーサル（読めないはずのファイルを読める）"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "The SSL-VPN session file, with usernames and plaintext passwords, without logging in",
+        "ja": "ログインせずに SSL-VPN のセッションファイルを読める。中にはユーザー名と平文のパスワードがある"
+      },
+      "part": ["intercom", "keys"],
+      "disclosed": "2019-05",
+      "exploited": {
+        "date": "2019-08",
+        "zeroDay": false,
+        "before": false,
+        "note": {
+          "en": "August 2019, after a public conference talk (day not confirmed)",
+          "ja": "2019年8月、公開の講演の後（日付は未確認）"
+        }
+      },
+      "kevAdded": "2021-11-03",
+      "ransomware": "Known",
+      "patch": {
+        "enough": false,
+        "reason": {
+          "en": "Passwords read before the patch keep working until they are reset; 87,000 devices' credentials were published in 2021",
+          "ja": "パッチ前に読まれたパスワードは、変更するまで使える。2021年に8万7,000台分の認証情報が公開された"
+        },
+        "source": "doors-fortinet-87000"
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2018-13379",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2018-13379",
+        "https://www.fortinet.com/blog/psirt-blogs/malicious-actor-discloses-fortigate-ssl-vpn-credentials",
+        "https://www.handa-hospital.jp/topics/2022/0616/report_02.pdf",
+        "https://www.gh.opho.jp/pdf/reportgaiyo_v01.pdf"
+      ]
+    },
+    {
+      "cve": "CVE-2022-42475",
+      "product": "fortinet",
+      "productDetail": "FortiOS SSL-VPN (FortiGate)",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 9.8,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "Heap buffer overflow",
+        "ja": "ヒープバッファオーバーフロー"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "Code execution on the firewall without logging in",
+        "ja": "ログインせずにファイアウォール上でコードを実行できる"
+      },
+      "part": ["intercom", "frame"],
+      "disclosed": "2022-12-12",
+      "exploited": {
+        "date": "2022-10",
+        "zeroDay": true,
+        "before": false,
+        "note": {
+          "en": "October 2022, at least two months before disclosure (MIVD)",
+          "ja": "2022年10月、公表の少なくとも2か月前（オランダ MIVD）"
+        }
+      },
+      "kevAdded": "2022-12-13",
+      "ransomware": "Known",
+      "patch": {
+        "enough": false,
+        "reason": {
+          "en": "The COATHANGER implant survives reboots and firmware upgrades (MIVD/AIVD)",
+          "ja": "COATHANGER というマルウェアは再起動にもファームウェア更新にも耐える（オランダ MIVD/AIVD）"
+        },
+        "source": "doors-mivd-coathanger"
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2022-42475",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2022-42475",
+        "https://www.agilicus.com/www/TLP-CLEAR+MIVD+AIVD+Advisory+COATHANGER.pdf",
+        "https://thehackernews.com/2024/02/chinese-hackers-exploited-fortigate.html",
+        "https://www.fortinet.com/blog/psirt-blogs/analysis-of-threat-actor-activity"
+      ]
+    },
+    {
+      "cve": "CVE-2023-27997",
+      "product": "fortinet",
+      "productDetail": "FortiOS / FortiProxy SSL-VPN",
+      "nickname": "XORtigate",
+      "cvss": [
+        {
+          "score": 9.8,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "Heap buffer overflow",
+        "ja": "ヒープバッファオーバーフロー"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "Code execution without logging in",
+        "ja": "ログインせずにコードを実行できる"
+      },
+      "part": ["intercom", "frame"],
+      "disclosed": "2023-06-12",
+      "exploited": {
+        "date": "2023-06",
+        "zeroDay": false,
+        "before": false,
+        "note": {
+          "en": "June 2023; Fortinet said it 'may have been exploited in a limited number of cases' (date not confirmed)",
+          "ja": "2023年6月。Fortinet は「限られた件数で悪用された可能性」と発表（日付は未確認）"
+        }
+      },
+      "kevAdded": "2023-06-13",
+      "ransomware": "Known",
+      "patch": {
+        "enough": false,
+        "reason": {
+          "en": "Fortinet named it among the entry points for a symlink left behind after updating to fixed versions",
+          "ja": "修正版へ更新した後も残るシンボリックリンクの侵入口の一つとして Fortinet が挙げた"
+        },
+        "source": "doors-fortinet-symlink"
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2023-27997",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2023-27997",
+        "https://www.fortinet.com/blog/psirt-blogs/analysis-of-threat-actor-activity"
+      ]
+    },
+    {
+      "cve": "CVE-2024-21762",
+      "product": "fortinet",
+      "productDetail": "FortiOS SSL-VPN (FortiGate)",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 9.8,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "Out-of-bounds write",
+        "ja": "範囲外書き込み"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "Code execution without logging in",
+        "ja": "ログインせずにコードを実行できる"
+      },
+      "part": ["intercom", "frame"],
+      "disclosed": "2024-02-08",
+      "exploited": {
+        "date": "2024-02",
+        "zeroDay": false,
+        "before": false,
+        "note": {
+          "en": "February 2024; the vendor said 'potentially exploited' at disclosure (date not confirmed)",
+          "ja": "2024年2月。公表時に「悪用された可能性」とされた（日付は未確認）"
+        }
+      },
+      "kevAdded": "2024-02-09",
+      "ransomware": "Known",
+      "patch": {
+        "enough": false,
+        "reason": {
+          "en": "Fortinet named it among the entry points for a symlink left behind after updating to fixed versions",
+          "ja": "修正版へ更新した後も残るシンボリックリンクの侵入口の一つとして Fortinet が挙げた"
+        },
+        "source": "doors-fortinet-symlink"
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2024-21762",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2024-21762",
+        "https://www.fortinet.com/blog/psirt-blogs/analysis-of-threat-actor-activity"
+      ]
+    },
+    {
+      "cve": "CVE-2026-24858",
+      "product": "fortinet",
+      "productDetail": "FortiOS (and FortiManager/FortiAnalyzer/FortiProxy/FortiWeb) FortiCloud SSO",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 9.8,
+          "by": "Fortinet"
+        }
+      ],
+      "class": {
+        "en": "Authentication bypass through cloud single sign-on trust",
+        "ja": "クラウドのシングルサインオンを経由した認証回避"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "Admin login to other customers' devices with FortiCloud SSO enabled; admin accounts created, configurations taken",
+        "ja": "FortiCloud SSO を有効にした他社の機器に管理者としてログインできる。管理者アカウントの作成と設定の持ち出しが確認された"
+      },
+      "part": ["lock", "frame"],
+      "disclosed": "2026-01-27",
+      "exploited": {
+        "date": "2026-01-20",
+        "zeroDay": true,
+        "before": false,
+        "note": {
+          "en": "2026-01-20, as a zero-day (customer reports, via secondary)",
+          "ja": "2026年1月20日、ゼロデイ（利用者の報告、二次情報）"
+        }
+      },
+      "kevAdded": "2026-01-27",
+      "ransomware": "Unknown",
+      "patch": {
+        "enough": true,
+        "reason": null,
+        "source": null
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2026-24858",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-24858",
+        "https://www.fortiguard.com/psirt/FG-IR-26-060",
+        "https://censys.com/advisory/cve-2026-24858/"
+      ]
+    },
+    {
+      "cve": "CVE-2025-68686",
+      "product": "fortinet",
+      "productDetail": "FortiOS SSL-VPN",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 5.9,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "Information exposure: bypass of the cleanup for an earlier symlink implant",
+        "ja": "情報漏えい（以前のシンボリックリンクの除去策を回避する）"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "On a device compromised earlier, files read through the leftover symlink despite the cleanup patch",
+        "ja": "以前に侵害された機器で、除去用のパッチを当てても残ったリンクからファイルを読める"
+      },
+      "part": ["intercom", "frame"],
+      "disclosed": "2026-02-10",
+      "exploited": null,
+      "kevAdded": "2026-07-27",
+      "ransomware": "Unknown",
+      "patch": {
+        "enough": false,
+        "reason": {
+          "en": "Only matters after an earlier compromise; FortiOS 7.2, 7.0 and 6.4 have no fix in their branch and must migrate",
+          "ja": "以前の侵害の後でのみ意味を持つ。FortiOS 7.2、7.0、6.4 には同じ系列の修正がなく、移行が必要"
+        },
+        "source": "doors-fortinet-fg-ir-25-934"
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2025-68686",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2025-68686",
+        "https://fortiguard.fortinet.com/psirt/FG-IR-25-934",
+        "https://www.fortinet.com/blog/psirt-blogs/analysis-of-threat-actor-activity"
+      ]
+    },
+    {
+      "cve": "CVE-2019-11510",
+      "product": "ivanti",
+      "productDetail": "Pulse Connect Secure",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 10.0,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "Arbitrary file read (path traversal)",
+        "ja": "任意のファイル読み出し（パストラバーサル）"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "Files including cached plaintext credentials and session data, without logging in",
+        "ja": "ログインせずに、キャッシュされた平文の認証情報やセッション情報を含むファイルを読める"
+      },
+      "part": ["intercom", "keys"],
+      "disclosed": "2019-04-24",
+      "exploited": {
+        "date": "2019-08-22",
+        "zeroDay": false,
+        "before": false,
+        "note": {
+          "en": "2019-08-22: mass scanning began the day after a public exploit appeared",
+          "ja": "2019年8月22日、公開エクスプロイトの翌日から大量スキャン"
+        }
+      },
+      "kevAdded": "2021-11-03",
+      "ransomware": "Known",
+      "patch": {
+        "enough": false,
+        "reason": {
+          "en": "CISA: attackers kept access after patching where stolen credentials were not changed",
+          "ja": "CISA によれば、盗まれた認証情報を変更しなかった組織では、パッチ後も侵入者がアクセスを保った"
+        },
+        "source": "doors-cisa-aa20-107a"
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2019-11510",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2019-11510",
+        "https://www.cisa.gov/news-events/cybersecurity-advisories/aa20-010a",
+        "https://www.cisa.gov/news-events/cybersecurity-advisories/aa20-107a",
+        "https://www.radiflow.com/blog/1913/"
+      ]
+    },
+    {
+      "cve": "CVE-2021-22893",
+      "product": "ivanti",
+      "productDetail": "Pulse Connect Secure",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 10.0,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "Authentication bypass (use-after-free)",
+        "ja": "認証回避（解放済みメモリの使用）"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "Code execution without logging in",
+        "ja": "ログインせずにコードを実行できる"
+      },
+      "part": ["lock", "frame"],
+      "disclosed": "2021-04-20",
+      "exploited": {
+        "date": "2021-04-20",
+        "zeroDay": true,
+        "before": true,
+        "note": {
+          "en": "Before 2021-04-20, as a zero-day (start not confirmed)",
+          "ja": "2021年4月20日より前、ゼロデイ（開始時期は未確認）"
+        }
+      },
+      "kevAdded": "2021-11-03",
+      "ransomware": "Known",
+      "patch": {
+        "enough": true,
+        "reason": null,
+        "source": null
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2021-22893",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2021-22893",
+        "https://cloud.google.com/blog/topics/threat-intelligence/suspected-apt-actors-leverage-bypass-techniques-pulse-secure-zero-day/",
+        "https://www.jpcert.or.jp/english/at/2021/at210019.html"
+      ]
+    },
+    {
+      "cve": "CVE-2023-46805",
+      "product": "ivanti",
+      "productDetail": "Ivanti Connect Secure / Policy Secure",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 8.2,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "Authentication bypass",
+        "ja": "認証回避"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "Restricted resources without logging in; chained with CVE-2024-21887 for root-level commands",
+        "ja": "ログインせずに制限された資源に届く。CVE-2024-21887 と組み合わせると root 権限でコマンドを実行できる"
+      },
+      "part": ["lock"],
+      "disclosed": "2024-01-10",
+      "exploited": {
+        "date": "2023-12",
+        "zeroDay": true,
+        "before": false,
+        "note": {
+          "en": "December 2023, as a zero-day (UNC5221 / UTA0178)",
+          "ja": "2023年12月、ゼロデイ（UNC5221 / UTA0178）"
+        }
+      },
+      "kevAdded": "2024-01-10",
+      "ransomware": "Known",
+      "patch": {
+        "enough": false,
+        "reason": {
+          "en": "CISA ordered agencies to disconnect, factory-reset and rebuild; persistence may survive factory resets",
+          "ja": "CISA は連邦機関に切断、初期化、再構築を命じた。初期化しても潜伏が残る可能性がある"
+        },
+        "source": "doors-cisa-aa24-060b"
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2023-46805",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2023-46805",
+        "https://www.cisa.gov/news-events/directives/ed-24-01-mitigate-ivanti-connect-secure-and-ivanti-policy-secure-vulnerabilities",
+        "https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-060b",
+        "https://cloud.google.com/blog/topics/threat-intelligence/ivanti-connect-secure-vpn-zero-day"
+      ]
+    },
+    {
+      "cve": "CVE-2024-21887",
+      "product": "ivanti",
+      "productDetail": "Ivanti Connect Secure / Policy Secure",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 9.1,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "Command injection",
+        "ja": "コマンドインジェクション"
+      },
+      "preauth": false,
+      "chainedBehind": "CVE-2023-46805",
+      "gets": {
+        "en": "Command execution; needs admin access alone, none when chained behind CVE-2023-46805",
+        "ja": "コマンドを実行できる。単独では管理者権限が要るが、CVE-2023-46805 の後ろにつなげば不要"
+      },
+      "part": ["lock", "frame"],
+      "disclosed": "2024-01-10",
+      "exploited": {
+        "date": "2023-12",
+        "zeroDay": true,
+        "before": false,
+        "note": {
+          "en": "December 2023, chained with CVE-2023-46805",
+          "ja": "2023年12月、CVE-2023-46805 と組み合わせて悪用"
+        }
+      },
+      "kevAdded": "2024-01-10",
+      "ransomware": "Known",
+      "patch": {
+        "enough": false,
+        "reason": {
+          "en": "Same directive and advisory as CVE-2023-46805: rebuild and treat linked accounts as compromised",
+          "ja": "CVE-2023-46805 と同じ指令と勧告。再構築し、連携するアカウントは侵害されたものとして扱う"
+        },
+        "source": "doors-cisa-ed-24-01"
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2024-21887",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2024-21887",
+        "https://www.cisa.gov/news-events/directives/ed-24-01-mitigate-ivanti-connect-secure-and-ivanti-policy-secure-vulnerabilities"
+      ]
+    },
+    {
+      "cve": "CVE-2025-0282",
+      "product": "ivanti",
+      "productDetail": "Ivanti Connect Secure",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 9.0,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "Stack buffer overflow",
+        "ja": "スタックバッファオーバーフロー"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "Code execution without logging in",
+        "ja": "ログインせずにコードを実行できる"
+      },
+      "part": ["intercom", "frame"],
+      "disclosed": "2025-01-08",
+      "exploited": {
+        "date": "2024-12",
+        "zeroDay": true,
+        "before": false,
+        "note": {
+          "en": "Mid-December 2024, as a zero-day (Mandiant); Japanese victims from late December (JPCERT/CC)",
+          "ja": "2024年12月中旬、ゼロデイ（Mandiant）。国内の被害は12月下旬から（JPCERT/CC）"
+        }
+      },
+      "kevAdded": "2025-01-08",
+      "ransomware": "Known",
+      "patch": {
+        "enough": false,
+        "reason": {
+          "en": "Mandiant: the malware faked a successful upgrade and copied itself into the new partition during a real one",
+          "ja": "Mandiant によれば、マルウェアは更新の成功を偽装し、本当の更新では新しい領域に自分を複製した"
+        },
+        "source": "doors-mandiant-0282"
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2025-0282",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2025-0282",
+        "https://cloud.google.com/blog/topics/threat-intelligence/ivanti-connect-secure-vpn-zero-day",
+        "https://www.jpcert.or.jp/at/2025/at250001.html",
+        "https://blogs.jpcert.or.jp/ja/2025/02/spawnchimera.html",
+        "https://www.cve.org/CVERecord?id=CVE-2025-0282"
+      ]
+    },
+    {
+      "cve": "CVE-2025-22457",
+      "product": "ivanti",
+      "productDetail": "Ivanti Connect Secure",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 9.0,
+          "by": "Ivanti"
+        },
+        {
+          "score": 9.8,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "Stack buffer overflow",
+        "ja": "スタックバッファオーバーフロー"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "Code execution without logging in",
+        "ja": "ログインせずにコードを実行できる"
+      },
+      "part": ["intercom", "frame"],
+      "disclosed": "2025-04-03",
+      "exploited": {
+        "date": "2025-03",
+        "zeroDay": false,
+        "before": false,
+        "note": {
+          "en": "Mid-March 2025, against boxes without the 2025-02-11 fix; the attackers 'likely studied the patch' (Mandiant)",
+          "ja": "2025年3月中旬、2月11日の修正を当てていない機器に対して。攻撃者は「おそらくパッチを分析した」（Mandiant）"
+        }
+      },
+      "kevAdded": "2025-04-04",
+      "ransomware": "Known",
+      "patch": {
+        "enough": true,
+        "reason": null,
+        "source": null
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2025-22457",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2025-22457",
+        "https://cloud.google.com/blog/topics/threat-intelligence/china-nexus-exploiting-critical-ivanti-vulnerability"
+      ]
+    },
+    {
+      "cve": "CVE-2026-104935",
+      "product": "ivanti",
+      "productDetail": "Ivanti Connect Secure 22.8 / 25.1",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 8.6,
+          "by": null
+        }
+      ],
+      "class": {
+        "en": "Authentication bypass by spoofing, chained into code execution",
+        "ja": "なりすましによる認証回避からのコード実行"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "Root-level code execution on a fully patched appliance when chained; logs were tampered with",
+        "ja": "連鎖させると、パッチを当て終えた機器で root 権限のコード実行。ログは改ざんされた"
+      },
+      "part": ["lock", "frame", "camera"],
+      "disclosed": "2026-10-13",
+      "exploited": {
+        "date": "2026-10-03",
+        "zeroDay": true,
+        "before": false,
+        "note": {
+          "en": "2026-10-03, as a zero-day (Volexity)",
+          "ja": "2026年10月3日、ゼロデイ（Volexity）"
+        }
+      },
+      "kevAdded": "2026-10-13",
+      "ransomware": "Unknown",
+      "patch": {
+        "enough": false,
+        "reason": {
+          "en": "At disclosure one bug in the chain (privilege escalation) still had no fix",
+          "ja": "公表時点で、連鎖の一つ（権限昇格）にはまだ修正がなかった"
+        },
+        "source": "doors-volexity-ivanti-2026"
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2026-104935",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-104935",
+        "https://www.volexity.com/blog/2026/10/13/a-series-of-unauthenticated-events-chained-exploitation-of-ivanti-connect-secure-zero-days/",
+        "https://www.helpnetsecurity.com/2026/10/14/ivanti-zero-days-gain-root-patched-vpn-appliances/"
+      ]
+    },
+    {
+      "cve": "CVE-2019-19781",
+      "product": "citrix",
+      "productDetail": "Citrix ADC / Gateway (now NetScaler)",
+      "nickname": "Shitrix",
+      "cvss": [
+        {
+          "score": 9.8,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "Path traversal leading to code execution",
+        "ja": "パストラバーサルからのコード実行"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "Code execution on the appliance without logging in",
+        "ja": "ログインせずに機器上でコードを実行できる"
+      },
+      "part": ["intercom", "frame"],
+      "disclosed": "2019-12-17",
+      "exploited": {
+        "date": "2020-01",
+        "zeroDay": false,
+        "before": false,
+        "note": {
+          "en": "January 2020, after exploit code circulated around 2020-01-10; firmware fixes came 2020-01-19 to 01-24",
+          "ja": "2020年1月、1月10日ごろに攻撃コードが出回った後。修正版ファームウェアは1月19日から24日"
+        }
+      },
+      "kevAdded": "2021-11-03",
+      "ransomware": "Known",
+      "patch": {
+        "enough": true,
+        "reason": null,
+        "source": null
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2019-19781",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2019-19781",
+        "https://www.cisa.gov/news-events/cybersecurity-advisories/aa20-020a",
+        "https://www.cisa.gov/news-events/cybersecurity-advisories/aa20-031a"
+      ]
+    },
+    {
+      "cve": "CVE-2023-3519",
+      "product": "citrix",
+      "productDetail": "NetScaler ADC / Gateway",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 9.8,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "Code injection",
+        "ja": "コードインジェクション"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "Code execution without logging in; a web shell was planted",
+        "ja": "ログインせずにコードを実行できる。Web シェルが置かれた"
+      },
+      "part": ["intercom", "frame"],
+      "disclosed": "2023-07-18",
+      "exploited": {
+        "date": "2023-06",
+        "zeroDay": true,
+        "before": false,
+        "note": {
+          "en": "June 2023, as a zero-day at a critical-infrastructure organization (CISA)",
+          "ja": "2023年6月、重要インフラ組織でゼロデイとして悪用（CISA）"
+        }
+      },
+      "kevAdded": "2023-07-19",
+      "ransomware": "Known",
+      "patch": {
+        "enough": true,
+        "reason": null,
+        "source": null
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2023-3519",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2023-3519",
+        "https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-201a"
+      ]
+    },
+    {
+      "cve": "CVE-2023-4966",
+      "product": "citrix",
+      "productDetail": "NetScaler ADC / Gateway",
+      "nickname": "CitrixBleed",
+      "cvss": [
+        {
+          "score": 9.4,
+          "by": "Citrix"
+        },
+        {
+          "score": 7.5,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "Out-of-bounds memory read that leaks session tokens",
+        "ja": "範囲外メモリ読み出し（セッショントークンが漏れる）"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "A valid session cookie issued after MFA, so the session works without username, password or MFA",
+        "ja": "多要素認証の後に発行されたセッション Cookie。ユーザー名もパスワードも多要素認証もなしでセッションを使える"
+      },
+      "part": ["intercom", "keys"],
+      "disclosed": "2023-10-10",
+      "exploited": {
+        "date": "2023-08",
+        "zeroDay": true,
+        "before": false,
+        "note": {
+          "en": "Late August 2023, as a zero-day (Mandiant)",
+          "ja": "2023年8月下旬、ゼロデイ（Mandiant）"
+        }
+      },
+      "kevAdded": "2023-10-18",
+      "ransomware": "Known",
+      "patch": {
+        "enough": false,
+        "reason": {
+          "en": "Sessions stolen before the patch kept working after it; active sessions had to be killed",
+          "ja": "パッチ前に盗まれたセッションはパッチ後も有効だった。有効なセッションをすべて切る必要がある"
+        },
+        "source": "doors-mandiant-citrixbleed"
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2023-4966",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2023-4966",
+        "https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-325a",
+        "https://cloud.google.com/blog/topics/threat-intelligence/session-hijacking-citrix-cve-2023-4966",
+        "https://www.darkreading.com/vulnerabilities-threats/citrixbleed-linked-to-ransomware-hit-on-china-s-state-owned-bank"
+      ]
+    },
+    {
+      "cve": "CVE-2025-5777",
+      "product": "citrix",
+      "productDetail": "NetScaler ADC / Gateway",
+      "nickname": "CitrixBleed 2",
+      "cvss": [
+        {
+          "score": 7.5,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "Out-of-bounds memory read that leaks session tokens",
+        "ja": "範囲外メモリ読み出し（セッショントークンが漏れる）"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "Session tokens from memory, so sessions can be hijacked past MFA",
+        "ja": "メモリからセッショントークンを読み、多要素認証を飛ばしてセッションを乗っ取れる"
+      },
+      "part": ["intercom", "keys"],
+      "disclosed": "2025-06-17",
+      "exploited": {
+        "date": "2025-06",
+        "zeroDay": false,
+        "before": false,
+        "note": {
+          "en": "Mid to late June 2025, before public proofs of concept (date not confirmed)",
+          "ja": "2025年6月中旬から下旬、検証コードの公開前（日付は未確認）"
+        }
+      },
+      "kevAdded": "2025-07-10",
+      "ransomware": "Known",
+      "patch": {
+        "enough": false,
+        "reason": {
+          "en": "Patching left stolen sessions valid; active sessions had to be terminated",
+          "ja": "パッチだけでは盗まれたセッションが有効なまま残る。有効なセッションを終了させる必要がある"
+        },
+        "source": "doors-tenable-citrixbleed2"
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2025-5777",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2025-5777",
+        "https://www.tenable.com/blog/cve-2025-5777-cve-2025-6543-frequently-asked-questions-about-citrixbleed-2",
+        "https://www.bleepingcomputer.com/news/security/cisa-tags-citrix-bleed-2-as-exploited-gives-agencies-a-day-to-patch/"
+      ]
+    },
+    {
+      "cve": "CVE-2025-6543",
+      "product": "citrix",
+      "productDetail": "NetScaler ADC / Gateway",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 9.8,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "Memory overflow (first described as denial of service)",
+        "ja": "メモリオーバーフロー（当初はサービス停止と説明）"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "Code execution in practice; web shells planted and traces erased",
+        "ja": "実際にはコード実行。Web シェルが置かれ、痕跡が消された"
+      },
+      "part": ["intercom", "frame", "camera"],
+      "disclosed": "2025-06-25",
+      "exploited": {
+        "date": "2025-05",
+        "zeroDay": true,
+        "before": false,
+        "note": {
+          "en": "Early May 2025, as a zero-day against Dutch organizations (NCSC-NL)",
+          "ja": "2025年5月上旬、オランダの組織に対するゼロデイ（NCSC-NL）"
+        }
+      },
+      "kevAdded": "2025-06-30",
+      "ransomware": "Unknown",
+      "patch": {
+        "enough": false,
+        "reason": {
+          "en": "NCSC-NL: updating does not remove access an attacker already gained",
+          "ja": "NCSC-NL によれば、更新しても攻撃者がすでに得たアクセスは消えない"
+        },
+        "source": "doors-ncsc-nl-citrix"
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2025-6543",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2025-6543",
+        "https://thehackernews.com/2025/08/dutch-ncsc-confirms-active-exploitation.html",
+        "https://www.ncsc.nl/actueel/nieuws/2025/07/22/casus-citrix-kwetsbaarheid"
+      ]
+    },
+    {
+      "cve": "CVE-2025-7775",
+      "product": "citrix",
+      "productDetail": "NetScaler ADC / Gateway",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 9.8,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "Memory overflow",
+        "ja": "メモリオーバーフロー"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "Code execution or denial of service without logging in (Gateway and AAA setups)",
+        "ja": "ログインせずにコード実行またはサービス停止（Gateway と AAA の構成）"
+      },
+      "part": ["intercom", "frame"],
+      "disclosed": "2025-08-26",
+      "exploited": {
+        "date": "2025-08",
+        "zeroDay": true,
+        "before": false,
+        "note": {
+          "en": "August 2025, already exploited at disclosure (date not confirmed)",
+          "ja": "2025年8月、公表時点で悪用済み（日付は未確認）"
+        }
+      },
+      "kevAdded": "2025-08-26",
+      "ransomware": "Unknown",
+      "patch": {
+        "enough": true,
+        "reason": null,
+        "source": null
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2025-7775",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2025-7775"
+      ]
+    },
+    {
+      "cve": "CVE-2026-3055",
+      "product": "citrix",
+      "productDetail": "NetScaler ADC / Gateway (SAML IdP config)",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 9.8,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "Out-of-bounds memory read (two over-reads under one CVE)",
+        "ja": "範囲外メモリ読み出し（一つの CVE に二つの読み過ぎ）"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "Appliance memory, possibly including admin session IDs, without logging in (SAML IdP setups only)",
+        "ja": "ログインせずに機器のメモリを読める。管理者のセッション ID が含まれることがある（SAML IdP 構成のみ）"
+      },
+      "part": ["intercom", "keys"],
+      "disclosed": "2026-03-23",
+      "exploited": {
+        "date": "2026-03-27",
+        "zeroDay": false,
+        "before": false,
+        "note": {
+          "en": "By 2026-03-27, four days after disclosure, from known threat-actor addresses (watchTowr honeypots)",
+          "ja": "遅くとも2026年3月27日、公表から4日後。既知の攻撃者のアドレスから（watchTowr のハニーポット）"
+        }
+      },
+      "kevAdded": "2026-03-30",
+      "ransomware": "Unknown",
+      "patch": {
+        "enough": true,
+        "reason": null,
+        "source": null
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2026-3055",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-3055",
+        "https://labs.watchtowr.com/please-we-beg-just-one-weekend-free-of-appliances-citrix-netscaler-cve-2026-3055-memory-overread-part-2/",
+        "https://watchtowr.com/resources/rapid-reaction-to-cve-2026-3055/"
+      ]
+    },
+    {
+      "cve": "CVE-2024-3400",
+      "product": "paloalto",
+      "productDetail": "PAN-OS GlobalProtect",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 10.0,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "OS command injection",
+        "ja": "OS コマンドインジェクション"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "Code execution on the firewall without logging in",
+        "ja": "ログインせずにファイアウォール上でコードを実行できる"
+      },
+      "part": ["intercom", "frame"],
+      "disclosed": "2024-04-12",
+      "exploited": {
+        "date": "2024-03-26",
+        "zeroDay": true,
+        "before": false,
+        "note": {
+          "en": "2024-03-26 first test attempts; working exploitation seen 2024-04-10 (Volexity)",
+          "ja": "2024年3月26日に最初の試行、4月10日に実際の悪用を確認（Volexity）"
+        }
+      },
+      "kevAdded": "2024-04-12",
+      "ransomware": "Known",
+      "patch": {
+        "enough": true,
+        "reason": null,
+        "source": null
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2024-3400",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2024-3400",
+        "https://www.volexity.com/blog/2024/04/12/zero-day-exploitation-of-unauthenticated-remote-code-execution-vulnerability-in-globalprotect-cve-2024-3400/"
+      ]
+    },
+    {
+      "cve": "CVE-2026-0257",
+      "product": "paloalto",
+      "productDetail": "PAN-OS GlobalProtect portal/gateway (and some Prisma Access)",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 9.1,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "Authentication bypass: forged authentication-override cookies are trusted",
+        "ja": "認証回避（偽造した認証オーバーライド Cookie を信用する）"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "A VPN connection without valid credentials, so MFA is never asked (needs a non-default feature)",
+        "ja": "正しい認証情報なしで VPN に接続できる。多要素認証も求められない（既定で無効の機能が必要）"
+      },
+      "part": ["keys"],
+      "disclosed": "2026-05-13",
+      "exploited": {
+        "date": "2026-05-17",
+        "zeroDay": false,
+        "before": false,
+        "note": {
+          "en": "2026-05-17 (Rapid7, via secondary)",
+          "ja": "2026年5月17日（Rapid7、二次情報）"
+        }
+      },
+      "kevAdded": "2026-05-29",
+      "ransomware": "Known",
+      "patch": {
+        "enough": true,
+        "reason": null,
+        "source": null
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2026-0257",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-0257",
+        "https://security.paloaltonetworks.com/CVE-2026-0257",
+        "https://www.helpnetsecurity.com/2026/10/21/ransomware-groups-exploit-palo-alto-globalprotect-cve-2026-0257/"
+      ]
+    },
+    {
+      "cve": "CVE-2021-20016",
+      "product": "sonicwall",
+      "productDetail": "SMA 100 SSL-VPN",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 9.8,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "SQL injection",
+        "ja": "SQL インジェクション"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "Usernames, passwords and session information, without logging in",
+        "ja": "ログインせずにユーザー名、パスワード、セッション情報を読める"
+      },
+      "part": ["intercom", "keys"],
+      "disclosed": "2021-01-22",
+      "exploited": {
+        "date": "2021-01",
+        "zeroDay": true,
+        "before": false,
+        "note": {
+          "en": "January 2021, used as a zero-day",
+          "ja": "2021年1月、ゼロデイとして悪用"
+        }
+      },
+      "kevAdded": "2021-11-03",
+      "ransomware": "Known",
+      "patch": {
+        "enough": true,
+        "reason": null,
+        "source": null
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2021-20016",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2021-20016",
+        "https://thehackernews.com/2021/04/hackers-exploit-sonicwall-zero-day-bug.html"
+      ]
+    },
+    {
+      "cve": "CVE-2024-40766",
+      "product": "sonicwall",
+      "productDetail": "SonicOS (firewall management and SSLVPN)",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 9.3,
+          "by": "SonicWall"
+        },
+        {
+          "score": 9.8,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "Improper access control",
+        "ja": "不適切なアクセス制御"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "Unauthorized access to firewall resources; used for SSLVPN initial access by ransomware groups",
+        "ja": "ファイアウォールの資源に無許可でアクセスできる。ランサムウェア集団が SSLVPN からの侵入に使った"
+      },
+      "part": ["lock"],
+      "disclosed": "2024-08-22",
+      "exploited": {
+        "date": "2024-08",
+        "zeroDay": false,
+        "before": false,
+        "note": {
+          "en": "August or September 2024 (date not confirmed)",
+          "ja": "2024年8月か9月（日付は未確認）"
+        }
+      },
+      "kevAdded": "2024-09-09",
+      "ransomware": "Known",
+      "patch": {
+        "enough": false,
+        "reason": {
+          "en": "SonicWall: in 2025 local passwords carried over in migrations and never reset were still being used",
+          "ja": "SonicWall によれば、2025年も機種移行で引き継がれ変更されていないローカルパスワードが使われた"
+        },
+        "source": "doors-sonicwall-2025"
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2024-40766",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2024-40766",
+        "https://thehackernews.com/2025/08/sonicwall-confirms-patched.html",
+        "https://www.helpnetsecurity.com/2025/08/07/sonicwall-gen-7-firewalls-exploit-vulnerability/"
+      ]
+    },
+    {
+      "cve": "CVE-2024-53704",
+      "product": "sonicwall",
+      "productDetail": "SonicOS SSLVPN",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 8.2,
+          "by": "SonicWall"
+        },
+        {
+          "score": 9.8,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "Authentication bypass that hijacks active VPN sessions",
+        "ja": "認証回避（ログイン中の VPN セッションを乗っ取る）"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "A logged-in user's SSL VPN session, bypassing password and MFA, and a tunnel into the network",
+        "ja": "ログイン中の利用者の SSL VPN セッション。パスワードと多要素認証を飛ばして社内へのトンネルを開ける"
+      },
+      "part": ["lock", "keys"],
+      "disclosed": "2025-01-07",
+      "exploited": {
+        "date": "2025-02",
+        "zeroDay": false,
+        "before": false,
+        "note": {
+          "en": "February 2025, shortly after a proof of concept was published on 2025-02-10",
+          "ja": "2025年2月、10日に検証コードが公開された直後"
+        }
+      },
+      "kevAdded": "2025-02-18",
+      "ransomware": "Known",
+      "patch": {
+        "enough": true,
+        "reason": null,
+        "source": null
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2024-53704",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2024-53704",
+        "https://bishopfox.com/blog/sonicwall-cve-2024-53704-ssl-vpn-session-hijacking",
+        "https://arcticwolf.com/resources/blog/cve-2024-53704/"
+      ]
+    },
+    {
+      "cve": "CVE-2026-15409",
+      "product": "sonicwall",
+      "productDetail": "SMA 1000 (Work Place interface)",
+      "nickname": null,
+      "cvss": [],
+      "class": {
+        "en": "Server-side request forgery, chained with a code injection (CVE-2026-15410)",
+        "ja": "サーバーサイドリクエストフォージェリ（コードインジェクション CVE-2026-15410 と連鎖）"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "Internal-only services without logging in; with CVE-2026-15410, root code execution",
+        "ja": "ログインせずに内部向けの機能に届く。CVE-2026-15410 と組み合わせると root でコード実行"
+      },
+      "part": ["intercom", "frame"],
+      "disclosed": "2026-07-14",
+      "exploited": {
+        "date": "2026-07-14",
+        "zeroDay": true,
+        "before": true,
+        "note": {
+          "en": "Before 2026-07-14, as a zero-day (Rapid7 MDR, via Tenable)",
+          "ja": "2026年7月14日より前、ゼロデイ（Rapid7 MDR、Tenable 経由）"
+        }
+      },
+      "kevAdded": "2026-07-14",
+      "ransomware": "Known",
+      "patch": {
+        "enough": true,
+        "reason": null,
+        "source": null
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2026-15409",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-15409",
+        "https://www.tenable.com/blog/cve-2026-15409-cve-2026-15410-sonicwall-sma-1000-zero-day-vulnerabilities-exploited-in-the",
+        "https://www.helpnetsecurity.com/2026/07/14/sonicwall-sma-attacks-via-cve-2026-15409-cve-2026-15410/"
+      ]
+    },
+    {
+      "cve": "CVE-2023-20269",
+      "product": "cisco",
+      "productDetail": "ASA / FTD remote access VPN",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 5.0,
+          "by": "Cisco"
+        },
+        {
+          "score": 9.1,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "Authentication paths not separated, which allows password guessing",
+        "ja": "認証の経路が分離されておらず、パスワードの総当たりができる"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "Valid VPN username and password pairs by brute force; it does not bypass MFA where MFA is enforced",
+        "ja": "総当たりで有効な VPN のユーザー名とパスワードの組を見つけられる。多要素認証を強制していれば回避はできない"
+      },
+      "part": ["lock"],
+      "disclosed": "2023-09-06",
+      "exploited": {
+        "date": "2023-03",
+        "zeroDay": true,
+        "before": false,
+        "note": {
+          "en": "From March 2023, brute-force campaigns (Rapid7, via secondary; date not confirmed)",
+          "ja": "2023年3月から総当たり攻撃（Rapid7、二次情報。日付は未確認）"
+        }
+      },
+      "kevAdded": "2023-09-13",
+      "ransomware": "Known",
+      "patch": {
+        "enough": true,
+        "reason": null,
+        "source": null
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2023-20269",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2023-20269",
+        "https://blogs.cisco.com/security/akira-ransomware-targeting-vpns-without-multi-factor-authentication",
+        "https://www.tenable.com/blog/cve-2023-20269-zero-day-vulnerability-in-cisco-asa-and-ftd-reportedly-exploited-ransomware-groups"
+      ]
+    },
+    {
+      "cve": "CVE-2025-20362",
+      "product": "cisco",
+      "productDetail": "Secure Firewall ASA / FTD VPN web server",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 6.5,
+          "by": "Cisco"
+        },
+        {
+          "score": 8.6,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "Missing authorization",
+        "ja": "認可の欠如"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "Restricted VPN web endpoints without logging in; chained with CVE-2025-20333",
+        "ja": "ログインせずに制限された VPN の Web 機能に届く。CVE-2025-20333 と組み合わせて使われた"
+      },
+      "part": ["lock"],
+      "disclosed": "2025-09-25",
+      "exploited": {
+        "date": "2025-05",
+        "zeroDay": true,
+        "before": true,
+        "note": {
+          "en": "May 2025 or earlier, as a zero-day (ArcaneDoor)",
+          "ja": "2025年5月以前、ゼロデイ（ArcaneDoor）"
+        }
+      },
+      "kevAdded": "2025-09-25",
+      "ransomware": "Unknown",
+      "patch": {
+        "enough": false,
+        "reason": {
+          "en": "CISA: the actor modified ROM to persist through reboot and upgrade; updates do 'not necessarily remove' it",
+          "ja": "CISA によれば、攻撃者は ROM を書き換えて再起動と更新を越えて残った。更新しても「必ずしも除去されない」"
+        },
+        "source": "doors-cisa-ed-25-03"
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2025-20362",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2025-20362",
+        "https://www.cisa.gov/news-events/directives/ed-25-03-identify-and-mitigate-potential-compromise-cisco-devices"
+      ]
+    },
+    {
+      "cve": "CVE-2025-20333",
+      "product": "cisco",
+      "productDetail": "Secure Firewall ASA / FTD VPN web server",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 9.9,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "Buffer overflow",
+        "ja": "バッファオーバーフロー"
+      },
+      "preauth": false,
+      "chainedBehind": "CVE-2025-20362",
+      "gets": {
+        "en": "Code execution as root; needs VPN credentials alone, none when chained behind CVE-2025-20362",
+        "ja": "root 権限でコードを実行できる。単独では VPN の認証情報が要るが、CVE-2025-20362 の後ろにつなげば不要"
+      },
+      "part": ["lock", "frame"],
+      "disclosed": "2025-09-25",
+      "exploited": {
+        "date": "2025-05",
+        "zeroDay": true,
+        "before": true,
+        "note": {
+          "en": "May 2025 or earlier, as a zero-day (ArcaneDoor / UAT4356)",
+          "ja": "2025年5月以前、ゼロデイ（ArcaneDoor / UAT4356）"
+        }
+      },
+      "kevAdded": "2025-09-25",
+      "ransomware": "Unknown",
+      "patch": {
+        "enough": false,
+        "reason": {
+          "en": "CISA: the actor modified ROM to persist through reboot and upgrade; updates do 'not necessarily remove' it",
+          "ja": "CISA によれば、攻撃者は ROM を書き換えて再起動と更新を越えて残った。更新しても「必ずしも除去されない」"
+        },
+        "source": "doors-cisa-ed-25-03"
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2025-20333",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2025-20333",
+        "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-asaftd-webvpn-z5xP8EUB",
+        "https://www.cisa.gov/news-events/directives/ed-25-03-identify-and-mitigate-potential-compromise-cisco-devices",
+        "https://www.ncsc.gov.uk/news/persistent-malicious-targeting-cisco-devices"
+      ]
+    },
+    {
+      "cve": "CVE-2024-24919",
+      "product": "checkpoint",
+      "productDetail": "Quantum Security Gateway (Remote Access VPN / Mobile Access)",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 8.6,
+          "by": "NVD"
+        }
+      ],
+      "class": {
+        "en": "Path traversal (arbitrary file read)",
+        "ja": "パストラバーサル（任意のファイル読み出し）"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "Files such as local account password hashes, without logging in",
+        "ja": "ログインせずに、ローカルアカウントのパスワードハッシュなどのファイルを読める"
+      },
+      "part": ["intercom", "keys"],
+      "disclosed": "2024-05-28",
+      "exploited": {
+        "date": "2024-04-07",
+        "zeroDay": true,
+        "before": false,
+        "note": {
+          "en": "2024-04-07, as a zero-day (Check Point, revised from 04-30)",
+          "ja": "2024年4月7日、ゼロデイ（Check Point が4月30日から修正）"
+        }
+      },
+      "kevAdded": "2024-05-30",
+      "ransomware": "Known",
+      "patch": {
+        "enough": false,
+        "reason": {
+          "en": "Check Point's remediation includes resetting local and LDAP passwords",
+          "ja": "Check Point の対処手順には、ローカルアカウントと LDAP のパスワード変更が含まれる"
+        },
+        "source": "doors-helpnet-checkpoint"
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2024-24919",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2024-24919",
+        "https://www.mnemonic.io/resources/blog/advisory-check-point-remote-access-vpn-vulnerability-cve-2024-24919/",
+        "https://www.helpnetsecurity.com/2024/05/31/cve-2024-24919/"
+      ]
+    },
+    {
+      "cve": "CVE-2026-50751",
+      "product": "checkpoint",
+      "productDetail": "Quantum Security Gateway Remote Access VPN / Mobile Access / Spark (IKEv1)",
+      "nickname": null,
+      "cvss": [
+        {
+          "score": 9.3,
+          "by": null
+        }
+      ],
+      "class": {
+        "en": "Improper authentication in legacy IKEv1 certificate validation",
+        "ja": "不適切な認証（旧式の IKEv1 の証明書検証）"
+      },
+      "preauth": true,
+      "chainedBehind": null,
+      "gets": {
+        "en": "A remote-access VPN session without a valid password (deprecated IKEv1 setups only)",
+        "ja": "正しいパスワードなしでリモートアクセス VPN のセッションを張れる（非推奨の IKEv1 構成のみ）"
+      },
+      "part": ["lock"],
+      "disclosed": "2026-06-08",
+      "exploited": {
+        "date": "2026-05-07",
+        "zeroDay": true,
+        "before": false,
+        "note": {
+          "en": "2026-05-07, as a zero-day (Rapid7)",
+          "ja": "2026年5月7日、ゼロデイ（Rapid7）"
+        }
+      },
+      "kevAdded": "2026-06-08",
+      "ransomware": "Known",
+      "patch": {
+        "enough": true,
+        "reason": null,
+        "source": null
+      },
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2026-50751",
+        "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-50751",
+        "https://www.rapid7.com/blog/post/etr-critical-check-point-vpn-zero-day-exploited-in-the-wild-cve-2026-50751/",
+        "https://support.checkpoint.com/results/sk/sk185033"
+      ]
+    }
+  ]
+}
