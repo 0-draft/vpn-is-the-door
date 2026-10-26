@@ -23,16 +23,20 @@ const { prev, next } = c ? neighbours(c.id) : { prev: undefined, next: undefined
 <Base lang={lang} title={title} description={description} chapter={chapter}>
   <article class="chapter">
     <header class="ch-head">
-      <p class="ch-kicker">
-        {
-          parentTitle && parentPath ? (
-            <a href={localePath(lang, parentPath, base)}>{parentTitle}</a>
-          ) : (
-            c && <span class="num">{chapterLabel(lang, c.num)}</span>
-          )
-        }
-        {c?.scales.map((s) => <Scale s={s} />)}
-      </p>
+      {
+        (c || parentTitle) && (
+          <p class="ch-kicker">
+            {
+              parentTitle && parentPath ? (
+                <a href={localePath(lang, parentPath, base)}>{parentTitle}</a>
+              ) : (
+                c && <span class="num">{chapterLabel(lang, c.num)}</span>
+              )
+            }
+            {c?.scales.map((s) => <Scale s={s} />)}
+          </p>
+        )
+      }
       <h1>{title}</h1>
       <p class="ch-lede">{description}</p>
     </header>

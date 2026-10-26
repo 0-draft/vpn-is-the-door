@@ -1,0 +1,270 @@
+---
+import type { Source } from "../data/source-schema";
+import { SOURCES } from "../data/sources";
+import { SITE, t } from "../i18n/ui";
+import Chapter from "../layouts/Chapter.astro";
+import type { Lang } from "../lib/paths";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const ja = lang === "ja";
+const JA_TEXT = /[぀-ヿ㐀-鿿＀-￯]/;
+
+// Group by publisher, publishers in name order, each group oldest first.
+const coll = new Intl.Collator(lang);
+const groups = [...Map.groupBy(SOURCES, (s) => s.publisher.en).values()]
+  .map((items) => ({
+    name: (items[0] as Source).publisher[lang],
+    items: [...items].sort((a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id)),
+  }))
+  .sort((a, b) => coll.compare(a.name, b.name));
+
+const REVISIONS = [{ rev: 1, date: "2026-10-25", change: { en: "First publication", ja: "初版" } }];
+
+const method = ja
+  ? [
+      {
+        what: "警察庁のランサムウェア統計",
+        how: "警察庁自身の統計データ（.xlsx）をセル単位で読んだ。数字ごとに出典のシート名（例: 統計編P124）を記す。令和6年以降の PDF は容量が大きく開けなかったため、ページ番号はシート名から取った。令和4年・令和5年の PDF と令和7年の英語版 PDF は実際に開き、ページを確認した。",
+        rule: "件数は警察庁の値をそのまま使う。割合はその件数から計算し、警察庁が示す割合と一致することを確かめた。",
+      },
+      {
+        what: "CISA KEV カタログ",
+        how: "CISA の公式 GitHub リポジトリ cisagov/kev-data から catalogVersion 2026.10.23（2026-10-23 公開）の JSON を取得し、vendorProject、product、knownRansomwareCampaignUse の各欄を jq で確認した。",
+        rule: "knownRansomwareCampaignUse は後から Unknown が Known に変わることがある。値はこの版のものである。",
+      },
+      {
+        what: "被害事例",
+        how: "被害組織自身の公表文、または公式の調査報告書（有識者会議、調査委員会、行政機関によるもの）だけを使った。",
+        rule: "組織が「ネットワーク機器」としか書いていない場合は、そのとおりに記し、製品名を推測しない。",
+      },
+      {
+        what: "港精密株式会社",
+        how: "従業員280人、本社と工場をもつ架空の会社。実際の調査結果を1枚の平面図の上で説明するために設けた。",
+        rule: `登場する図にはすべて「${t(lang, "composite")}」と記す。`,
+      },
+      {
+        what: "UNVERIFIED",
+        how: "調査メモでは、一次資料で裏付けられなかった項目に UNVERIFIED と記した。",
+        rule: "UNVERIFIED の項目はこのサイトに載せていない。",
+      },
+    ]
+  : [
+      {
+        what: "NPA ransomware statistics",
+        how: "Read cell by cell from the National Police Agency's own statistical workbooks (.xlsx). Each figure names the sheet it came from, for example 統計編P124. The PDFs from 2024 on were too large to open, so their page numbers are taken from the sheet names. The 2022 and 2023 Japanese PDFs and the 2025 English PDF were opened and their pages confirmed.",
+        rule: "Counts are NPA's own. Percentages are computed from those counts and checked against the shares NPA prints.",
+      },
+      {
+        what: "CISA KEV catalog",
+        how: "The JSON feed at catalogVersion 2026.10.23 (released 2026-10-23), taken from CISA's official GitHub repository cisagov/kev-data. The vendorProject, product and knownRansomwareCampaignUse fields were checked with jq.",
+        rule: "CISA can change knownRansomwareCampaignUse from Unknown to Known later. Values are as of that version.",
+      },
+      {
+        what: "Incidents",
+        how: "Only an organization's own statements or an official investigation report, by an expert panel, an investigation committee or a government body.",
+        rule: "Where an organization says only “network equipment”, the site says so and does not guess the product.",
+      },
+      {
+        what: "Minato Precision Co., Ltd.",
+        how: "A fictional company with 280 staff, a head office and a factory, used to place the real findings on one floor plan.",
+        rule: `Every figure that shows it is labelled “${t(lang, "composite")}”.`,
+      },
+      {
+        what: "UNVERIFIED",
+        how: "The research notes mark anything that could not be tied to a primary source as UNVERIFIED.",
+        rule: "Items marked UNVERIFIED are left out of this site.",
+      },
+    ];
+
+const copy = ja
+  ? {
+      title: t(lang, "nav.sources"),
+      desc: "このサイトが読んだ資料、数字を出典と照合した方法、引用したすべての文書。文書ごとにリンクと該当ページ・シートを示す。",
+      hMethod: "数字はすべて出典と照合した",
+      cMethod: "資料の種類ごとの読み方と扱い",
+      colWhat: "資料",
+      colHow: "読み方",
+      colRule: "扱い",
+      hList: "発行元別の出典",
+      listNote: `他のページの数字はすべて、ここに並べた文書のいずれかにつながっている。発行元ごとに分け、公表日の古い順に並べた。表題は原文のまま、原語で記す。全${SOURCES.length}件。`,
+      colTitle: "表題",
+      colDate: "公表日",
+      colLoc: "該当箇所",
+      hRev: "改訂履歴",
+      cRev: `報告書 ${SITE.report} の改訂`,
+      colRev: "改訂",
+      colChange: "内容",
+    }
+  : {
+      title: t(lang, "nav.sources"),
+      desc: "What this site read, how each number was checked against its source, and every document cited, with a link and the page or sheet each figure comes from.",
+      hMethod: "Each number was checked against its source",
+      cMethod: "How each kind of material was read and used",
+      colWhat: "Material",
+      colHow: "How it was read",
+      colRule: "Rule",
+      hList: "Sources by publisher",
+      listNote: `Every number on the other pages links to one of the documents below. They are grouped by publisher and listed oldest first. Titles are copied exactly as published, in their original language. ${SOURCES.length} documents.`,
+      colTitle: "Title",
+      colDate: "Published",
+      colLoc: "Page or sheet",
+      hRev: "Revision history",
+      cRev: `Revisions of report ${SITE.report}`,
+      colRev: "Rev.",
+      colChange: "Change",
+    };
+---
+
+<Chapter lang={lang} title={copy.title} description={copy.desc} chapter="sources">
+  <h2 id="method">{copy.hMethod}</h2>
+  <div class="table-scroll" tabindex="0">
+    <table class="method">
+      <caption>{copy.cMethod}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{copy.colWhat}</th>
+          <th scope="col">{copy.colHow}</th>
+          <th scope="col">{copy.colRule}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          method.map((m) => (
+            <tr>
+              <th scope="row">{m.what === "UNVERIFIED" ? <span class="mono">{m.what}</span> : m.what}</th>
+              <td>{m.how}</td>
+              <td>{m.rule}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="list">{copy.hList}</h2>
+  <p>{copy.listNote}</p>
+  {
+    groups.map((g) => (
+      <section class="pub" aria-label={g.name}>
+        <h3>{g.name}</h3>
+        <div class="table-scroll" tabindex="0">
+          <table class="srcs">
+            <thead>
+              <tr>
+                <th scope="col">{copy.colTitle}</th>
+                <th scope="col">{copy.colDate}</th>
+                <th scope="col">{copy.colLoc}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {g.items.map((s) => (
+                <tr id={`src-${s.id}`}>
+                  <td>
+                    <a href={s.url} lang={!ja && JA_TEXT.test(s.title) ? "ja" : undefined}>
+                      {s.title}
+                    </a>
+                    <span class="sid mono">{s.id}</span>
+                  </td>
+                  <td class="mono nowrap">
+                    <time datetime={s.date}>{s.date}</time>
+                  </td>
+                  <td class="loc" lang={!ja && s.locator && JA_TEXT.test(s.locator) ? "ja" : undefined}>
+                    {s.locator ?? "—"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    ))
+  }
+
+  <h2 id="revisions">{copy.hRev}</h2>
+  <div class="table-scroll" tabindex="0">
+    <table class="revs">
+      <caption>{copy.cRev}</caption>
+      <thead>
+        <tr>
+          <th scope="col" class="num">{copy.colRev}</th>
+          <th scope="col">{copy.colDate}</th>
+          <th scope="col">{copy.colChange}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          REVISIONS.map((r) => (
+            <tr id={`rev-${r.rev}`}>
+              <td class="num">{r.rev}</td>
+              <td class="mono nowrap">
+                <time datetime={r.date}>{r.date}</time>
+              </td>
+              <td>{r.change[lang]}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</Chapter>
+
+<style>
+  table {
+    inline-size: 100%;
+  }
+  caption {
+    text-align: start;
+    caption-side: top;
+    font-size: 0.9375rem;
+    color: var(--ink-3);
+    padding-block-end: 0.5rem;
+  }
+  .method {
+    min-inline-size: 40rem;
+  }
+  .method th[scope="row"] {
+    inline-size: 11rem;
+    vertical-align: top;
+    text-align: start;
+    border-block-end: 1px solid var(--hair);
+  }
+  .method td {
+    vertical-align: top;
+  }
+  .srcs {
+    min-inline-size: 36rem;
+  }
+  .srcs td {
+    vertical-align: top;
+  }
+  .srcs td:first-child {
+    inline-size: 60%;
+  }
+  .sid {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--ink-3);
+  }
+  .nowrap {
+    white-space: nowrap;
+  }
+  .loc {
+    font-size: 0.9375rem;
+  }
+  .pub h3 {
+    margin-block: 2rem 0;
+  }
+  .pub .table-scroll {
+    margin-block-start: 0.75rem;
+  }
+  tr:target {
+    background: var(--marker);
+  }
+  .revs {
+    max-inline-size: 40rem;
+  }
+</style>
