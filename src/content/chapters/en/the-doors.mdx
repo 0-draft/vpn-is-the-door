@@ -54,7 +54,7 @@ Mail filtering and the security checks at the main entrance work like a receptio
 
 The appliance is a closed box. An office server can be watched with security software and its logs collected elsewhere. On most VPN appliances neither is possible, and one bug can hand over the whole box.
 
-<Fig lang="en" n="3-2" caption="What defenders can rely on, on an office server and on a VPN appliance" sources={["doors-gtig-2024", "doors-volexity-ivanti-2024", "sophos-aar-2025", "doors-cisa-aa24-060b"]}>
+<Fig lang="en" n="3-2" caption="What defenders can rely on, on an office server and on a VPN appliance" sources={["doors-gtig-2024", "doors-volexity-ivanti-2024", "sophos-aar-2025", "cisa-aa24-060b"]}>
   <div class="table-scroll" tabindex="0">
     <table>
       <thead>
@@ -74,7 +74,7 @@ The appliance is a closed box. An office server can be watched with security sof
 
 Google's analysis of 2024 zero-days notes that these products seldom need a chain of bugs: one flaw can "single-handedly" give remote code execution. Many rows in this chapter's schedule are buffer overflows, a class of bug that memory-unsafe languages such as C allow; CISA and the FBI cite CVE-2025-0282 as an example. When one works, the attacker usually controls the whole appliance, including the passwords and keys stored on it.
 
-<SourceLine lang="en" ids={["doors-gtig-2024", "doors-cisa-bo-alert", "doors-cisa-aa24-060b"]} />
+<SourceLine lang="en" ids={["doors-gtig-2024", "doors-cisa-bo-alert", "cisa-aa24-060b"]} />
 
 ### No security agent runs on it
 
@@ -104,7 +104,7 @@ Updating the appliance stops remote work while it restarts, so the update is pos
 
 An appliance past end of support gets no more fixes but keeps working, so it stays in the wall. CISA, the FBI and the UK NCSC warn that state actors use these devices "as entry points to access modern, supported environments". The appliance in the Osaka General Medical Center case was still on FortiOS 5.4.2 when it was examined.
 
-<SourceLine lang="en" ids={["doors-eos-factsheet", "osaka-report-2023"]} />
+<SourceLine lang="en" ids={["cisa-eos-edge-2026", "osaka-report-2023"]} />
 
 ## <Scale s="1:100" /> A pre-auth flaw never meets the lock
 
@@ -166,7 +166,7 @@ Two notes on reading it. "Ransomware: Unknown" is CISA's own value and means CIS
 
 ## <Scale s="1:5" /> {ST.preauth} of {ST.total} need no password
 
-<Fig lang="en" n="3-8" caption="Rows of the door schedule by product line; filled squares are reachable before login" sources={["cisa-kev", "doors-volexity-3400", "doors-cve-2025-0282"]}>
+<Fig lang="en" n="3-8" caption="Rows of the door schedule by product line; filled squares are reachable before login" sources={["cisa-kev", "doors-volexity-3400", "cve-2025-0282"]}>
   <PreauthUnits lang="en" />
 </Fig>
 
@@ -176,13 +176,13 @@ The two outlined squares are CVE-2024-21887 and CVE-2025-20333. Each needs a log
 
 After the lock opens, the appliance hands the user a key: a session cookie. The appliance keeps a copy in memory. CitrixBleed (CVE-2023-4966) and CitrixBleed 2 (CVE-2025-5777) are bugs at the intercom that return pieces of that memory, keys included.
 
-<Fig lang="en" n="3-9" caption="How a leaked session cookie skips the password and MFA" sources={["doors-mandiant-citrixbleed", "doors-cisa-aa23-325a"]}>
+<Fig lang="en" n="3-9" caption="How a leaked session cookie skips the password and MFA" sources={["doors-mandiant-citrixbleed", "case-cisa-aa23-325a"]}>
   <SessionLanes lang="en" />
 </Fig>
 
 Mandiant: with a valid cookie an attacker has a session "without knowledge of the username, password, or access to a multi-factor authentication token or device". CISA and the FBI tied CitrixBleed to LockBit 3.0 affiliates. SonicWall's CVE-2024-53704 reaches the same result through an authentication bypass, and in CVE-2026-0257 the appliance trusted forged authentication-override cookies. Because the cookie was issued before the patch, a patched appliance still accepts it until the session is ended. Tenable's FAQ on CitrixBleed 2 repeats Citrix's advice to terminate active sessions after updating.
 
-<SourceLine lang="en" ids={["doors-mandiant-citrixbleed", "doors-cisa-aa23-325a", "doors-tenable-citrixbleed2"]} />
+<SourceLine lang="en" ids={["doors-mandiant-citrixbleed", "case-cisa-aa23-325a", "doors-tenable-citrixbleed2"]} />
 
 ## <Scale s="1:5" /> Leaked passwords outlive the patch
 
@@ -212,7 +212,7 @@ The same pattern appears in other rows. CISA wrote in 2020 that attackers with s
 
 Some intruders leave something in the frame. An upgrade replaces the software it expects to replace. It does not always remove what an attacker added.
 
-<Fig lang="en" n="3-11" caption="Cases where the vendor or a government agency says compromise survived patching or upgrading" sources={["doors-fortinet-symlink", "doors-fortinet-fg-ir-25-934", "doors-mivd-coathanger", "doors-cisa-aa24-060b", "doors-mandiant-0282", "doors-cisa-ed-25-03", "doors-ncsc-nl-citrix"]}>
+<Fig lang="en" n="3-11" caption="Cases where the vendor or a government agency says compromise survived patching or upgrading" sources={["fortinet-psirt-2025-04", "doors-fortinet-fg-ir-25-934", "doors-mivd-coathanger", "cisa-aa24-060b", "mandiant-ivanti-2025", "doors-cisa-ed-25-03", "doors-ncsc-nl-citrix"]}>
   <div class="table-scroll" tabindex="0">
     <table>
       <thead>
@@ -232,7 +232,7 @@ Some intruders leave something in the frame. An upgrade replaces the software it
 
 CISA's response to the Ivanti flaws shows what "more than a patch" means in practice. Emergency Directive 24-01 had federal agencies disconnect the appliances, factory-reset and rebuild them, revoke and reissue every certificate, key and password on them, and treat linked domain accounts as compromised.
 
-<SourceLine lang="en" ids={["doors-cisa-ed-24-01"]} />
+<SourceLine lang="en" ids={["case-cisa-ed-24-01"]} />
 
 ## <Scale s="1:5" /> The gap is days, and often negative
 
@@ -261,7 +261,7 @@ A patch window measured in weeks assumes the attackers start after the advisory.
 
 Zero-trust network access (ZTNA) products are often sold as the replacement for the VPN door. They change what a stolen login reaches: one application at a time instead of the whole network. Their gateways are still software on the internet edge, and they get the same class of bugs.
 
-<Fig lang="en" n="3-13" caption="Products named in the CVE record for CVE-2025-0282" sources={["doors-cve-2025-0282", "doors-mandiant-0282"]}>
+<Fig lang="en" n="3-13" caption="Products named in the CVE record for CVE-2025-0282" sources={["cve-2025-0282", "mandiant-ivanti-2025"]}>
   <div class="table-scroll" tabindex="0">
     <table>
       <thead>

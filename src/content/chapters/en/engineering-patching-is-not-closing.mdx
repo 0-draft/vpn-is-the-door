@@ -26,7 +26,7 @@ import KevFlow from "../../../components/ch5/KevFlow.astro";
 
 Each lane in Fig. 5-5 is one failure mode that advisories and incident reports have documented. The patch is the black line. The red line is the intruder's access, which starts before it and carries on after.
 
-<Fig lang="en" n="5-5" caption="Five ways an intruder's access survives the patch" sources={["npa-r8h1-data", "ch5-fortinet-87000", "jpcert-ir-2024q2", "ch5-mandiant-citrixbleed", "ch5-fortinet-symlink", "ch5-coathanger", "ch5-cisa-ed-25-03", "ch5-cisa-aa24-060b", "ch5-mandiant-0282", "ch5-jpcert-at-2025-0001"]} nts>
+<Fig lang="en" n="5-5" caption="Five ways an intruder's access survives the patch" sources={["npa-r8h1-data", "doors-fortinet-87000", "jpcert-ir-2024q2", "doors-mandiant-citrixbleed", "fortinet-psirt-2025-04", "doors-mivd-coathanger", "doors-cisa-ed-25-03", "cisa-aa24-060b", "mandiant-ivanti-2025", "jpcert-at-2025-0001"]} nts>
   <FailureLanes lang="en" label="Five lanes, each with a red line that starts before the patch and continues after it: credentials stolen, sessions stolen, persistence that survives upgrades, an integrity check that is fooled, compromise before disclosure." />
 </Fig>
 
@@ -54,7 +54,7 @@ Ivanti ships an Integrity Checker Tool (ICT) to tell whether the appliance's fil
 
 Fig. 5-6 puts the steps in order. Preservation comes first because every later step changes the box. The two branches handle the cases where no fixed firmware exists for your model and where the hunt cannot rule out compromise.
 
-<Fig lang="en" n="5-6" caption="Flowchart: a KEV entry names your VPN appliance" sources={["ch5-cisa-aa24-060b", "ch5-fortinet-symlink", "ch5-netscaler-4966", "jpcert-ir-2024q2", "ch5-cisa-bod-26-04"]}>
+<Fig lang="en" n="5-6" caption="Flowchart: a KEV entry names your VPN appliance" sources={["cisa-aa24-060b", "fortinet-psirt-2025-04", "ch5-netscaler-4966", "jpcert-ir-2024q2", "cisa-bod-26-04"]}>
   <KevFlow lang="en" label="Flowchart. Start: a KEV entry names your appliance. 1 Preserve config, logs and memory. Decision: fixed version for your model? Yes: 2 upgrade from the vendor's clean image. No: apply the vendor mitigation or disconnect and plan replacement. Both lead to 3 reset every credential the box touched, 4 revoke all sessions and tokens, 5 hunt behind the box. Decision: any sign of compromise, or not sure? Yes: 6 factory reset or rebuild, restore a reviewed config, reset credentials again. Then, and on No: 7 report to the vendor, JPCERT/CC and the police." />
 </Fig>
 
@@ -86,4 +86,4 @@ The appliance holds or sees more secrets than its own admin password. CISA tells
 
 </div>
 
-<SourceLine lang="en" ids={["ch5-cisa-aa24-060b", "ch5-mandiant-0282", "ch5-jpcert-at-2026-0019", "ch5-sonicwall-2025", "ch5-netscaler-4966"]} />
+<SourceLine lang="en" ids={["cisa-aa24-060b", "mandiant-ivanti-2025", "ch5-jpcert-at-2026-0019", "doors-sonicwall-2025", "ch5-netscaler-4966"]} />

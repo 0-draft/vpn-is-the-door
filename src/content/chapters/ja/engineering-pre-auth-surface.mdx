@@ -32,7 +32,7 @@ export const n = (c) => groups.find((g) => g.cls === c).cves.length;
 
 認証前の欠陥はこの範囲の中にある。図の赤線は悪用されたときの流れを示す。要求は Web デーモンから OS に渡り、認証の箱を通らずに社内へ届く。多要素認証の設定はこの流れに関係しない。[建具表](../../the-doors/)に載せた KEV 登録済みの VPN・リモートアクセス製品の CVE {TOTAL}件のうち、{PREAUTH}件はログイン前に到達できる。残る{TOTAL - PREAUTH}件も、実際の攻撃ではログイン前に到達できる欠陥と組み合わせて使われた。
 
-<Fig lang="ja" n="5-2" caption="SSL-VPN 機器を通る1つの要求。網掛けが認証前の範囲" sources={["ch5-fg-ir-22-398", "ch5-vulns-classes"]} nts>
+<Fig lang="ja" n="5-2" caption="SSL-VPN 機器を通る1つの要求。網掛けが認証前の範囲" sources={["ch5-fg-ir-22-398", "cisa-kev"]} nts>
   <PreauthLifecycle lang="ja" label="SSL-VPN 機器を上から下へ。TLS の終端、全要求を解析する Web デーモン、網掛けの認証前の範囲（ログイン画面、静的ファイル、クライアント配布、SAML・SSO、クライアントレス、露出した管理画面）、認証、セッション Cookie、トンネル、社内ネットワーク。赤い破線は認証前の範囲から機器の OS に入り、認証を通らずに社内ネットワークへ届く。" />
 </Fig>
 
@@ -42,7 +42,7 @@ export const n = (c) => groups.find((g) => g.cls === c).cves.length;
 
 図5-3は、建具表の{TOTAL}件の CVE を欠陥の種類で分けたものである。最も多いのはメモリ破壊である。大半はバッファオーバーフローと範囲外の読み書きで、解放後使用（use-after-free）が1件ある。この種の欠陥は C や C++ のようなメモリ安全でない言語で書かれたコードで起きる。CISA と FBI は、バッファオーバーフローの例に CVE-2025-0282（Ivanti Connect Secure）と CVE-2023-6549（Citrix NetScaler）を挙げ、「Threat actors frequently exploit these vulnerabilities to gain initial access to an organization's network and then move laterally to the wider network.」と書いた。この種類は「can be addressed by using memory safe languages」とも述べている。こうしたコードの多くが1つの大きな Web デーモンに収まった古い C であるという見方は、欠陥の種類と Pulse Secure から Ivanti に至る製品系譜から本サイトが推測したものである。ベンダーはこれを公表していない。
 
-<Fig lang="ja" n="5-3" caption={`KEV 登録済みの VPN・リモートアクセス製品の CVE ${TOTAL}件（2018〜2026年）。四角1つが1件、欠陥の種類別`} sources={["ch5-vulns-classes", "ch5-cisa-sbd-buffer-overflow"]}>
+<Fig lang="ja" n="5-3" caption={`KEV 登録済みの VPN・リモートアクセス製品の CVE ${TOTAL}件（2018〜2026年）。四角1つが1件、欠陥の種類別`} sources={["cisa-kev", "doors-cisa-bo-alert"]}>
   <BugClasses lang="ja" label={`ユニットチャート。メモリ破壊${n("memory")}件、認証・認可の回避${n("auth")}件、インジェクション${n("inject")}件、ファイル読み出し・パストラバーサル${n("read")}件。`} />
   <table slot="data">
     <thead><tr><th>種類</th><th class="num">件数</th><th>CVE</th></tr></thead>
@@ -66,7 +66,7 @@ export const n = (c) => groups.find((g) => g.cls === c).cves.length;
 
 </div>
 
-<SourceLine lang="ja" ids={["ch5-paloalto-3400", "ch5-cisco-webvpn", "ch5-cisa-aa24-060b"]} />
+<SourceLine lang="ja" ids={["ch5-paloalto-3400", "ch5-cisco-webvpn", "cisa-aa24-060b"]} />
 
 ## <Scale s="1:5" /> 自社のアドレスに限って外から露出を棚卸しする
 
@@ -84,13 +84,13 @@ export const n = (c) => groups.find((g) => g.cls === c).cves.length;
 
 </div>
 
-<SourceLine lang="ja" ids={["osaka-report-2023", "ch5-eos-factsheet"]} />
+<SourceLine lang="ja" ids={["osaka-report-2023", "cisa-eos-edge-2026"]} />
 
 ## <Scale s="1:5" /> 応答しなくてよいものは止める
 
 図5-4は面を削った後の同じ機器である。どの変更も、網掛けの範囲の一部をインターネットから届かなくする。有効なまま残る処理に欠陥があれば直らないので、パッチは引き続き必要である。
 
-<Fig lang="ja" n="5-4" caption="同じ機器で、管理画面をインターネットから外し、使わない機能を止め、手前に接続元 IP の制限を置いた状態" sources={["ch5-cccs-itsm80101", "handa-report-tech", "ch5-jpcert-at-2024-0004"]} nts>
+<Fig lang="ja" n="5-4" caption="同じ機器で、管理画面をインターネットから外し、使わない機能を止め、手前に接続元 IP の制限を置いた状態" sources={["cccs-itsm-80-101", "handa-report-tech", "ch5-jpcert-at-2024-0004"]} nts>
   <PreauthLifecycle lang="ja" variant="reduced" label="図5-2と同じ機器。手前の緑の線は接続元 IP の制限。クライアントレスは無効化、管理画面はインターネットから外したことを示す取り消し線。赤い経路はない。" />
 </Fig>
 

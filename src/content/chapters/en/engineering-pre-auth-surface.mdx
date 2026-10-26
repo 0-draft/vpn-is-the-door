@@ -32,7 +32,7 @@ Follow one connection down Fig. 5-2. The appliance terminates TLS, then a web da
 
 A pre-auth flaw sits inside that zone. The red line in the figure shows what exploitation does: the request goes from the web daemon to the operating system and on into the network without passing the authentication box. MFA settings make no difference to it. Of the {TOTAL} KEV-listed VPN and remote-access CVEs in the [door schedule](../../the-doors/), {PREAUTH} are reachable before login. The other {TOTAL - PREAUTH} were exploited in the wild chained behind one that is.
 
-<Fig lang="en" n="5-2" caption="One request through an SSL-VPN appliance; the pre-auth zone is shaded" sources={["ch5-fg-ir-22-398", "ch5-vulns-classes"]} nts>
+<Fig lang="en" n="5-2" caption="One request through an SSL-VPN appliance; the pre-auth zone is shaded" sources={["ch5-fg-ir-22-398", "cisa-kev"]} nts>
   <PreauthLifecycle lang="en" label="An SSL-VPN appliance from top to bottom: TLS termination, a web daemon that parses every request, a shaded pre-auth zone with login portal, static files, client download, SAML and SSO, clientless mode and management UI marked exposed, then authentication, session cookie, tunnel and the internal network. A red dashed route leaves the pre-auth zone into the appliance OS and reaches the internal network without passing authentication." />
 </Fig>
 
@@ -42,7 +42,7 @@ Pre-auth code has to accept input from anyone, so it cannot rely on account limi
 
 Fig. 5-3 groups the {TOTAL} CVEs by bug class. Memory corruption is the largest group: buffer overflows, out-of-bounds reads and writes, one use-after-free. These bugs occur in code written in memory-unsafe languages such as C and C++. CISA and the FBI list CVE-2025-0282 (Ivanti Connect Secure) and CVE-2023-6549 (Citrix NetScaler) as buffer-overflow examples and say: "Threat actors frequently exploit these vulnerabilities to gain initial access to an organization's network and then move laterally to the wider network." The alert adds that the class "can be addressed by using memory safe languages". That much of this code is old C inside one large web daemon is this site's inference from the bug classes and from product lineages such as Pulse Secure to Ivanti; vendors do not publish it.
 
-<Fig lang="en" n="5-3" caption={`${TOTAL} KEV-listed VPN and remote-access CVEs, 2018–2026, one square per CVE, by bug class`} sources={["ch5-vulns-classes", "ch5-cisa-sbd-buffer-overflow"]}>
+<Fig lang="en" n="5-3" caption={`${TOTAL} KEV-listed VPN and remote-access CVEs, 2018–2026, one square per CVE, by bug class`} sources={["cisa-kev", "doors-cisa-bo-alert"]}>
   <BugClasses lang="en" label={`Unit chart. Memory corruption ${n("memory")}, authentication or authorization bypass ${n("auth")}, injection ${n("inject")}, file read or path traversal ${n("read")}.`} />
   <table slot="data">
     <thead><tr><th>Class</th><th class="num">CVEs</th><th>IDs</th></tr></thead>
@@ -66,7 +66,7 @@ The privilege that exploitation gives is stated in some advisories. That every a
 
 </div>
 
-<SourceLine lang="en" ids={["ch5-paloalto-3400", "ch5-cisco-webvpn", "ch5-cisa-aa24-060b"]} />
+<SourceLine lang="en" ids={["ch5-paloalto-3400", "ch5-cisco-webvpn", "cisa-aa24-060b"]} />
 
 ## <Scale s="1:5" /> Inventory the exposure from outside, on your own addresses
 
@@ -84,13 +84,13 @@ Start from what you own, then check what the internet sees. Every method below l
 
 </div>
 
-<SourceLine lang="en" ids={["osaka-report-2023", "ch5-eos-factsheet"]} />
+<SourceLine lang="en" ids={["osaka-report-2023", "cisa-eos-edge-2026"]} />
 
 ## <Scale s="1:5" /> Turn off what does not need to answer
 
 Fig. 5-4 is the same appliance after the surface is cut down. Each change removes a part of the shaded zone from the internet's reach. None of them fixes a vulnerable handler that stays enabled, so patching still applies.
 
-<Fig lang="en" n="5-4" caption="The same appliance with the management UI off the internet, unused modes disabled and a source-IP allow-list in front" sources={["ch5-cccs-itsm80101", "handa-report-tech", "ch5-jpcert-at-2024-0004"]} nts>
+<Fig lang="en" n="5-4" caption="The same appliance with the management UI off the internet, unused modes disabled and a source-IP allow-list in front" sources={["cccs-itsm-80-101", "handa-report-tech", "ch5-jpcert-at-2024-0004"]} nts>
   <PreauthLifecycle lang="en" variant="reduced" label="The same appliance as Fig. 5-2. A green bar marks a source-IP allow-list in front of the appliance. Clientless mode is crossed out as disabled and the management UI is crossed out as moved off the internet. No red route." />
 </Fig>
 

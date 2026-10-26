@@ -53,13 +53,13 @@ Logdesc=Application crashed and msg=[...] application:sslvpnd,[...], Signal 11 r
 
 Where these records live is the problem. The UK NCSC wrote in 2026 that with network devices defenders "can have fewer tools available to them than the attacker", and that "manufacturers should provide supported mechanisms for gathering the evidence needed to investigate incidents". Until they do, the defender's part is to get the logs off the box.
 
-<SourceLine lang="en" ids={["ch5-jpcert-at-2026-0019", "ch5-ncsc-observability"]} />
+<SourceLine lang="en" ids={["ch5-jpcert-at-2026-0019", "doors-ncsc-uk-observability"]} />
 
 ## <Scale s="1:5" /> Only 25 of 102 victims kept all their logs
 
 NPA asks ransomware victims in Japan whether their logs survived. For 2025, a quarter had all of them. Two of the named causes, deletion by the attacker and encryption, are what an intruder does to logs left within reach. A third, an expired retention period, is a setting.
 
-<Fig lang="en" n="5-8" caption="Ransomware victims in Japan, 2025: log preservation, and why logs became unusable" sources={["ch5-npa-r7-logs"]}>
+<Fig lang="en" n="5-8" caption="Ransomware victims in Japan, 2025: log preservation, and why logs became unusable" sources={["npa-r7-data"]}>
   <LogBars lang="en" label="Bar chart. Log preservation, 102 victims: all preserved 25, partly unusable 64, unusable 8, no logs collected 5. Why logs became unusable, 68 answers: deleted by the attacker 20, encrypted 20, retention period expired 18, deleted by mistake 3, other 7." />
   <table slot="data">
     <thead><tr><th>Item</th><th>NPA label</th><th class="num">Count</th></tr></thead>
@@ -101,7 +101,7 @@ The Osaka report also shows what a kept log is worth. The hospital's firewall lo
 
 Choose an action in Fig. 5-10. Anything in memory is gone after any of them. Files on the appliance usually survive a reboot; an upgrade may replace or reformat the partition that holds them, which is what happened at both hospitals. A factory reset removes logs and configuration. Files the intruder planted are the exception: the advisories on the [patching page](../patching-is-not-closing/) describe implants that survived reboots, upgrades and, on Ivanti, a factory reset. Only copies already off the box are safe from all three.
 
-<Fig lang="en" n="5-10" caption="What remains of the evidence after a reboot, a firmware upgrade or a factory reset. General pattern; check your vendor's documentation for your model" sources={["osaka-report-2023", "handa-report-main", "ch5-coathanger", "ch5-cisa-ed-25-03", "ch5-cisa-aa24-060b"]}>
+<Fig lang="en" n="5-10" caption="What remains of the evidence after a reboot, a firmware upgrade or a factory reset. General pattern; check your vendor's documentation for your model" sources={["osaka-report-2023", "handa-report-main", "doors-mivd-coathanger", "doors-cisa-ed-25-03", "cisa-aa24-060b"]}>
   <EvidenceSurvival lang="en" label="Appliance evidence by location: memory, flash or disk, and off the box, with the state of each item after the selected action." />
   <table slot="data">
     <thead><tr><th>Evidence</th>{ACTIONS.map((a) => <th>{ACTION_LABEL.en[a]}</th>)}</tr></thead>
@@ -130,7 +130,7 @@ Do these in order on a suspect appliance, before any patch, reboot or reset. If 
 
 </div>
 
-<SourceLine lang="en" ids={["ch5-fortinet-symlink", "ch5-ncsc-forensics-spec", "ch5-ncsc-observability"]} />
+<SourceLine lang="en" ids={["fortinet-psirt-2025-04", "ch5-ncsc-forensics-spec", "doors-ncsc-uk-observability"]} />
 
 ## <Scale s="1:5" /> Keep logs where the intruder cannot reach them
 
@@ -148,4 +148,4 @@ The copies taken during an incident only cover what the appliance still holds. L
 
 </div>
 
-<SourceLine lang="en" ids={["ch5-cccs-itsm80101", "ch5-ncsc-forensics-spec", "ch5-mandiant-citrixbleed", "ch5-mandiant-0282", "ch5-npa-r7-logs"]} />
+<SourceLine lang="en" ids={["cccs-itsm-80-101", "ch5-ncsc-forensics-spec", "doors-mandiant-citrixbleed", "mandiant-ivanti-2025", "npa-r7-data"]} />

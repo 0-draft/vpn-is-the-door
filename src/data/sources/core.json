@@ -1,7 +1,10 @@
 [
   {
     "id": "npa-r4",
-    "publisher": { "en": "National Police Agency", "ja": "警察庁" },
+    "publisher": {
+      "en": "National Police Agency",
+      "ja": "警察庁"
+    },
     "title": "令和４年におけるサイバー空間をめぐる脅威の情勢等について",
     "date": "2023-03-16",
     "url": "https://www.npa.go.jp/publications/statistics/cybersecurity/data/R04_cyber_jousei.pdf",
@@ -9,7 +12,10 @@
   },
   {
     "id": "npa-r5",
-    "publisher": { "en": "National Police Agency", "ja": "警察庁" },
+    "publisher": {
+      "en": "National Police Agency",
+      "ja": "警察庁"
+    },
     "title": "令和５年におけるサイバー空間をめぐる脅威の情勢等について",
     "date": "2024-03-14",
     "url": "https://www.npa.go.jp/publications/statistics/cybersecurity/data/R5/R05_cyber_jousei.pdf",
@@ -17,7 +23,10 @@
   },
   {
     "id": "npa-r6-data",
-    "publisher": { "en": "National Police Agency", "ja": "警察庁" },
+    "publisher": {
+      "en": "National Police Agency",
+      "ja": "警察庁"
+    },
     "title": "令和６年におけるサイバー空間をめぐる脅威の情勢等について（統計データ）",
     "date": "2025-03-13",
     "url": "https://www.npa.go.jp/publications/statistics/cybersecurity/data/R6/R06_jousei_data.xlsx",
@@ -25,15 +34,21 @@
   },
   {
     "id": "npa-r7-data",
-    "publisher": { "en": "National Police Agency", "ja": "警察庁" },
+    "publisher": {
+      "en": "National Police Agency",
+      "ja": "警察庁"
+    },
     "title": "令和７年におけるサイバー空間をめぐる脅威の情勢等について（統計データ）",
     "date": "2026-03",
     "url": "https://www.npa.go.jp/publications/statistics/cybersecurity/data/R7/R07_jousei_data.xlsx",
-    "locator": "sheets 統計編P122, P124, P126, P129, P130"
+    "locator": "sheets 統計編P122, P124, P126, P129, P130; sheets 統計編P137, P138"
   },
   {
     "id": "npa-r7-en",
-    "publisher": { "en": "National Police Agency", "ja": "警察庁" },
+    "publisher": {
+      "en": "National Police Agency",
+      "ja": "警察庁"
+    },
     "title": "Threats in Cyberspace in 2025 And Police Efforts",
     "date": "2026-03",
     "url": "https://www.npa.go.jp/publications/statistics/cybersecurity/data/R7/R07_cyber_jousei_eng.pdf",
@@ -41,7 +56,10 @@
   },
   {
     "id": "npa-r8h1-data",
-    "publisher": { "en": "National Police Agency", "ja": "警察庁" },
+    "publisher": {
+      "en": "National Police Agency",
+      "ja": "警察庁"
+    },
     "title": "令和８年上半期におけるサイバー空間をめぐる脅威の情勢等について（統計データ）",
     "date": "2026-09-10",
     "url": "https://www.npa.go.jp/publications/statistics/cybersecurity/data/R8kami/R08kami_jousei_data.xlsx",
@@ -49,7 +67,10 @@
   },
   {
     "id": "npa-leaflet-r7",
-    "publisher": { "en": "National Police Agency", "ja": "警察庁" },
+    "publisher": {
+      "en": "National Police Agency",
+      "ja": "警察庁"
+    },
     "title": "ランサムウェア被害防止対策（アンケート調査結果及び対策）",
     "date": "2026-01",
     "url": "https://www.npa.go.jp/bureau/cyber/pdf/R7countermeasures_leaflet.pdf",
@@ -57,15 +78,21 @@
   },
   {
     "id": "cisa-kev",
-    "publisher": { "en": "CISA", "ja": "CISA（米国）" },
+    "publisher": {
+      "en": "CISA",
+      "ja": "CISA（米国）"
+    },
     "title": "Known Exploited Vulnerabilities Catalog",
     "date": "2026-10-23",
     "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
-    "locator": "catalogVersion 2026.10.23"
+    "locator": "catalogVersion 2026.10.23; VPN/remote-access entries of the chapter 3 door schedule, bug class from NVD CWE and vendor advisories"
   },
   {
     "id": "dbir-2025",
-    "publisher": { "en": "Verizon", "ja": "Verizon" },
+    "publisher": {
+      "en": "Verizon",
+      "ja": "Verizon"
+    },
     "title": "2025 Data Breach Investigations Report: Executive Summary",
     "date": "2025-04",
     "url": "https://www.verizon.com/business/resources/reports/2025-dbir-executive-summary.pdf",
@@ -73,7 +100,10 @@
   },
   {
     "id": "dbir-2026",
-    "publisher": { "en": "Verizon", "ja": "Verizon" },
+    "publisher": {
+      "en": "Verizon",
+      "ja": "Verizon"
+    },
     "title": "2026 Data Breach Investigations Report: Executive Summary",
     "date": "2026",
     "url": "https://www.verizon.com/business/resources/executivebriefs/2026-dbir-executive-summary.pdf",
@@ -81,7 +111,10 @@
   },
   {
     "id": "jpcert-ir-2024q2",
-    "publisher": { "en": "JPCERT/CC", "ja": "JPCERT/CC" },
+    "publisher": {
+      "en": "JPCERT/CC",
+      "ja": "JPCERT/CC"
+    },
     "title": "Incident Handling Report [July 1, 2024 - September 30, 2024]",
     "date": "2024-10",
     "url": "https://www.jpcert.or.jp/english/doc/IR_Report2024Q2_en.pdf",

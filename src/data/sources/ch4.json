@@ -1,32 +1,5 @@
 [
   {
-    "id": "case-handa-main",
-    "publisher": { "en": "Tsurugi Town Handa Hospital expert panel", "ja": "つるぎ町立半田病院 有識者会議" },
-    "title": "徳島県つるぎ町立半田病院 コンピュータウイルス感染事案 有識者会議調査報告書",
-    "date": "2022-06-07",
-    "url": "https://www.handa-hospital.jp/topics/2022/0616/report_01.pdf",
-    "locator": "pp.6–9, 13, 21, 37–38"
-  },
-  {
-    "id": "case-handa-tech",
-    "publisher": { "en": "Tsurugi Town Handa Hospital expert panel", "ja": "つるぎ町立半田病院 有識者会議" },
-    "title": "徳島県つるぎ町立半田病院 コンピュータウイルス感染事案 有識者会議調査報告書 ― 技術編 ―",
-    "date": "2022-06-07",
-    "url": "https://www.handa-hospital.jp/topics/2022/0616/report_02.pdf",
-    "locator": "pp.10–14"
-  },
-  {
-    "id": "case-ogmc-report",
-    "publisher": {
-      "en": "Osaka General Medical Center investigation committee",
-      "ja": "大阪急性期・総合医療センター 情報セキュリティインシデント調査委員会"
-    },
-    "title": "調査報告書",
-    "date": "2023-03-28",
-    "url": "https://www.gh.opho.jp/pdf/report_v01.pdf",
-    "locator": "pp.11, 37, 45–46, 71"
-  },
-  {
     "id": "case-ogmc-summary",
     "publisher": {
       "en": "Osaka General Medical Center investigation committee",
@@ -39,7 +12,10 @@
   },
   {
     "id": "case-nuts-association",
-    "publisher": { "en": "Nagoya Harbor Transportation Association", "ja": "名古屋港運協会" },
+    "publisher": {
+      "en": "Nagoya Harbor Transportation Association",
+      "ja": "名古屋港運協会"
+    },
     "title": "NUTS システム障害の経緯報告",
     "date": "2023-07-26",
     "url": "https://meikoukyo.com/wp-content/uploads/2023/07/0bb9d9907568e832da8f400e529efc99.pdf",
@@ -47,7 +23,10 @@
   },
   {
     "id": "case-mlit-nuts",
-    "publisher": { "en": "Ministry of Land, Infrastructure, Transport and Tourism", "ja": "国土交通省" },
+    "publisher": {
+      "en": "Ministry of Land, Infrastructure, Transport and Tourism",
+      "ja": "国土交通省"
+    },
     "title": "コンテナターミナルにおける情報セキュリティ対策等検討委員会 中間取りまとめ①",
     "date": "2023",
     "url": "https://www.mlit.go.jp/kowan/content/001633384.pdf",
@@ -55,14 +34,20 @@
   },
   {
     "id": "case-kantsu-3rd",
-    "publisher": { "en": "Kantsu Co., Ltd.", "ja": "株式会社関通" },
+    "publisher": {
+      "en": "Kantsu Co., Ltd.",
+      "ja": "株式会社関通"
+    },
     "title": "【第3報】当社におけるサイバー攻撃によるシステムの停止事案発生のお知らせ",
     "date": "2024-09-28",
     "url": "https://www.kantsu.com/news/6615/"
   },
   {
     "id": "case-kantsu-softbank",
-    "publisher": { "en": "SoftBank Corp. business blog", "ja": "ソフトバンク ビジネスブログ" },
+    "publisher": {
+      "en": "SoftBank Corp. business blog",
+      "ja": "ソフトバンク ビジネスブログ"
+    },
     "title": "サイバー攻撃の教訓～関通 情シスが語る、全て捨てて挑んだ再構築。防御から復旧へ～",
     "date": "2025-10-28",
     "url": "https://www.softbank.jp/business/content/blog/202510/kantsu-ransomware-it"
@@ -80,7 +65,10 @@
   },
   {
     "id": "case-askul-13th",
-    "publisher": { "en": "ASKUL Corporation", "ja": "アスクル株式会社" },
+    "publisher": {
+      "en": "ASKUL Corporation",
+      "ja": "アスクル株式会社"
+    },
     "title": "ランサムウェア攻撃の影響調査結果および安全性強化に向けた取り組みのご報告（ランサムウェア攻撃によるシステム障害関連・第 13 報）",
     "date": "2025-12-12",
     "url": "https://pdf.irpocket.com/C0032/PDLX/O3bg/N4O3.pdf",
@@ -88,21 +76,30 @@
   },
   {
     "id": "case-asahi-2025-11-27",
-    "publisher": { "en": "Asahi Group Holdings", "ja": "アサヒグループホールディングス" },
+    "publisher": {
+      "en": "Asahi Group Holdings",
+      "ja": "アサヒグループホールディングス"
+    },
     "title": "サイバー攻撃による情報漏えいに関する調査結果と今後の対応について",
     "date": "2025-11-27",
     "url": "https://www.asahigroup-holdings.com/newsroom/detail/20251127-0104.html"
   },
   {
     "id": "case-asahi-2026-02-18",
-    "publisher": { "en": "Asahi Group Holdings", "ja": "アサヒグループホールディングス" },
+    "publisher": {
+      "en": "Asahi Group Holdings",
+      "ja": "アサヒグループホールディングス"
+    },
     "title": "サイバー攻撃被害の再発防止策とガバナンス体制の強化について",
     "date": "2026-02-18",
     "url": "https://www.asahigroup-holdings.com/newsroom/detail/20260218-0101.html"
   },
   {
     "id": "case-anabuki-4th",
-    "publisher": { "en": "Anabuki Kosan Inc.", "ja": "穴吹興産株式会社" },
+    "publisher": {
+      "en": "Anabuki Kosan Inc.",
+      "ja": "穴吹興産株式会社"
+    },
     "title": "情報流出に関するお知らせとお詫び（ランサムウェア被害発生のお知らせ（第４報））",
     "date": "2026-04-03",
     "url": "https://www.anabuki.ne.jp/cms_upload/news/429/20260403_higaihassei4.pdf",
@@ -110,21 +107,30 @@
   },
   {
     "id": "case-ycc-5th",
-    "publisher": { "en": "YCC Information System", "ja": "YCC情報システム" },
+    "publisher": {
+      "en": "YCC Information System",
+      "ja": "YCC情報システム"
+    },
     "title": "【重要】ランサムウェア攻撃に関するお知らせ（第五報）",
     "date": "2026-05-20",
     "url": "https://www.yamagata-ycc.co.jp/news/20260520-1/"
   },
   {
     "id": "case-sedeco-2026-07-21",
-    "publisher": { "en": "Seidensha Electronics", "ja": "精電舎電子工業" },
+    "publisher": {
+      "en": "Seidensha Electronics",
+      "ja": "精電舎電子工業"
+    },
     "title": "サイバー攻撃に関するお知らせ",
     "date": "2026-07-21",
     "url": "https://www.sedeco.co.jp/news/detail/?itemid=111&dispmid=567"
   },
   {
     "id": "case-ryomo-scan",
-    "publisher": { "en": "ScanNetSecurity", "ja": "ScanNetSecurity" },
+    "publisher": {
+      "en": "ScanNetSecurity",
+      "ja": "ScanNetSecurity"
+    },
     "title": "両毛システムズにランサムウェア攻撃",
     "date": "2026-10-15",
     "url": "https://scan.netsecurity.ne.jp/article/2026/10/15/56461.html"
@@ -141,56 +147,82 @@
   },
   {
     "id": "case-colonial-bis",
-    "publisher": { "en": "BankInfoSecurity", "ja": "BankInfoSecurity" },
+    "publisher": {
+      "en": "BankInfoSecurity",
+      "ja": "BankInfoSecurity"
+    },
     "title": "Colonial CEO at Senate Hearing Details Ransomware Attack",
     "date": "2021-06-08",
     "url": "https://www.bankinfosecurity.com/colonial-ceo-at-senate-hearing-details-ransomware-attack-a-16836"
   },
   {
     "id": "case-cisa-aa23-325a",
-    "publisher": { "en": "CISA, FBI, MS-ISAC, ASD's ACSC", "ja": "CISA・FBI・MS-ISAC・ASD's ACSC（共同）" },
+    "publisher": {
+      "en": "CISA, FBI, MS-ISAC, ASD's ACSC",
+      "ja": "CISA・FBI・MS-ISAC・ASD's ACSC（共同）"
+    },
     "title": "#StopRansomware: LockBit 3.0 Ransomware Affiliates Exploit CVE 2023-4966 Citrix Bleed Vulnerability",
     "date": "2023-11-21",
-    "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-325a"
+    "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-325a",
+    "locator": "AA23-325A"
   },
   {
     "id": "case-boeing-techcrunch",
-    "publisher": { "en": "TechCrunch", "ja": "TechCrunch" },
+    "publisher": {
+      "en": "TechCrunch",
+      "ja": "TechCrunch"
+    },
     "title": "Boeing confirms ‘cyber incident’ after ransomware gang claims data theft",
     "date": "2023-11-02",
     "url": "https://techcrunch.com/2023/11/02/boeing-cyber-incident-ransomware-gang-claims-data-theft/"
   },
   {
     "id": "case-cisa-csat",
-    "publisher": { "en": "CISA", "ja": "CISA（米国）" },
+    "publisher": {
+      "en": "CISA",
+      "ja": "CISA（米国）"
+    },
     "title": "Chemical Security Assessment Tool (CSAT) Ivanti Notification",
     "date": "2024-06",
     "url": "https://www.cisa.gov/topics/critical-infrastructure-security-and-resilience/chemical-security/assessment-tool-csat-ivanti-notification"
   },
   {
     "id": "case-cisa-ed-24-01",
-    "publisher": { "en": "CISA", "ja": "CISA（米国）" },
+    "publisher": {
+      "en": "CISA",
+      "ja": "CISA（米国）"
+    },
     "title": "ED 24-01: Mitigate Ivanti Connect Secure and Ivanti Policy Secure Vulnerabilities",
     "date": "2024-01-19",
-    "url": "https://www.cisa.gov/news-events/directives/ed-24-01-mitigate-ivanti-connect-secure-and-ivanti-policy-secure-vulnerabilities"
+    "url": "https://www.cisa.gov/news-events/directives/ed-24-01-mitigate-ivanti-connect-secure-and-ivanti-policy-secure-vulnerabilities",
+    "locator": "Supplemental Direction V2"
   },
   {
     "id": "case-cisa-dive",
-    "publisher": { "en": "Cybersecurity Dive", "ja": "Cybersecurity Dive" },
+    "publisher": {
+      "en": "Cybersecurity Dive",
+      "ja": "Cybersecurity Dive"
+    },
     "title": "CISA attacked in Ivanti vulnerabilities exploit rush",
     "date": "2024-03-11",
     "url": "https://www.cybersecuritydive.com/news/cisa-attacked-ivanti-cve-exploits/709893/"
   },
   {
     "id": "case-mitre-conclusion",
-    "publisher": { "en": "MITRE", "ja": "MITRE" },
+    "publisher": {
+      "en": "MITRE",
+      "ja": "MITRE"
+    },
     "title": "MITRE Concludes Its Internal Cyber-Attack Investigation",
     "date": "2024",
     "url": "https://www.mitre.org/news-insights/impact-story/mitre-concludes-its-internal-cyber-attack-investigation"
   },
   {
     "id": "case-mitre-helpnet",
-    "publisher": { "en": "Help Net Security", "ja": "Help Net Security" },
+    "publisher": {
+      "en": "Help Net Security",
+      "ja": "Help Net Security"
+    },
     "title": "MITRE breached by nation-state threat actor via Ivanti zero-days",
     "date": "2024-04-22",
     "url": "https://www.helpnetsecurity.com/2024/04/22/mitre-breached/"
