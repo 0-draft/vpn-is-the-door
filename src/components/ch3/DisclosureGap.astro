@@ -1,0 +1,301 @@
+---
+// Fig. 3-5: first exploitation and KEV listing, in days relative to the
+// vendor's disclosure (day 0). Bars left of 0 are zero-days. Month-precision
+// dates are drawn as a range, never as a single day.
+import { exploitGap, kevGap, period, VULNS, type Vuln } from "../../data/doors";
+import type { Lang } from "../../lib/paths";
+
+interface Props {
+  lang: Lang;
+  /** "table" renders the same numbers as a plain table for the Data drawer. */
+  as?: "chart" | "table";
+}
+
+const { lang, as = "chart" } = Astro.props;
+const ja = lang === "ja";
+const MIN = -180;
+const MAX = 120;
+const pos = (d: number) => ((Math.min(MAX, Math.max(MIN, d)) - MIN) / (MAX - MIN)) * 100;
+const rows = VULNS.filter((v) => v.exploited && !v.chainedBehind)
+  .map((v) => ({ v, g: exploitGap(v)!, k: kevGap(v) }))
+  .sort((a, b) => period(a.v.disclosed).start - period(b.v.disclosed).start);
+const sign = (n: number) => (n > 0 ? `+${n}` : n < 0 ? `−${-n}` : "0");
+const days = (n: number) => (ja ? `${sign(n)}日` : `${sign(n)} d`);
+const range = (g: { from: number; to: number; open: boolean }) =>
+  g.open
+    ? ja
+      ? `${days(g.to)}以前`
+      : `${days(g.to)} or earlier`
+    : g.from === g.to
+      ? days(g.from)
+      : ja
+        ? `${sign(g.from)}〜${sign(g.to)}日`
+        : `${sign(g.from)} to ${sign(g.to)} d`;
+const name = (v: Vuln) => `${v.cve}${v.nickname ? ` ${v.nickname}` : ""}`;
+const ticks = [-180, -120, -60, 0, 60, 120];
+const L = ja
+  ? {
+      exp: "悪用",
+      kev: "KEV",
+      axis: "公表日を0とした日数",
+      zero: "公表",
+      before: "公表より前（ゼロデイ）",
+      after: "公表より後",
+    }
+  : {
+      exp: "exploited",
+      kev: "KEV",
+      axis: "days from the vendor's disclosure",
+      zero: "disclosed",
+      before: "before disclosure (zero-day)",
+      after: "after disclosure",
+    };
+---
+
+{
+  as === "table" && (
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">CVE</th>
+          <th scope="col">{ja ? "公表" : "Disclosed"}</th>
+          <th scope="col">{ja ? "最初の悪用" : "First exploited"}</th>
+          <th scope="col">{ja ? "公表からの日数" : "Days from disclosure"}</th>
+          <th scope="col">{ja ? "KEV 登録" : "KEV added"}</th>
+          <th scope="col" class="num">{ja ? "公表から KEV まで" : "Disclosure to KEV"}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map(({ v, g, k }) => (
+          <tr>
+            <td class="mono">{name(v)}</td>
+            <td class="num">{v.disclosed}</td>
+            <td>{v.exploited?.note[lang]}</td>
+            <td class="num">{range(g)}</td>
+            <td class="num">{v.kevAdded}</td>
+            <td class="num">{days(k)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+}
+{
+  as === "chart" && (
+<div class="gap">
+  <div class="gap-head">
+    <span class="gap-side gap-before">← {L.before}</span>
+    <span class="gap-side gap-after">{L.after} →</span>
+  </div>
+  <ol class="gap-rows">
+    {
+      rows.map(({ v, g, k }) => {
+        const zero = v.exploited?.zeroDay;
+        const a = pos(g.from);
+        const b = pos(g.to);
+        return (
+          <li class="gap-row">
+            <span class="gap-name">
+              <a class="mono" href={`#${v.cve.toLowerCase()}`}>
+                {name(v)}
+              </a>
+            </span>
+            <span class="gap-track">
+              <span class="gap-zero" style={`inset-inline-start:${pos(0)}%`} />
+              <span
+                class:list={["gap-bar", { "gap-zero-day": zero, "gap-open": g.open, "gap-clip": g.from < MIN }]}
+                style={`inset-inline-start:${a}%;inline-size:max(6px, ${b - a}%)`}
+              />
+              <span
+                class:list={["gap-kev", { "gap-kev-out": k > MAX }]}
+                style={`inset-inline-start:${pos(k)}%`}
+              />
+            </span>
+            <span class="gap-v num">
+              {L.exp} {range(g)} · {L.kev} {days(k)}
+            </span>
+          </li>
+        );
+      })
+    }
+  </ol>
+  <div class="gap-axis">
+    {
+      ticks.map((t) => (
+        <span class:list={["gap-tick num", { "gap-tick-minor": t === -120 || t === 60 }]} style={`inset-inline-start:${pos(t)}%`}>
+          {t === 0 ? L.zero : days(t)}
+        </span>
+      ))
+    }
+  </div>
+  <p class="gap-legend">
+    <span class="gap-k"><span class="gap-key gap-key-bar"></span>{ja ? "ゼロデイの悪用" : "zero-day exploitation"}</span>
+    <span class="gap-k"
+      ><span class="gap-key gap-key-n"></span>{
+        ja ? "公表後の悪用（月単位の日付は幅で示す）" : "exploitation after disclosure (a month-only date is drawn as a range)"
+      }</span
+    >
+    <span class="gap-k"
+      ><span class="gap-key gap-key-kev"></span>{
+        ja ? "KEV 登録（右端の矢印は120日より後）" : "added to KEV (an arrow at the right edge means after day 120)"
+      }</span
+    >
+  </p>
+</div>
+  )
+}
+
+<style>
+  .gap {
+    --label: 15rem;
+    --value: 16.5rem;
+    font-size: 0.9375rem;
+  }
+  .gap-head,
+  .gap-axis {
+    margin-inline: calc(var(--label) + 0.75rem) calc(var(--value) + 0.75rem);
+  }
+  .gap-head {
+    display: flex;
+    justify-content: space-between;
+    color: var(--ink-3);
+    font-size: 0.875rem;
+    margin-block-end: 0.4rem;
+  }
+  .gap-rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.15rem;
+  }
+  .gap-row {
+    display: grid;
+    grid-template-columns: var(--label) minmax(0, 1fr) var(--value);
+    gap: 0.75rem;
+    align-items: center;
+    padding-block: 0.15rem;
+    border-block-end: 1px solid var(--hair);
+  }
+  .gap-name a {
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 0.875rem;
+  }
+  .gap-name a:hover {
+    text-decoration: underline;
+  }
+  .gap-track {
+    position: relative;
+    block-size: 1.25rem;
+  }
+  .gap-zero {
+    position: absolute;
+    inset-block: -0.3rem;
+    border-inline-start: 2px solid var(--ink);
+  }
+  .gap-bar {
+    position: absolute;
+    inset-block: 0.3rem;
+    background: var(--intruder);
+    border: 1px solid var(--intruder);
+  }
+  .gap-bar:not(.gap-zero-day) {
+    background: var(--intruder-tint);
+  }
+  .gap-open::before,
+  .gap-clip::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: -8px;
+    inset-block-start: 50%;
+    translate: 0 -50%;
+    border-block: 5px solid transparent;
+    border-inline-end: 7px solid var(--intruder);
+  }
+  .gap-kev {
+    position: absolute;
+    inset-block: 0;
+    inline-size: 0;
+    border-inline-start: 3px solid var(--ink-2);
+    translate: -1px 0;
+  }
+  .gap-kev-out {
+    border: 0;
+    inset-block-start: 50%;
+    translate: -100% -50%;
+    block-size: 0;
+    border-block: 6px solid transparent;
+    border-inline-start: 9px solid var(--ink-2);
+  }
+  .gap-v {
+    color: var(--ink-2);
+    font-size: 0.875rem;
+  }
+  .gap-axis {
+    position: relative;
+    block-size: 1.5rem;
+    margin-block-start: 0.3rem;
+    border-block-start: 1px solid var(--line);
+  }
+  .gap-tick {
+    position: absolute;
+    translate: -50% 0;
+    font-size: 0.875rem;
+    color: var(--ink-3);
+    white-space: nowrap;
+  }
+  .gap-tick:first-child {
+    translate: 0 0;
+  }
+  .gap-tick:last-child {
+    translate: -100% 0;
+  }
+  .gap-legend {
+    margin: 0.75rem 0 0;
+    font-size: 0.875rem;
+    color: var(--ink-2);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 0.5rem;
+    align-items: center;
+  }
+  .gap-k {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: baseline;
+    margin-inline-end: 0.75rem;
+  }
+  .gap-key {
+    flex: none;
+    display: inline-block;
+    inline-size: 1.25rem;
+    block-size: 0.6rem;
+  }
+  .gap-key-bar {
+    background: var(--intruder);
+  }
+  .gap-key-n {
+    background: var(--intruder-tint);
+    border: 1px solid var(--intruder);
+  }
+  .gap-key-kev {
+    inline-size: 0;
+    block-size: 1rem;
+    border-inline-start: 3px solid var(--ink-2);
+  }
+  @media (max-width: 52em) {
+    .gap-tick-minor {
+      display: none;
+    }
+    .gap-head,
+    .gap-axis {
+      margin-inline: 0;
+    }
+    .gap-row {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.15rem;
+      padding-block: 0.4rem;
+    }
+  }
+</style>

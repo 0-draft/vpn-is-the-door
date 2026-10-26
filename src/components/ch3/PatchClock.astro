@@ -1,0 +1,139 @@
+---
+// Fig. 3-3: the defender's clock against the attacker's, on one day scale.
+// DBIR 2025: median 32 days to fully remediate edge-device / VPN flaws.
+// Marks: rows of the door schedule exploited within days of disclosure
+// (day-precision dates only) and rows added to KEV on the disclosure day.
+import { exploitGap, kevGap, VULNS } from "../../data/doors";
+import type { Lang } from "../../lib/paths";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const ja = lang === "ja";
+const MAX = 35;
+const pos = (d: number) => (d / MAX) * 100;
+const fast = VULNS.filter((v) => v.exploited && !v.exploited.zeroDay && v.exploited.date.length === 10)
+  .map((v) => ({ v, d: exploitGap(v)!.from }))
+  .filter((x) => x.d >= 0 && x.d <= MAX);
+const sameDay = VULNS.filter((v) => kevGap(v) === 0).length;
+const ticks = [0, 7, 14, 21, 28, 35];
+---
+
+<div class="clock">
+  <div class="clock-row">
+    <p class="clock-k">{ja ? "攻撃者" : "Attackers"}</p>
+    <div class="clock-track">
+      {
+        fast.map(({ v, d }) => (
+          <span class="clock-mark" style={`--x:${pos(d)}%`}>
+            <span class="clock-mark-t">
+              <span class="mono">{v.cve}</span> {ja ? `公表${d}日後に悪用` : `exploited ${d} days after disclosure`}
+            </span>
+          </span>
+        ))
+      }
+      <span class="clock-mark clock-mark-0" style="--x:0%">
+        <span class="clock-mark-t">
+          {ja ? `${sameDay}件は公表当日に KEV 登録（悪用確認済み）` : `${sameDay} rows added to KEV, as exploited, on the disclosure day`}
+        </span>
+      </span>
+    </div>
+  </div>
+  <div class="clock-row">
+    <p class="clock-k">{ja ? "守る側" : "Defenders"}</p>
+    <div class="clock-track">
+      <span class="clock-bar" style={`inline-size:${pos(32)}%`}></span>
+      <span class="clock-bar-t">
+        {
+          ja
+            ? "中央値32日: エッジ機器・VPN の脆弱性を完全に直すまで（年内に直し終えたのは約54%）"
+            : "Median 32 days to fully fix an edge-device or VPN flaw (only about 54% were fully fixed within the year)"
+        }
+      </span>
+    </div>
+  </div>
+  <div class="clock-axis" aria-hidden="true">
+    {
+      ticks.map((t) => (
+        <span class="clock-tick num" style={`inset-inline-start:${pos(t)}%`}>
+          {ja ? `${t}日` : `${t} d`}
+        </span>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .clock {
+    --k: 7rem;
+    display: grid;
+    gap: 1rem;
+    font-size: 0.9375rem;
+  }
+  .clock-row {
+    display: grid;
+    grid-template-columns: var(--k) minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: start;
+  }
+  .clock-k {
+    margin: 0;
+    font-weight: 700;
+  }
+  .clock-track {
+    position: relative;
+    display: grid;
+    gap: 0.35rem;
+    padding-block: 0.25rem;
+    border-inline-start: 2px solid var(--ink);
+  }
+  .clock-mark {
+    display: block;
+    padding-inline-start: var(--x, 0%);
+  }
+  .clock-mark-t {
+    display: inline-block;
+    padding-inline-start: 0.6rem;
+    border-inline-start: 3px solid var(--intruder);
+    color: var(--ink);
+  }
+  .clock-bar {
+    display: block;
+    block-size: 0.875rem;
+    background: var(--ink-2);
+  }
+  .clock-bar-t {
+    display: block;
+    color: var(--ink-2);
+  }
+  .clock-axis {
+    position: relative;
+    block-size: 1.5rem;
+    margin-inline-start: calc(var(--k) + 0.75rem);
+    border-block-start: 1px solid var(--line);
+  }
+  .clock-tick {
+    position: absolute;
+    translate: -50% 0;
+    font-size: 0.875rem;
+    color: var(--ink-3);
+    white-space: nowrap;
+  }
+  .clock-tick:first-child {
+    translate: 0 0;
+  }
+  .clock-tick:last-child {
+    translate: -100% 0;
+  }
+  @media (max-width: 40em) {
+    .clock-row {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.25rem;
+    }
+    .clock-axis {
+      margin-inline-start: 0;
+    }
+  }
+</style>

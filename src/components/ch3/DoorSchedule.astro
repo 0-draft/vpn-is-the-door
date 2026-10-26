@@ -1,0 +1,594 @@
+---
+// 建具表 explorer (design §8.3): the door schedule with the detail drawing.
+// Selecting a row (button, Enter, or #cve-yyyy-nnnn) highlights the failing
+// parts and draws the route; the row's full record opens under it. Without
+// JavaScript every record stays visible in the table.
+import {
+  anchor,
+  cvssText,
+  kevUrl,
+  matches,
+  nvdUrl,
+  PRODUCTS,
+  partPath,
+  segmentsFor,
+  skipsLock,
+  VULNS,
+  type Vuln,
+} from "../../data/doors";
+import { source } from "../../data/sources";
+import type { Lang } from "../../lib/paths";
+import DoorDetail from "./DoorDetail.astro";
+
+interface Props {
+  lang: Lang;
+  initial?: string;
+}
+
+const { lang, initial = "CVE-2023-4966" } = Astro.props;
+const ja = lang === "ja";
+const S = ja
+  ? {
+      filters: "絞り込み",
+      all: "すべて",
+      preauth: "認証前のみ",
+      patch: "パッチだけでは閉まらないもの",
+      cve: "CVE",
+      part: "壊れる部位",
+      gets: "攻撃者が得るもの",
+      kev: "KEV 登録日",
+      patchCol: "パッチだけで閉まるか",
+      pre: "認証前",
+      post: (c: string) => `${c} の後ろで連鎖`,
+      no: "いいえ",
+      noReport: "報告なし",
+      ransom: "ランサムウェア",
+      known: "あり",
+      unknown: "不明",
+      product: "製品",
+      class: "欠陥の種類",
+      cvss: "CVSS v3.1",
+      route: "図上の経路",
+      disclosed: "公表",
+      exploited: "最初の悪用",
+      unknownExp: "日付は確認できない（KEV は悪用ありとし、ベンダーは悪用なしとしている）",
+      kevAdded: "KEV 登録",
+      kevRansom: "KEV のランサムウェア使用欄",
+      patchRec: "パッチだけで閉まるか",
+      patchYes: "この表の出典には、パッチ以外の対処を求める記述はない",
+      links: "出典",
+      select: "選ぶ",
+      shown: (n: number, t: number) => `${t}件中${n}件を表示`,
+      selected: "選択中",
+      zero: "ゼロデイ",
+    }
+  : {
+      filters: "Filter",
+      all: "All",
+      preauth: "Pre-auth only",
+      patch: "Patch is not enough",
+      cve: "CVE",
+      part: "Part that fails",
+      gets: "What the attacker gets",
+      kev: "KEV added",
+      patchCol: "Patch alone closes it?",
+      pre: "Pre-auth",
+      post: (c: string) => `Chained behind ${c}`,
+      no: "No",
+      noReport: "No report says otherwise",
+      ransom: "Ransomware",
+      known: "Known",
+      unknown: "Unknown",
+      product: "Product",
+      class: "Flaw",
+      cvss: "CVSS v3.1",
+      route: "Route on the drawing",
+      disclosed: "Disclosed",
+      exploited: "First exploited",
+      unknownExp:
+        "No date confirmed (KEV lists it as exploited; the vendor advisory says it is not known to be exploited)",
+      kevAdded: "Added to KEV",
+      kevRansom: "KEV ransomware field",
+      patchRec: "Patch alone closes it?",
+      patchYes: "None of the sources for this row ask for more than the patch",
+      links: "Sources",
+      select: "Select",
+      shown: (n: number, t: number) => `Showing ${n} of ${t}`,
+      selected: "Selected",
+      zero: "zero-day",
+    };
+const SHORT: Record<string, string> = {
+  fortinet: "Fortinet",
+  ivanti: "Ivanti",
+  citrix: "Citrix",
+  paloalto: "Palo Alto",
+  sonicwall: "SonicWall",
+  cisco: "Cisco",
+  checkpoint: "Check Point",
+};
+const groups = PRODUCTS.map((p) => ({ p, rows: VULNS.filter((v) => v.product === p.id) }));
+const first = VULNS.find((v) => v.cve === initial) ?? VULNS[0]!;
+const host = (u: string) => new URL(u).hostname.replace(/^www\./, "");
+const ransom = (v: Vuln) => (v.ransomware === "Known" ? S.known : S.unknown);
+const all = { product: "all", preauthOnly: false, patchNotEnough: false } as const;
+const total = VULNS.filter((v) => matches(v, all)).length;
+---
+
+<div class="explorer" data-explorer data-initial={first.cve} data-lang={lang}>
+  <div class="ex-controls" role="group" aria-label={S.filters}>
+    <div class="ex-products">
+      <button type="button" class="ex-btn" data-product="all" aria-pressed="true">{S.all}</button>
+      {
+        PRODUCTS.map((p) => (
+          <button type="button" class="ex-btn" data-product={p.id} aria-pressed="false">
+            <span class="mono">{p.mark}</span> {SHORT[p.id]}
+          </button>
+        ))
+      }
+    </div>
+    <div class="ex-checks">
+      <label><input type="checkbox" data-filter="preauth" /> {S.preauth}</label>
+      <label><input type="checkbox" data-filter="patch" /> {S.patch}</label>
+    </div>
+    <p class="ex-count" aria-live="polite" data-count>{S.shown(total, total)}</p>
+  </div>
+
+  <div class="ex-grid">
+    <div class="ex-fig">
+      <div class="ex-sticky">
+        <DoorDetail
+          lang={lang}
+          uid="ex"
+          labels="real"
+          path={first.part}
+          label={ja ? "VPN 機器の詳細図。選んだ行の壊れる部位を示す" : "Detail of the VPN door, showing the part the selected row breaks"}
+        />
+        <p class="ex-now" aria-live="polite" data-now>
+          <span class="ex-now-k">{S.selected}:</span>{" "}
+          <span data-now-text>
+            {first.cve}
+            {first.nickname ? ` ${first.nickname}` : ""} · {partPath(lang, first.part)}
+          </span>
+        </p>
+      </div>
+    </div>
+
+    <div class="ex-table table-scroll" tabindex="0">
+      <table>
+        <colgroup>
+          <col class="c-cve" />
+          <col class="c-part" />
+          <col />
+          <col class="c-kev" />
+          <col class="c-patch" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th scope="col">{S.cve}</th>
+            <th scope="col">{S.part}</th>
+            <th scope="col">{S.gets}</th>
+            <th scope="col">{S.kev}</th>
+            <th scope="col">{S.patchCol}</th>
+          </tr>
+        </thead>
+        {
+          groups.map(({ p, rows }) => (
+            <tbody data-group={p.id}>
+              <tr class="ex-group">
+                <th scope="colgroup" colspan="5">
+                  <span class="mono ex-mark">{p.mark}</span> {p.name[lang]}
+                </th>
+              </tr>
+              {rows.map((v) => (
+                <>
+                  <tr
+                    class="ex-row"
+                    id={anchor(v.cve)}
+                    data-cve={v.cve}
+                    data-product={v.product}
+                    data-preauth={v.preauth ? "1" : "0"}
+                    data-patch={v.patch.enough ? "1" : "0"}
+                    data-segs={segmentsFor(v.part).join(" ")}
+                    data-hot={v.part.join(" ")}
+                    data-skip={skipsLock(v) ? "1" : "0"}
+                    data-now={`${v.cve}${v.nickname ? ` ${v.nickname}` : ""} · ${partPath(lang, v.part)}`}
+                  >
+                    <td class="ex-cve">
+                      <button type="button" class="ex-pick num" aria-pressed="false" aria-controls={`rec-${anchor(v.cve)}`}>
+                        {v.cve}
+                      </button>
+                      {v.nickname && <span class="ex-nick">{v.nickname}</span>}
+                      <span class="ex-links">
+                        <a href={nvdUrl(v.cve)}>NVD</a> · <a href={kevUrl(v.cve)}>KEV</a>
+                      </span>
+                    </td>
+                    <td>
+                      <span class="ex-path">{partPath(lang, v.part, false)}</span>
+                      {v.preauth ? (
+                        <span class="tag-intruder ex-pre">{S.pre}</span>
+                      ) : (
+                        <span class="ex-chain">{S.post(v.chainedBehind ?? "")}</span>
+                      )}
+                    </td>
+                    <td>{v.gets[lang]}</td>
+                    <td class="num">
+                      {v.kevAdded}
+                      <span class="ex-sub">
+                        {S.ransom}: {ransom(v)}
+                      </span>
+                    </td>
+                    <td>
+                      {v.patch.enough ? (
+                        <span class="ex-sub">{S.noReport}</span>
+                      ) : (
+                        <>
+                          <span class="tag-caution">{S.no}</span> <span class="ex-reason">{v.patch.reason[lang]}</span>
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                  <tr class="ex-detail" id={`rec-${anchor(v.cve)}`} data-rec={v.cve}>
+                    <td colspan="5">
+                      <dl class="ex-dl">
+                        <dt>{S.product}</dt>
+                        <dd>
+                          {p.name[lang]} <span class="ex-sub">({v.productDetail})</span>
+                        </dd>
+                        <dt>{S.class}</dt>
+                        <dd>{v.class[lang]}</dd>
+                        <dt>{S.cvss}</dt>
+                        <dd class="num">{cvssText(v, lang)}</dd>
+                        <dt>{S.route}</dt>
+                        <dd>{partPath(lang, v.part)}</dd>
+                        <dt>{S.disclosed}</dt>
+                        <dd class="num">{v.disclosed}</dd>
+                        <dt>{S.exploited}</dt>
+                        <dd>
+                          {v.exploited ? (
+                            <>
+                              {v.exploited.zeroDay && <span class="tag-intruder">{S.zero}</span>} {v.exploited.note[lang]}
+                            </>
+                          ) : (
+                            S.unknownExp
+                          )}
+                        </dd>
+                        <dt>{S.kevAdded}</dt>
+                        <dd class="num">{v.kevAdded}</dd>
+                        <dt>{S.kevRansom}</dt>
+                        <dd>{ransom(v)}</dd>
+                        <dt>{S.patchRec}</dt>
+                        <dd>
+                          {v.patch.enough ? (
+                            S.patchYes
+                          ) : (
+                            <>
+                              <span class="tag-caution">{S.no}</span> {v.patch.reason[lang]} (
+                              <a href={source(v.patch.source).url}>{source(v.patch.source).publisher[lang]}</a>)
+                            </>
+                          )}
+                        </dd>
+                        <dt>{S.links}</dt>
+                        <dd>
+                          <ul class="ex-srcs">
+                            {v.sources.map((u) => (
+                              <li>
+                                <a href={u}>{host(u)}</a>
+                              </li>
+                            ))}
+                          </ul>
+                        </dd>
+                      </dl>
+                    </td>
+                  </tr>
+                </>
+              ))}
+            </tbody>
+          ))
+        }
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { cveFromHash } from "../../data/doors";
+
+  for (const root of document.querySelectorAll<HTMLElement>("[data-explorer]")) {
+    const svg = root.querySelector<SVGSVGElement>("svg.door");
+    const now = root.querySelector<HTMLElement>("[data-now-text]");
+    const count = root.querySelector<HTMLElement>("[data-count]");
+    const rows = [...root.querySelectorAll<HTMLTableRowElement>("tr.ex-row")];
+    const recs = [...root.querySelectorAll<HTMLTableRowElement>("tr.ex-detail")];
+    const groups = [...root.querySelectorAll<HTMLElement>("tbody[data-group]")];
+    const productBtns = [...root.querySelectorAll<HTMLButtonElement>("[data-product]")].filter(
+      (b) => b.tagName === "BUTTON",
+    );
+    const pre = root.querySelector<HTMLInputElement>('[data-filter="preauth"]');
+    const patch = root.querySelector<HTMLInputElement>('[data-filter="patch"]');
+    const total = rows.length;
+    let product = "all";
+
+    const select = (cve: string, push: boolean) => {
+      const row = rows.find((r) => r.dataset.cve === cve);
+      if (!row || !svg) return;
+      svg.dataset.segs = row.dataset.segs ?? "";
+      svg.dataset.hot = row.dataset.hot ?? "";
+      if (row.dataset.skip === "1") svg.dataset.skip = "1";
+      else delete svg.dataset.skip;
+      if (now) now.textContent = row.dataset.now ?? cve;
+      for (const r of rows) {
+        const on = r === row;
+        r.toggleAttribute("data-selected", on);
+        r.querySelector(".ex-pick")?.setAttribute("aria-pressed", String(on));
+      }
+      for (const d of recs) d.hidden = d.dataset.rec !== cve;
+      if (push) history.replaceState(null, "", `#${cve.toLowerCase()}`);
+    };
+
+    const apply = () => {
+      let n = 0;
+      for (const r of rows) {
+        const ok =
+          (product === "all" || r.dataset.product === product) &&
+          (!pre?.checked || r.dataset.preauth === "1") &&
+          (!patch?.checked || r.dataset.patch === "0");
+        r.hidden = !ok;
+        if (ok) n++;
+        const rec = recs.find((d) => d.dataset.rec === r.dataset.cve);
+        if (rec && !ok) rec.hidden = true;
+        else if (rec && ok) rec.hidden = !r.hasAttribute("data-selected");
+      }
+      for (const g of groups) g.hidden = !g.querySelector("tr.ex-row:not([hidden])");
+      if (count) count.textContent = root.dataset.lang === "ja" ? `${total}件中${n}件を表示` : `Showing ${n} of ${total}`;
+    };
+
+    for (const b of productBtns)
+      b.addEventListener("click", () => {
+        product = b.dataset.product ?? "all";
+        for (const x of productBtns) x.setAttribute("aria-pressed", String(x === b));
+        apply();
+      });
+    pre?.addEventListener("change", apply);
+    patch?.addEventListener("change", apply);
+
+    for (const r of rows) {
+      r.querySelector(".ex-pick")?.addEventListener("click", () => select(r.dataset.cve ?? "", true));
+      r.addEventListener("click", (e) => {
+        if ((e.target as HTMLElement).closest("a, button")) return;
+        select(r.dataset.cve ?? "", true);
+      });
+    }
+
+    const fromHash = () => {
+      const cve = cveFromHash(location.hash);
+      if (!cve) return false;
+      select(cve, false);
+      rows.find((r) => r.dataset.cve === cve)?.scrollIntoView({ block: "center" });
+      return true;
+    };
+    if (!fromHash()) select(root.dataset.initial ?? "", false);
+    addEventListener("hashchange", fromHash);
+    root.classList.add("is-live");
+  }
+</script>
+
+<style>
+  .explorer {
+    margin-block: 1.5rem 2rem;
+  }
+  .ex-controls {
+    display: grid;
+    gap: 0.75rem;
+    margin-block-end: 1.25rem;
+  }
+  .ex-products {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .ex-btn {
+    font: inherit;
+    font-size: 0.9375rem;
+    padding: 0.35rem 0.7rem;
+    background: var(--sheet);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    cursor: pointer;
+  }
+  .ex-btn[aria-pressed="true"] {
+    background: var(--ink);
+    color: var(--sheet);
+    border-color: var(--ink);
+  }
+  .ex-checks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    font-size: 1rem;
+  }
+  .ex-checks label {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+    cursor: pointer;
+  }
+  .ex-checks input {
+    inline-size: 1.1rem;
+    block-size: 1.1rem;
+    accent-color: var(--ink);
+  }
+  .ex-count {
+    margin: 0;
+    font-size: 0.9375rem;
+    color: var(--ink-3);
+  }
+  .ex-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+  }
+  .ex-sticky {
+    background: var(--sheet);
+    border-block: 2px solid var(--ink);
+    padding: 1rem 0.75rem 0.75rem;
+  }
+  .ex-now {
+    margin: 0.75rem 0 0;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+  .ex-now-k {
+    font-weight: 700;
+    color: var(--ink-2);
+  }
+  @media (min-width: 70em) {
+    .ex-grid {
+      grid-template-columns: 23rem minmax(0, 1fr);
+      gap: 2rem;
+      align-items: start;
+    }
+    .ex-sticky {
+      position: sticky;
+      inset-block-start: 1rem;
+    }
+    .ex-table {
+      margin-block: 0;
+    }
+  }
+  @media (max-width: 45em) {
+    .ex-sticky {
+      margin-inline: calc(-1 * var(--gutter));
+    }
+  }
+  .ex-table table {
+    min-inline-size: 42rem;
+    font-size: 0.875rem;
+    table-layout: fixed;
+  }
+  .c-cve {
+    inline-size: 9.5rem;
+  }
+  .c-part {
+    inline-size: 7.75rem;
+  }
+  .c-kev {
+    inline-size: 6.5rem;
+  }
+  .c-patch {
+    inline-size: 9.75rem;
+  }
+  .ex-table td.num {
+    text-align: start;
+    white-space: nowrap;
+  }
+  .ex-table td.num .ex-sub {
+    white-space: normal;
+  }
+  .ex-table th[scope="col"] {
+    vertical-align: bottom;
+  }
+  .ex-group th {
+    padding-block: 1.25rem 0.4rem;
+    font-size: 1rem;
+    border-block-end: 1px solid var(--ink);
+  }
+  .ex-mark {
+    border: 1px solid var(--ink);
+    padding: 0 0.3em;
+    margin-inline-end: 0.3em;
+  }
+  .ex-row {
+    cursor: pointer;
+  }
+  .ex-row[data-selected] > td {
+    background: var(--marker);
+  }
+  .ex-row[data-selected] :is(.ex-sub, .ex-links, .ex-chain) {
+    color: var(--ink-2);
+  }
+  .ex-row[data-selected] > td:first-child {
+    box-shadow: inset 3px 0 0 var(--intruder);
+  }
+  .ex-pick {
+    font: inherit;
+    font-size: 0.9375rem;
+    white-space: nowrap;
+    font-weight: 700;
+    padding: 0.2rem 0.35rem;
+    margin-inline-start: -0.35rem;
+    background: none;
+    border: 1px solid transparent;
+    color: var(--ink);
+    cursor: pointer;
+    text-align: start;
+  }
+  .ex-pick:hover {
+    border-color: var(--line);
+  }
+  .ex-pick[aria-pressed="true"] {
+    border-color: var(--intruder);
+  }
+  .ex-nick,
+  .ex-links,
+  .ex-sub,
+  .ex-chain {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--ink-3);
+  }
+  .ex-nick {
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .ex-path {
+    display: block;
+    margin-block-end: 0.25rem;
+  }
+  .ex-pre {
+    margin-block-start: 0.1rem;
+  }
+  .ex-reason {
+    display: block;
+    margin-block-start: 0.25rem;
+  }
+  .ex-detail > td {
+    background: var(--sheet);
+    padding: 0.75rem 1rem 1rem;
+    border-block-end: 2px solid var(--ink);
+  }
+  .is-live .ex-detail > td {
+    border-inline-start: 3px solid var(--intruder);
+  }
+  .ex-dl {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 0.3rem 1rem;
+    margin: 0;
+  }
+  .ex-dl dt {
+    font-weight: 700;
+    color: var(--ink-2);
+  }
+  .ex-dl dd {
+    margin: 0;
+  }
+  .ex-srcs {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem 0.9rem;
+  }
+  @media (max-width: 45em) {
+    .ex-dl {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .ex-dl dd {
+      margin-block-end: 0.4rem;
+    }
+  }
+  [hidden] {
+    display: none !important;
+  }
+</style>

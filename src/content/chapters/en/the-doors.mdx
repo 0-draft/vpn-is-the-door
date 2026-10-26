@@ -1,0 +1,279 @@
+---
+title: The doors
+description: Seven VPN product lines, 31 flaws attackers have used through them. Most work before anyone logs in, so passwords and MFA never come into play, and many leave something behind that a patch does not remove.
+chapter: doors
+path: /the-doors/
+---
+
+import DisclosureGap from "../../../components/ch3/DisclosureGap.astro";
+import DoorDetail from "../../../components/ch3/DoorDetail.astro";
+import DoorSchedule from "../../../components/ch3/DoorSchedule.astro";
+import PatchClock from "../../../components/ch3/PatchClock.astro";
+import PreauthUnits from "../../../components/ch3/PreauthUnits.astro";
+import SessionLanes from "../../../components/ch3/SessionLanes.astro";
+import Fig from "../../../components/Fig.astro";
+import Scale from "../../../components/Scale.astro";
+import SectionCut from "../../../components/SectionCut.astro";
+import SourceLine from "../../../components/SourceLine.astro";
+import Summary from "../../../components/Summary.astro";
+import { scheduleStats } from "../../../data/doors";
+
+export const ST = scheduleStats();
+
+<Summary lang="en">
+  <p>The door schedule on this page lists {ST.total} flaws in the VPN appliances of seven vendors. CISA has confirmed attackers used every one of them. {ST.preauth} of the {ST.total} work before anyone logs in. For those, a strong password and multi-factor authentication (MFA) are never checked.</p>
+  <p>{ST.zeroDay} were used before the vendor published a warning. For {ST.patchNotEnough}, the vendor or a government agency says the patch alone did not close the door: stolen passwords and sessions stayed valid, or the intruder's implant survived the upgrade.</p>
+  <p>The decision this implies: treat the VPN appliance as the most exposed system the company owns. Patch it within days, and after any serious flaw also reset its passwords, end its sessions and check it for implants.</p>
+</Summary>
+
+## <Scale s="1:100" /> The door answers strangers before the lock
+
+A VPN appliance is a door built for staff who work outside the office. To work as a door, it has to accept connections from the whole internet. Figure 3-1 names its parts the way this chapter uses them.
+
+<Fig lang="en" n="3-1" caption="The VPN door seen from the street, with the five parts this chapter refers to" nts>
+  <DoorDetail lang="en" uid="f31" labels="metaphor" label="Elevation of the VPN door: camera above, frame and hinges, issued keys hanging inside, intercom on the wall, lock on the leaf" />
+</Fig>
+
+### On the internet all day
+
+The door cannot be hidden and still be used. Anyone can try it at any hour. In the Handa Hospital case in chapter 4, the investigators found no limit on which addresses could connect: every system on the internet could reach the appliance.
+
+<SourceLine lang="en" ids={["handa-report-tech"]} />
+
+### The intercom answers before anyone logs in
+
+Before the lock asks for a password, the appliance already answers: it serves a login page, images, language files and single sign-on endpoints. That code is the intercom. A flaw in it needs no account.
+
+### It opens behind reception
+
+Mail filtering and the security checks at the main entrance work like a reception desk. The VPN door opens into the corridor behind it, as chapter 2 showed. The UK NCSC writes that these devices "often sit at trust boundaries".
+
+<SourceLine lang="en" ids={["doors-ncsc-uk-observability"]} />
+
+## <Scale s="1:100" /> One flaw in the frame is enough
+
+The appliance is a closed box. An office server can be watched with security software and its logs collected elsewhere. On most VPN appliances neither is possible, and one bug can hand over the whole box.
+
+<Fig lang="en" n="3-2" caption="What defenders can rely on, on an office server and on a VPN appliance" sources={["doors-gtig-2024", "doors-volexity-ivanti-2024", "sophos-aar-2025", "doors-cisa-aa24-060b"]}>
+  <div class="table-scroll" tabindex="0">
+    <table>
+      <thead>
+        <tr><th scope="col">Part</th><th scope="col">Office server</th><th scope="col">VPN appliance</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Security agent (EDR)</td><td>Installed and reporting</td><td>"EDR tools are not usually equipped to work on these products" (Google)</td></tr>
+        <tr><td>Logs</td><td>Sent to a central store</td><td>Often kept only on the box. Volexity found an appliance whose "logs had been wiped and logging had been disabled"</td></tr>
+        <tr><td>Integrity check</td><td>Agent and file checks</td><td>The vendor tool for Ivanti appliances "failed to detect compromise" (CISA)</td></tr>
+        <tr><td>Damage from one bug</td><td>Usually one service</td><td>Root on the box, which holds VPN passwords and directory credentials</td></tr>
+      </tbody>
+    </table>
+  </div>
+</Fig>
+
+### Old code with full control of the box
+
+Google's analysis of 2024 zero-days notes that these products seldom need a chain of bugs: one flaw can "single-handedly" give remote code execution. Many rows in this chapter's schedule are buffer overflows, a class of bug that memory-unsafe languages such as C allow; CISA and the FBI cite CVE-2025-0282 as an example. When one works, the attacker usually controls the whole appliance, including the passwords and keys stored on it.
+
+<SourceLine lang="en" ids={["doors-gtig-2024", "doors-cisa-bo-alert", "doors-cisa-aa24-060b"]} />
+
+### No security agent runs on it
+
+The usual endpoint protection cannot be installed on the appliance. Volexity describes these systems as ones that "cannot run traditional security software". Nobody is watching the frame from the inside.
+
+<SourceLine lang="en" ids={["doors-volexity-ivanti-2024"]} />
+
+### The camera records little
+
+Logs on the appliance are short, rotate quickly and can be erased by an intruder with root. Sophos found logs missing in 47% of the 2024 cases in its 2025 report. In both Japanese hospital cases, the VPN logs were lost when the appliance firmware was upgraded after the attack.
+
+<SourceLine lang="en" ids={["sophos-aar-2025", "osaka-report-2023", "handa-report-main"]} />
+
+## <Scale s="1:100" /> Repairs wait, and old doors stay up
+
+<Fig lang="en" n="3-3" caption="Time to fix against time to exploit, on one scale of days" sources={["dbir-2025", "cisa-kev", "doors-watchtowr-3055"]}>
+  <PatchClock lang="en" />
+</Fig>
+
+### Patching closes the door for everyone
+
+Updating the appliance stops remote work while it restarts, so the update is postponed. Verizon found that only about 54% of edge-device and VPN flaws were fully fixed within the year, with a median of 32 days. In Japan, NPA's survey found that 52% of organizations using VPN appliances had not applied the latest patch. Figure 3-3 puts those 32 days next to the attackers' days.
+
+<SourceLine lang="en" ids={["dbir-2025", "npa-leaflet-r7"]} />
+
+### Doors past end of support
+
+An appliance past end of support gets no more fixes but keeps working, so it stays in the wall. CISA, the FBI and the UK NCSC warn that state actors use these devices "as entry points to access modern, supported environments". The appliance in the Osaka General Medical Center case was still on FortiOS 5.4.2 when it was examined.
+
+<SourceLine lang="en" ids={["doors-eos-factsheet", "osaka-report-2023"]} />
+
+## <Scale s="1:100" /> A pre-auth flaw never meets the lock
+
+This is the point of the chapter. Multi-factor authentication is part of the lock. It stops someone who arrives with a stolen password. A flaw in the intercom or the frame is used before the lock is ever consulted, so MFA has nothing to stop.
+
+<Fig lang="en" n="3-4" caption="Two ways in: a stolen password meets MFA at the lock; a pre-auth flaw goes from the intercom straight to the frame" nts>
+  <DoorDetail lang="en" uid="f34" labels="metaphor" path={["intercom", "frame"]} compare label="The red route goes from the street to the intercom and on to the frame; the lock stays intact and is marked MFA: not reached. A grey route ends at the lock." />
+</Fig>
+
+MFA is still worth having: it closes the stolen-password route in grey. It does nothing for the red route, which is how {ST.preauth} of the {ST.total} flaws in the schedule below work.
+
+## <Scale s="1:100" /> Exploitation often starts before the advisory
+
+Each row in Figure 3-5 is one flaw. Day 0 is the day the vendor disclosed it. A bar left of day 0 means attackers were already using it before there was a warning or a patch. The grey tick is the day CISA added it to its Known Exploited Vulnerabilities (KEV) catalog.
+
+<Fig lang="en" n="3-5" caption="First exploitation and KEV listing, in days from the vendor's disclosure" sources={["cisa-kev"]}>
+  <DisclosureGap lang="en" />
+  <DisclosureGap slot="data" lang="en" as="table" />
+</Fig>
+
+{ST.zeroDay} of the {ST.total} were zero-days. For the older flaws the KEV tick sits far to the right only because the catalog itself started on 2021-11-03. Rows chained behind another flaw are drawn once, under the first flaw of the chain.
+
+<SectionCut lang="en" />
+
+## <Scale s="1:5" /> The door, by its real parts
+
+From here the drawing uses component names. The intercom is everything the appliance serves before authentication: the login page, static files, language files, SAML endpoints. The issued keys are the session cookies and tokens it hands out after login, plus the credentials it stores.
+
+<Fig lang="en" n="3-6" caption="Detail of the VPN door at S=1:5, with component names" nts>
+  <DoorDetail lang="en" uid="f36" labels="real" label="Detail drawing: appliance logs, appliance OS and management, session tokens and stored credentials, pre-auth web portal, authentication and MFA" />
+</Fig>
+
+<div class="table-scroll" tabindex="0">
+  <table>
+    <thead>
+      <tr><th scope="col">Part</th><th scope="col">Component</th><th scope="col">What failure looks like</th><th scope="col" class="num">Rows in the schedule</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Intercom</td><td>Pre-auth web portal</td><td>File read, memory read or overflow reached with no session</td><td class="num">{ST.byPart.intercom}</td></tr>
+      <tr><td>Lock</td><td>Authentication, MFA, SAML, IKE</td><td>Authentication bypass, missing authorization, password guessing</td><td class="num">{ST.byPart.lock}</td></tr>
+      <tr><td>Issued keys</td><td>Session tokens, stored credentials</td><td>Tokens leaked from memory, credential files read, sessions hijacked or forged</td><td class="num">{ST.byPart.keys}</td></tr>
+      <tr><td>Frame and hinges</td><td>Appliance OS, daemons, management interface</td><td>Code execution as root, implants, admin login</td><td class="num">{ST.byPart.frame}</td></tr>
+      <tr><td>Camera</td><td>Appliance logs</td><td>Log entries removed after exploitation</td><td class="num">{ST.byPart.camera}</td></tr>
+    </tbody>
+  </table>
+</div>
+
+A row can pass through more than one part, so the counts add up to more than {ST.total}.
+
+## <Scale s="1:5" /> Door schedule: {ST.total} flaws in seven product lines
+
+The schedule follows the fittings schedule of a building drawing: one door mark per product line (`SD-1` to `SD-7`), one row per flaw. Every row is in CISA KEV (catalog version 2026.10.23). Select a row to see the parts it breaks on the drawing and its full record. Each row has its own link, for example [#cve-2023-4966](#cve-2023-4966).
+
+<Fig lang="en" n="3-7" caption="Door schedule: exploited flaws in VPN appliances, with the part each one breaks" sources={["cisa-kev"]}>
+  <DoorSchedule lang="en" />
+</Fig>
+
+Two notes on reading it. "Ransomware: Unknown" is CISA's own value and means CISA has not linked the flaw to a ransomware campaign; it does not mean "no". "No report says otherwise" in the last column means only that none of the cited sources asks for more than the patch. It is not a promise that patching is enough. One flaw in the research, CVE-2026-8452, is left out because its score and first exploitation could not be confirmed from a primary source.
+
+## <Scale s="1:5" /> {ST.preauth} of {ST.total} need no password
+
+<Fig lang="en" n="3-8" caption="Rows of the door schedule by product line; filled squares are reachable before login" sources={["cisa-kev", "doors-volexity-3400", "doors-cve-2025-0282"]}>
+  <PreauthUnits lang="en" />
+</Fig>
+
+The two outlined squares are CVE-2024-21887 and CVE-2025-20333. Each needs a login on its own. Attackers used them behind a pre-auth flaw (CVE-2023-46805 and CVE-2025-20362), so in practice the chain needed no login either. CVE-2024-3400 is "unauthenticated remote code execution" in Volexity's words. The CVE record for CVE-2025-0282 describes "a remote unauthenticated attacker". For rows like these, password length and MFA settings do not change the outcome.
+
+## <Scale s="1:5" /> A stolen session is already past MFA
+
+After the lock opens, the appliance hands the user a key: a session cookie. The appliance keeps a copy in memory. CitrixBleed (CVE-2023-4966) and CitrixBleed 2 (CVE-2025-5777) are bugs at the intercom that return pieces of that memory, keys included.
+
+<Fig lang="en" n="3-9" caption="How a leaked session cookie skips the password and MFA" sources={["doors-mandiant-citrixbleed", "doors-cisa-aa23-325a"]}>
+  <SessionLanes lang="en" />
+</Fig>
+
+Mandiant: with a valid cookie an attacker has a session "without knowledge of the username, password, or access to a multi-factor authentication token or device". CISA and the FBI tied CitrixBleed to LockBit 3.0 affiliates. SonicWall's CVE-2024-53704 reaches the same result through an authentication bypass, and in CVE-2026-0257 the appliance trusted forged authentication-override cookies. Because the cookie was issued before the patch, a patched appliance still accepts it until the session is ended. Tenable's FAQ on CitrixBleed 2 repeats Citrix's advice to terminate active sessions after updating.
+
+<SourceLine lang="en" ids={["doors-mandiant-citrixbleed", "doors-cisa-aa23-325a", "doors-tenable-citrixbleed2"]} />
+
+## <Scale s="1:5" /> Leaked passwords outlive the patch
+
+A flaw that reads files at the intercom often hands over the keys themselves: usernames and passwords stored on the box. Patching stops new reads. It does nothing to the passwords already copied.
+
+<Fig lang="en" n="3-10" caption="CVE-2018-13379: the patch came in 2019, the stolen passwords kept working" sources={["doors-fortinet-87000", "doors-jpcert-2020", "handa-report-tech"]}>
+  <div class="table-scroll" tabindex="0">
+    <table>
+      <thead>
+        <tr><th scope="col">Date</th><th scope="col">Event</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="num">2019-05</td><td>Fortinet fixes CVE-2018-13379, a pre-auth file read that exposes the SSL-VPN session file with plaintext passwords</td></tr>
+        <tr><td class="num">2020-11-27</td><td>JPCERT/CC warns that a list of affected hosts has been published and recommends changing passwords "even if already addressed"</td></tr>
+        <tr><td class="num">2021-09-08</td><td>Fortinet: SSL-VPN access information for 87,000 FortiGate devices has been disclosed. Upgraded devices "may remain vulnerable post-upgrade" without a password reset</td></tr>
+        <tr><td class="num">2021-10-31</td><td>Handa Hospital is hit by ransomware. The investigators confirm the leaked data included the hospital's address, ID and password</td></tr>
+      </tbody>
+    </table>
+  </div>
+</Fig>
+
+The same pattern appears in other rows. CISA wrote in 2020 that attackers with stolen Pulse Secure credentials could still move through a network "after the organization has patched", if the credentials were not changed. In 2025 SonicWall traced a wave of intrusions to CVE-2024-40766 and to cases "where local user passwords were carried over during the migration and not reset". Check Point's remediation for CVE-2024-24919 includes password resets.
+
+<SourceLine lang="en" ids={["doors-cisa-aa20-107a", "doors-sonicwall-2025", "doors-helpnet-checkpoint"]} />
+
+## <Scale s="1:5" /> Implants survive the upgrade
+
+Some intruders leave something in the frame. An upgrade replaces the software it expects to replace. It does not always remove what an attacker added.
+
+<Fig lang="en" n="3-11" caption="Cases where the vendor or a government agency says compromise survived patching or upgrading" sources={["doors-fortinet-symlink", "doors-fortinet-fg-ir-25-934", "doors-mivd-coathanger", "doors-cisa-aa24-060b", "doors-mandiant-0282", "doors-cisa-ed-25-03", "doors-ncsc-nl-citrix"]}>
+  <div class="table-scroll" tabindex="0">
+    <table>
+      <thead>
+        <tr><th scope="col">Product</th><th scope="col">What stayed</th><th scope="col">What it survived</th><th scope="col">Said by</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>FortiGate</td><td>A symbolic link in the SSL-VPN language-file folder giving read-only access to the file system</td><td>Updating to FortiOS versions that fixed the original flaws (CVE-2022-42475, CVE-2023-27997, CVE-2024-21762). In 2026 CVE-2025-68686 bypassed the cleanup</td><td>Fortinet, 2025-04-10 and FG-IR-25-934</td></tr>
+        <tr><td>FortiGate</td><td>COATHANGER remote access trojan</td><td>Reboots and firmware upgrades; "even fully patched FortiGate devices may therefore be infected"</td><td>MIVD and AIVD, 2024-02-06</td></tr>
+        <tr><td>Ivanti Connect Secure</td><td>Root-level persistence; web shells the integrity checker missed</td><td>Factory resets, according to CISA's lab research</td><td>CISA AA24-060B</td></tr>
+        <tr><td>Ivanti Connect Secure</td><td>SPAWNANT and PHASEJAM malware</td><td>A real upgrade (copied into the new partition), or a faked one shown to the admin</td><td>Mandiant, 2025-01-09</td></tr>
+        <tr><td>Cisco ASA</td><td>Modified ROM</td><td>"reboot and system upgrade"</td><td>CISA ED 25-03</td></tr>
+        <tr><td>Citrix NetScaler</td><td>Access gained through CVE-2025-6543, web shells</td><td>The update; NCSC-NL says an attacker can keep earlier access</td><td>NCSC-NL, 2025-08-13</td></tr>
+      </tbody>
+    </table>
+  </div>
+</Fig>
+
+CISA's response to the Ivanti flaws shows what "more than a patch" means in practice. Emergency Directive 24-01 had federal agencies disconnect the appliances, factory-reset and rebuild them, revoke and reissue every certificate, key and password on them, and treat linked domain accounts as compromised.
+
+<SourceLine lang="en" ids={["doors-cisa-ed-24-01"]} />
+
+## <Scale s="1:5" /> The gap is days, and often negative
+
+Figure 3-5 shows the gap row by row. The fastest cases after disclosure: watchTowr saw CVE-2026-3055 exploited from known attacker addresses "as of March 27th", four days after Citrix published it. For CVE-2025-22457, Ivanti shipped a fix on 2025-02-11 as an ordinary bug fix. Mandiant assesses that the attackers "likely studied the patch" and were exploiting unpatched appliances by mid-March. CISA gave federal agencies one day to deal with CitrixBleed 2.
+
+<Fig lang="en" n="3-12" caption="How soon after disclosure the door-schedule rows were known to be exploited" sources={["cisa-kev", "doors-watchtowr-3055", "doors-mandiant-22457", "doors-bleeping-citrixbleed2"]}>
+  <div class="table-scroll" tabindex="0">
+    <table>
+      <thead>
+        <tr><th scope="col">Measure</th><th scope="col" class="num">Rows</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Exploited before the vendor disclosed it (zero-day)</td><td class="num">{ST.zeroDay}</td></tr>
+        <tr><td>Added to KEV, as exploited, on the disclosure day</td><td class="num">{ST.sameDayKev}</td></tr>
+        <tr><td>Patch alone not enough, per the cited source</td><td class="num">{ST.patchNotEnough}</td></tr>
+        <tr><td>KEV ransomware field "Known"</td><td class="num">{ST.ransomwareKnown}</td></tr>
+        <tr><td>All rows</td><td class="num">{ST.total}</td></tr>
+      </tbody>
+    </table>
+  </div>
+</Fig>
+
+A patch window measured in weeks assumes the attackers start after the advisory. For most of these rows they started earlier, or within days.
+
+## <Scale s="1:5" /> Replacement products are edge software too
+
+Zero-trust network access (ZTNA) products are often sold as the replacement for the VPN door. They change what a stolen login reaches: one application at a time instead of the whole network. Their gateways are still software on the internet edge, and they get the same class of bugs.
+
+<Fig lang="en" n="3-13" caption="Products named in the CVE record for CVE-2025-0282" sources={["doors-cve-2025-0282", "doors-mandiant-0282"]}>
+  <div class="table-scroll" tabindex="0">
+    <table>
+      <thead>
+        <tr><th scope="col">Product</th><th scope="col">Affected before version</th><th scope="col">Role</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Ivanti Connect Secure</td><td class="num">22.7R2.5</td><td>SSL VPN</td></tr>
+        <tr><td>Ivanti Policy Secure</td><td class="num">22.7R1.2</td><td>Network access control</td></tr>
+        <tr><td>Ivanti Neurons for ZTA gateways</td><td class="num">22.7R2.3</td><td>ZTNA gateway</td></tr>
+      </tbody>
+    </table>
+  </div>
+</Fig>
+
+The record describes one stack-based buffer overflow across all three products, reachable by "a remote unauthenticated attacker". Moving to ZTNA narrows what the intruder reaches after a stolen login. The gateway still has to be patched, logged and checked like the door it replaces.

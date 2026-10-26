@@ -1,0 +1,279 @@
+---
+title: 建具表
+description: 7社の VPN 製品で、攻撃に使われた欠陥は31件。多くはログインの前に届くため、パスワードも多要素認証も関係しない。パッチを当てても消えないものを残していく例も多い。
+chapter: doors
+path: /the-doors/
+---
+
+import DisclosureGap from "../../../components/ch3/DisclosureGap.astro";
+import DoorDetail from "../../../components/ch3/DoorDetail.astro";
+import DoorSchedule from "../../../components/ch3/DoorSchedule.astro";
+import PatchClock from "../../../components/ch3/PatchClock.astro";
+import PreauthUnits from "../../../components/ch3/PreauthUnits.astro";
+import SessionLanes from "../../../components/ch3/SessionLanes.astro";
+import Fig from "../../../components/Fig.astro";
+import Scale from "../../../components/Scale.astro";
+import SectionCut from "../../../components/SectionCut.astro";
+import SourceLine from "../../../components/SourceLine.astro";
+import Summary from "../../../components/Summary.astro";
+import { scheduleStats } from "../../../data/doors";
+
+export const ST = scheduleStats();
+
+<Summary lang="ja">
+  <p>このページの建具表には、7社の VPN 機器の欠陥{ST.total}件を載せた。どれも攻撃に使われたことを米国 CISA が確認している。{ST.total}件のうち{ST.preauth}件は、誰もログインしていない段階で届く。これらに対しては、強いパスワードも多要素認証も確認される機会がない。</p>
+  <p>{ST.zeroDay}件はベンダーが警告を出す前から使われていた。{ST.patchNotEnough}件については、パッチだけでは扉は閉まらなかったとベンダーか政府機関が述べている。盗まれたパスワードやセッションは有効なまま残り、侵入者が仕込んだものは更新後も残った。</p>
+  <p>ここから導かれる判断は、VPN 機器を社内で最も外にさらされたシステムとして扱うこと。数日以内にパッチを当て、深刻な欠陥のあとはパスワードの変更、セッションの終了、仕込まれたものの点検まで行う。</p>
+</Summary>
+
+## <Scale s="1:100" /> 扉は錠より先に見知らぬ相手に応答する
+
+VPN 機器は、社外で働く社員のために付けた扉である。扉として機能するには、インターネット全体からの接続を受け付けなければならない。図3-1に、この章で使う各部の名前を示す。
+
+<Fig lang="ja" n="3-1" caption="通りから見た VPN の扉と、この章で使う5つの部位" nts>
+  <DoorDetail lang="ja" uid="f31" labels="metaphor" label="VPN の扉の立面図。上に防犯カメラ、枠と蝶番、内側に掛けた合鍵、壁のインターホン、扉の錠" />
+</Fig>
+
+### 一日中インターネットに面している
+
+使うためには隠せない。誰でも、いつでも試せる。第4章で扱う半田病院の事例では、接続元の制限がなく、インターネット上のすべてのシステムから機器に接続できたと調査報告書は記している。
+
+<SourceLine lang="ja" ids={["handa-report-tech"]} />
+
+### ログインの前にインターホンが応答する
+
+錠がパスワードを求める前に、機器はすでに応答している。ログイン画面、画像、言語ファイル、シングルサインオン用の窓口を返す。このコードがインターホンにあたる。ここに欠陥があれば、アカウントは要らない。
+
+### 開けると受付の奥に出る
+
+メールの検査や入口のセキュリティ対策は、正面玄関の受付にあたる。第2章で見たとおり、VPN の扉はその奥の廊下に直接つながっている。英国 NCSC は、こうした機器が「信頼の境界に置かれることが多い」と書いている。
+
+<SourceLine lang="ja" ids={["doors-ncsc-uk-observability"]} />
+
+## <Scale s="1:100" /> 枠の欠陥ひとつで足りる
+
+VPN 機器は中の見えない箱である。社内のサーバならセキュリティソフトで見張り、ログを別の場所に集められる。多くの VPN 機器ではどちらもできず、欠陥がひとつあれば箱ごと渡してしまう。
+
+<Fig lang="ja" n="3-2" caption="社内のサーバと VPN 機器で、守る側が頼れるもの" sources={["doors-gtig-2024", "doors-volexity-ivanti-2024", "sophos-aar-2025", "doors-cisa-aa24-060b"]}>
+  <div class="table-scroll" tabindex="0">
+    <table>
+      <thead>
+        <tr><th scope="col">項目</th><th scope="col">社内のサーバ</th><th scope="col">VPN 機器</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>セキュリティソフト（EDR）</td><td>導入でき、検知を報告する</td><td>EDR は通常こうした製品では動かない（Google）</td></tr>
+        <tr><td>ログ</td><td>集中管理の保存先に送る</td><td>機器の中にしかないことが多い。Volexity は、ログが消され記録も止められていた機器を報告している</td></tr>
+        <tr><td>改ざんの確認</td><td>ソフトとファイルの検査</td><td>Ivanti 製品用のベンダーの検査ツールは侵害を見つけられなかった（CISA）</td></tr>
+        <tr><td>欠陥ひとつの被害</td><td>多くはひとつのサービス</td><td>機器の root 権限。そこには VPN のパスワードやディレクトリの認証情報がある</td></tr>
+      </tbody>
+    </table>
+  </div>
+</Fig>
+
+### 古いコードが箱全体を握っている
+
+Google による2024年のゼロデイの分析は、これらの製品では欠陥を連鎖させる必要がほとんどなく、ひとつの欠陥「単独で」遠隔コード実行に至ると指摘する。この章の建具表にもバッファオーバーフローが多い。C のようにメモリを直接扱う言語で起きる種類の欠陥で、CISA と FBI は CVE-2025-0282 をその例に挙げている。成功すれば、攻撃者は機器全体と、そこに保存されたパスワードや鍵を握る。
+
+<SourceLine lang="ja" ids={["doors-gtig-2024", "doors-cisa-bo-alert", "doors-cisa-aa24-060b"]} />
+
+### セキュリティソフトが入らない
+
+いつものエンドポイント保護は機器に入れられない。Volexity はこれらの機器を「従来のセキュリティソフトを動かせない」システムと書いている。枠を内側から見張る者はいない。
+
+<SourceLine lang="ja" ids={["doors-volexity-ivanti-2024"]} />
+
+### 防犯カメラはほとんど記録しない
+
+機器のログは短く、すぐに上書きされ、root を取った侵入者なら消せる。Sophos の2025年の報告書では、2024年の対応事案の47%でログが欠けていた。国内の2つの病院の事例では、どちらも攻撃後にファームウェアを更新したことで VPN のログが失われた。
+
+<SourceLine lang="ja" ids={["sophos-aar-2025", "osaka-report-2023", "handa-report-main"]} />
+
+## <Scale s="1:100" /> 修理は後回しになり、古い扉は残る
+
+<Fig lang="ja" n="3-3" caption="直すまでの日数と、悪用されるまでの日数を同じ目盛りで並べる" sources={["dbir-2025", "cisa-kev", "doors-watchtowr-3055"]}>
+  <PatchClock lang="ja" />
+</Fig>
+
+### パッチを当てると全員の扉が閉まる
+
+機器を更新すると、再起動のあいだ在宅勤務が止まる。だから更新は延びる。Verizon の調査では、エッジ機器と VPN の脆弱性のうち年内に完全に直されたのは約54%で、中央値は32日だった。国内では、警察庁の調査で VPN 機器を使う組織の52%が最新のパッチを当てていなかった。図3-3は、この32日を攻撃側の日数と並べたものである。
+
+<SourceLine lang="ja" ids={["dbir-2025", "npa-leaflet-r7"]} />
+
+### サポートが切れた扉
+
+サポートが終わった機器は修正を受けられないが、動き続けるので壁に残る。CISA、FBI、英国 NCSC は、国家を背景とする攻撃者がこうした機器を、サポート中の新しい環境に入るための入口として使うと警告している。大阪急性期・総合医療センターの事例では、侵入口の機器は調査の時点で FortiOS 5.4.2 のままだった。
+
+<SourceLine lang="ja" ids={["doors-eos-factsheet", "osaka-report-2023"]} />
+
+## <Scale s="1:100" /> 認証前の欠陥は錠を通らない
+
+この章の要点はここにある。多要素認証は錠の一部で、盗んだパスワードを持って来た相手を止める。インターホンや枠の欠陥は錠を確かめる前に使われるので、多要素認証には止める対象がない。
+
+<Fig lang="ja" n="3-4" caption="2つの入り方。盗んだパスワードは錠で多要素認証に当たり、認証前の欠陥はインターホンから枠へまっすぐ進む" nts>
+  <DoorDetail lang="ja" uid="f34" labels="metaphor" path={["intercom", "frame"]} compare label="赤い経路は通りからインターホンを経て枠に達する。錠は無傷のまま残り、多要素認証は素通りと記される。灰色の経路は錠で止まる。" />
+</Fig>
+
+多要素認証は入れておく価値がある。灰色の、盗んだパスワードの経路はそれで閉じる。赤い経路には効かない。下の建具表の{ST.total}件のうち{ST.preauth}件は、この赤い経路で働く。
+
+## <Scale s="1:100" /> 悪用は警告より先に始まることが多い
+
+図3-5の1行が1件の欠陥である。0日目はベンダーが公表した日。0日目より左の帯は、警告もパッチもない段階で攻撃者がすでに使っていたことを表す。灰色の縦線は、CISA が既知の悪用された脆弱性（KEV）カタログに載せた日である。
+
+<Fig lang="ja" n="3-5" caption="最初の悪用と KEV 登録。ベンダーの公表日からの日数" sources={["cisa-kev"]}>
+  <DisclosureGap lang="ja" />
+  <DisclosureGap slot="data" lang="ja" as="table" />
+</Fig>
+
+{ST.total}件のうち{ST.zeroDay}件がゼロデイだった。古い欠陥で KEV の線が右端に寄るのは、カタログ自体が2021年11月3日に始まったためである。別の欠陥の後ろで連鎖して使われたものは、連鎖の最初の欠陥の行にまとめた。
+
+<SectionCut lang="ja" />
+
+## <Scale s="1:5" /> 部位を実際の名前で呼ぶ
+
+ここからは図に部品の名前を使う。インターホンは、機器が認証の前に返すものすべてである。ログイン画面、静的ファイル、言語ファイル、SAML の窓口などがここに入る。合鍵は、ログイン後に機器が渡すセッション Cookie やトークンと、機器が保存している認証情報である。
+
+<Fig lang="ja" n="3-6" caption="VPN の扉の詳細図（S=1:5）。部品の名前で示す" nts>
+  <DoorDetail lang="ja" uid="f36" labels="real" label="詳細図。機器のログ、機器の OS と管理機能、セッショントークンと保存された認証情報、認証前の Web ポータル、認証と多要素認証" />
+</Fig>
+
+<div class="table-scroll" tabindex="0">
+  <table>
+    <thead>
+      <tr><th scope="col">部位</th><th scope="col">部品</th><th scope="col">壊れ方</th><th scope="col" class="num">建具表の件数</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>インターホン</td><td>認証前の Web ポータル</td><td>セッションなしで届くファイル読み出し、メモリ読み出し、オーバーフロー</td><td class="num">{ST.byPart.intercom}</td></tr>
+      <tr><td>錠</td><td>認証、多要素認証、SAML、IKE</td><td>認証回避、認可の欠如、パスワードの総当たり</td><td class="num">{ST.byPart.lock}</td></tr>
+      <tr><td>合鍵</td><td>セッショントークン、保存された認証情報</td><td>メモリからのトークン漏えい、認証情報ファイルの読み出し、セッションの乗っ取りや偽造</td><td class="num">{ST.byPart.keys}</td></tr>
+      <tr><td>枠と蝶番</td><td>機器の OS、常駐プロセス、管理画面</td><td>root でのコード実行、仕込まれたマルウェア、管理者ログイン</td><td class="num">{ST.byPart.frame}</td></tr>
+      <tr><td>防犯カメラ</td><td>機器のログ</td><td>悪用の後にログの記録が消される</td><td class="num">{ST.byPart.camera}</td></tr>
+    </tbody>
+  </table>
+</div>
+
+1件が複数の部位を通ることがあるため、件数の合計は{ST.total}件より多い。
+
+## <Scale s="1:5" /> 建具表: 7つの製品系列、{ST.total}件の欠陥
+
+建具表は建築図面の建具表にならい、製品系列ごとに建具記号（`SD-1`〜`SD-7`）を付け、欠陥1件を1行とした。どの行も CISA の KEV（カタログ版 2026.10.23）に載っている。行を選ぶと、図にその欠陥が壊す部位が示され、行の下に全項目が開く。行ごとにリンクがあり、たとえば [#cve-2023-4966](#cve-2023-4966) で直接開ける。
+
+<Fig lang="ja" n="3-7" caption="建具表: VPN 機器で悪用された欠陥と、それぞれが壊す部位" sources={["cisa-kev"]}>
+  <DoorSchedule lang="ja" />
+</Fig>
+
+読み方の注意を2つ。「ランサムウェア: 不明」は CISA の欄の値で、CISA がまだランサムウェアの攻撃と結び付けていないことを意味する。「使われていない」という意味ではない。最後の列の「報告なし」は、引用した出典がパッチ以外の対処を求めていないことだけを示す。パッチで足りるという保証ではない。調査段階では CVE-2026-8452 も候補にあったが、スコアと最初の悪用日を一次情報で確認できなかったため外した。
+
+## <Scale s="1:5" /> {ST.total}件中{ST.preauth}件はパスワードが要らない
+
+<Fig lang="ja" n="3-8" caption="建具表の行を製品系列ごとに並べる。塗りつぶしはログイン前に届くもの" sources={["cisa-kev", "doors-volexity-3400", "doors-cve-2025-0282"]}>
+  <PreauthUnits lang="ja" />
+</Fig>
+
+白抜きの2つは CVE-2024-21887 と CVE-2025-20333 である。どちらも単独ではログインが要る。攻撃者は認証前の欠陥（CVE-2023-46805 と CVE-2025-20362）の後ろでこれらを使ったので、実際の連鎖ではログインは不要だった。Volexity は CVE-2024-3400 を「認証なしの遠隔コード実行」と呼び、CVE-2025-0282 の CVE レコードは「認証されていない遠隔の攻撃者」が使えると書く。こうした欠陥では、パスワードの長さも多要素認証の設定も結果を変えない。
+
+## <Scale s="1:5" /> 盗まれたセッションはすでに多要素認証を通っている
+
+錠が開くと、機器は利用者に鍵を渡す。セッション Cookie である。機器はその写しをメモリに持っている。CitrixBleed（CVE-2023-4966）と CitrixBleed 2（CVE-2025-5777）は、インターホンにある欠陥で、そのメモリの一部を鍵ごと返してしまう。
+
+<Fig lang="ja" n="3-9" caption="漏れたセッション Cookie がパスワードと多要素認証を飛ばす仕組み" sources={["doors-mandiant-citrixbleed", "doors-cisa-aa23-325a"]}>
+  <SessionLanes lang="ja" />
+</Fig>
+
+Mandiant によれば、有効な Cookie があれば、ユーザー名もパスワードも多要素認証のトークンや端末もなしにセッションを張れる。CISA と FBI は CitrixBleed を LockBit 3.0 の実行役と結び付けた。SonicWall の CVE-2024-53704 は認証回避で同じ結果に至り、CVE-2026-0257 では機器が偽造された認証オーバーライド Cookie を信用した。Cookie はパッチの前に発行されたものなので、パッチを当てた機器もセッションを終わらせるまでは受け入れる。Tenable の CitrixBleed 2 の解説は、更新後に有効なセッションを終了させるという Citrix の推奨を載せている。
+
+<SourceLine lang="ja" ids={["doors-mandiant-citrixbleed", "doors-cisa-aa23-325a", "doors-tenable-citrixbleed2"]} />
+
+## <Scale s="1:5" /> 漏れたパスワードはパッチの後も使える
+
+インターホンでファイルを読める欠陥は、鍵そのもの、つまり機器に保存されたユーザー名とパスワードを渡してしまうことが多い。パッチは新たな読み出しを止める。すでに写し取られたパスワードには何もしない。
+
+<Fig lang="ja" n="3-10" caption="CVE-2018-13379。パッチは2019年に出たが、盗まれたパスワードは使われ続けた" sources={["doors-fortinet-87000", "doors-jpcert-2020", "handa-report-tech"]}>
+  <div class="table-scroll" tabindex="0">
+    <table>
+      <thead>
+        <tr><th scope="col">日付</th><th scope="col">出来事</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="num">2019-05</td><td>Fortinet が CVE-2018-13379 を修正。認証前のファイル読み出しで、平文のパスワードを含む SSL-VPN のセッションファイルが読める欠陥</td></tr>
+        <tr><td class="num">2020-11-27</td><td>JPCERT/CC が、影響を受けるホストの一覧が公開されたと注意喚起。「既に対応済みでも、アカウントのパスワード変更を実施することが推奨されます」</td></tr>
+        <tr><td class="num">2021-09-08</td><td>Fortinet が、FortiGate 8万7,000台分の SSL-VPN 接続情報が公開されたと発表。更新した機器でもパスワードを変えなければ危険が残ると警告</td></tr>
+        <tr><td class="num">2021-10-31</td><td>半田病院がランサムウェアの被害に遭う。調査で、漏えいしたデータに病院のアドレス、ID、パスワードが含まれていたことが確認された</td></tr>
+      </tbody>
+    </table>
+  </div>
+</Fig>
+
+他の行にも同じ形が見える。CISA は2020年、Pulse Secure の認証情報を盗んだ攻撃者は、認証情報を変えない限り「パッチを当てた後も」ネットワーク内を動けると書いた。SonicWall は2025年、一連の侵入を CVE-2024-40766 と、機種移行の際にローカルユーザーのパスワードが引き継がれ変更されていなかった事例に結び付けた。Check Point の CVE-2024-24919 への対処手順にもパスワードの変更が入っている。
+
+<SourceLine lang="ja" ids={["doors-cisa-aa20-107a", "doors-sonicwall-2025", "doors-helpnet-checkpoint"]} />
+
+## <Scale s="1:5" /> 仕込まれたものは更新を越えて残る
+
+侵入者が枠に何かを残していくことがある。更新は、置き換える予定のソフトウェアを置き換える。攻撃者が足したものまで消えるとは限らない。
+
+<Fig lang="ja" n="3-11" caption="パッチや更新の後も侵害が残ったとベンダーまたは政府機関が述べた事例" sources={["doors-fortinet-symlink", "doors-fortinet-fg-ir-25-934", "doors-mivd-coathanger", "doors-cisa-aa24-060b", "doors-mandiant-0282", "doors-cisa-ed-25-03", "doors-ncsc-nl-citrix"]}>
+  <div class="table-scroll" tabindex="0">
+    <table>
+      <thead>
+        <tr><th scope="col">製品</th><th scope="col">残ったもの</th><th scope="col">何を越えて残ったか</th><th scope="col">述べた機関</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>FortiGate</td><td>SSL-VPN の言語ファイル用フォルダに置かれたシンボリックリンク。ファイルシステムを読み取り専用で見られる</td><td>元の欠陥（CVE-2022-42475、CVE-2023-27997、CVE-2024-21762）を直した FortiOS への更新。2026年には CVE-2025-68686 がこの除去策を回避した</td><td>Fortinet、2025年4月10日と FG-IR-25-934</td></tr>
+        <tr><td>FortiGate</td><td>遠隔操作型マルウェア COATHANGER</td><td>再起動とファームウェア更新。最新のパッチを当てた機器でも感染している可能性がある</td><td>オランダ MIVD・AIVD、2024年2月6日</td></tr>
+        <tr><td>Ivanti Connect Secure</td><td>root 権限での潜伏。検査ツールが見逃した Web シェル</td><td>CISA の検証では工場出荷時への初期化</td><td>CISA AA24-060B</td></tr>
+        <tr><td>Ivanti Connect Secure</td><td>マルウェア SPAWNANT と PHASEJAM</td><td>本物の更新（新しい領域に自分を複製）、または管理者に見せかけた偽の更新</td><td>Mandiant、2025年1月9日</td></tr>
+        <tr><td>Cisco ASA</td><td>書き換えられた ROM</td><td>再起動とシステムの更新</td><td>CISA ED 25-03</td></tr>
+        <tr><td>Citrix NetScaler</td><td>CVE-2025-6543 で得たアクセス、Web シェル</td><td>更新。攻撃者は以前に得たアクセスを保てると NCSC-NL は述べる</td><td>NCSC-NL、2025年8月13日</td></tr>
+      </tbody>
+    </table>
+  </div>
+</Fig>
+
+Ivanti の欠陥に対する CISA の対応は、「パッチ以上」が実際に何を指すかを示している。緊急指令 24-01 は連邦機関に対し、機器を切り離し、初期化して作り直し、機器上の証明書、鍵、パスワードをすべて失効させて再発行し、連携するドメインアカウントは侵害されたものとして扱うよう求めた。
+
+<SourceLine lang="ja" ids={["doors-cisa-ed-24-01"]} />
+
+## <Scale s="1:5" /> 公表から悪用までは数日、多くは公表より前
+
+図3-5に1件ずつの差を示した。公表後で最も速い例では、watchTowr が Citrix の公表から4日後の2026年3月27日には、既知の攻撃者のアドレスから CVE-2026-3055 が悪用されているのを確認している。CVE-2025-22457 では、Ivanti が2025年2月11日に通常の不具合修正として直した。Mandiant は、攻撃者が「おそらくパッチを分析し」、3月中旬には未更新の機器を攻撃していたとみている。CitrixBleed 2 について、CISA は連邦機関に1日の対応期限を課した。
+
+<Fig lang="ja" n="3-12" caption="建具表の行が、公表に対していつ悪用されていたか" sources={["cisa-kev", "doors-watchtowr-3055", "doors-mandiant-22457", "doors-bleeping-citrixbleed2"]}>
+  <div class="table-scroll" tabindex="0">
+    <table>
+      <thead>
+        <tr><th scope="col">項目</th><th scope="col" class="num">件数</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>ベンダーの公表前から悪用（ゼロデイ）</td><td class="num">{ST.zeroDay}</td></tr>
+        <tr><td>公表当日に悪用ありとして KEV に登録</td><td class="num">{ST.sameDayKev}</td></tr>
+        <tr><td>出典によればパッチだけでは足りない</td><td class="num">{ST.patchNotEnough}</td></tr>
+        <tr><td>KEV のランサムウェア使用欄が「あり」</td><td class="num">{ST.ransomwareKnown}</td></tr>
+        <tr><td>全行</td><td class="num">{ST.total}</td></tr>
+      </tbody>
+    </table>
+  </div>
+</Fig>
+
+週単位のパッチ期限は、攻撃が公表の後に始まることを前提にしている。この表の多くの行では、攻撃はそれより前か、数日以内に始まっていた。
+
+## <Scale s="1:5" /> 置き換え先の製品もエッジのソフトウェアである
+
+ゼロトラストネットワークアクセス（ZTNA）製品は、VPN の扉の置き換えとして売られることが多い。盗まれたログインで届く範囲は、ネットワーク全体からアプリケーション単位に変わる。ただしそのゲートウェイもインターネットの境界に置かれたソフトウェアで、同じ種類の欠陥を抱える。
+
+<Fig lang="ja" n="3-13" caption="CVE-2025-0282 の CVE レコードに挙がっている製品" sources={["doors-cve-2025-0282", "doors-mandiant-0282"]}>
+  <div class="table-scroll" tabindex="0">
+    <table>
+      <thead>
+        <tr><th scope="col">製品</th><th scope="col">影響を受けるバージョン</th><th scope="col">役割</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Ivanti Connect Secure</td><td class="num">22.7R2.5 より前</td><td>SSL VPN</td></tr>
+        <tr><td>Ivanti Policy Secure</td><td class="num">22.7R1.2 より前</td><td>ネットワークアクセス制御</td></tr>
+        <tr><td>Ivanti Neurons for ZTA gateways</td><td class="num">22.7R2.3 より前</td><td>ZTNA ゲートウェイ</td></tr>
+      </tbody>
+    </table>
+  </div>
+</Fig>
+
+レコードは、3製品にまたがるひとつのスタックバッファオーバーフローを、「認証されていない遠隔の攻撃者」が使えるものとして記述している。ZTNA に移れば、盗まれたログインで侵入者が届く範囲は狭まる。それでもゲートウェイには、置き換えた扉と同じようにパッチを当て、ログを取り、点検する必要がある。
