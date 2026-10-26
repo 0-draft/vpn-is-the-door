@@ -1,0 +1,90 @@
+---
+// A boxed observation sheet for one stage of the route: what the IT team
+// would have seen if it was looking, and how long after entry it happens.
+import type { Lang } from "../../lib/paths";
+
+interface Props {
+  lang: Lang;
+  step: number;
+  time: string;
+}
+
+const { lang, step, time } = Astro.props;
+const head = lang === "ja" ? "見ていれば見えたもの" : "What the IT team would see";
+const timeK = lang === "ja" ? "時間" : "Time";
+---
+
+<section class="signs" aria-label={`${head} (${step})`}>
+  <header class="signs-h">
+    <span class="signs-n num" aria-hidden="true">{step}</span>
+    <span class="signs-t">{head}</span>
+    <span class="signs-time"><span class="signs-k">{timeK}</span> {time}</span>
+  </header>
+  <div class="signs-body"><slot /></div>
+</section>
+
+<style>
+  .signs {
+    border: 1px solid var(--line);
+    border-inline-start: 3px solid var(--intruder);
+    background: var(--sheet);
+    margin-block: 1rem 2rem;
+  }
+  .signs-h {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.35rem 0.75rem;
+    padding: 0.6rem 1rem;
+    border-block-end: 1px solid var(--hair);
+    font-size: 0.9375rem;
+  }
+  .signs-n {
+    display: inline-grid;
+    place-items: center;
+    inline-size: 1.6rem;
+    block-size: 1.6rem;
+    border: 1.5px solid var(--intruder);
+    border-radius: 50%;
+    color: var(--intruder-text);
+    font-weight: 700;
+    align-self: center;
+  }
+  .signs-t {
+    font-weight: 700;
+  }
+  .signs-time {
+    margin-inline-start: auto;
+    color: var(--ink-2);
+  }
+  .signs-k {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--ink-3);
+    border: 1px solid var(--line);
+    padding: 0 0.35em;
+    margin-inline-end: 0.25rem;
+  }
+  .signs-body {
+    padding: 0.75rem 1rem 0.25rem;
+  }
+  .signs-body :global(ul) {
+    margin: 0 0 0.75rem;
+    padding-inline-start: 1.1em;
+  }
+  .signs-body :global(li) {
+    margin-block: 0.35em;
+  }
+  .signs-body :global(.where) {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--ink-2);
+    border: 1px solid var(--line);
+    padding: 0 0.35em;
+    margin-inline-end: 0.4rem;
+    white-space: nowrap;
+  }
+  .signs-body :global(.src) {
+    margin-block: 0 0.75rem;
+  }
+</style>

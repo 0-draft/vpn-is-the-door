@@ -1,0 +1,344 @@
+---
+// Fig. 2-2: how fast the route runs. Two hand-placed layouts: a horizontal
+// axis with one lane per source (wide), and a vertical axis with one row per
+// mark (phones), so labels stay at 15–16px at render size.
+import {
+  axisPos,
+  breakSpan,
+  LANES,
+  type LaneId,
+  MARKS,
+  type Mark,
+  marksByTime,
+  OFF_HOURS_PCT,
+  SPLIT_H,
+  spread,
+  TICKS,
+} from "../../lib/ch2-timeline";
+import type { Lang } from "../../lib/paths";
+import Fig from "../Fig.astro";
+
+interface Props {
+  lang: Lang;
+  n: string;
+  caption: string;
+}
+
+const { lang, n, caption } = Astro.props;
+const ja = lang === "ja";
+
+// ---------- wide layout ----------
+const W = { w: 960, x0: 24, len: 900, laneTop: 26, laneH: 180, base: 76 };
+const wx = (h: number) => W.x0 + axisPos(h, W.len);
+const laneY = (i: number) => W.laneTop + i * W.laneH;
+const axisY = laneY(LANES.length) + 6;
+const [brA, brB] = breakSpan(W.len).map((v) => W.x0 + v) as [number, number];
+const offY = axisY + 92;
+const wideH = offY + 58;
+
+// hand-placed label side and anchor per mark (wide layout)
+const PLACE: Record<string, { side: "above" | "below"; anchor: "start" | "middle" | "end" }> = {
+  scan: { side: "above", anchor: "start" },
+  fastest: { side: "below", anchor: "start" },
+  under4: { side: "below", anchor: "start" },
+  ad: { side: "below", anchor: "end" },
+  "ad-2024": { side: "above", anchor: "start" },
+  "exfil-2024": { side: "above", anchor: "end" },
+  exfil: { side: "below", anchor: "end" },
+  note: { side: "below", anchor: "end" },
+};
+const laneIndex = (id: LaneId) => LANES.findIndex((l) => l.id === id);
+
+function wideLabel(m: Mark) {
+  const p = PLACE[m.id] ?? { side: "below", anchor: "start" };
+  const by = laneY(laneIndex(m.lane)) + W.base;
+  const x = wx(m.h) + (p.anchor === "start" ? -4 : p.anchor === "end" ? 4 : 0);
+  const lines = m.text[lang];
+  const ys =
+    p.side === "above"
+      ? lines.map((_, i) => by - 16 - (lines.length - 1 - i) * 20)
+      : lines.map((_, i) => by + 28 + i * 20);
+  return { x, anchor: p.anchor, lines: lines.map((s, i) => ({ s, y: ys[i] as number, first: i === 0 })) };
+}
+
+// ---------- tall layout ----------
+const T = { w: 380, ax: 64, top: 164, len: 620, lx: 112, line: 20 };
+const ty = (h: number) => T.top + axisPos(h, T.len);
+const laneShort: Record<LaneId, Record<Lang, string>> = {
+  akira: { en: "Arctic Wolf, Akira", ja: "Arctic Wolf、Akira" },
+  sophos: { en: "Sophos, median", ja: "Sophos、中央値" },
+  handa: { en: "Handa Hospital", ja: "半田病院" },
+};
+const tallOrigin: Record<LaneId, Record<Lang, string>> = {
+  akira: { en: "0 = VPN login", ja: "0 = VPN へのログイン" },
+  sophos: { en: "0 = start of the attack", ja: "0 = 攻撃の開始" },
+  handa: { en: "0 = 23:57, first RDP record", ja: "0 = 23:57、最初の RDP 記録" },
+};
+const laneCol: Record<LaneId, number> = { akira: T.ax + 14, sophos: T.ax, handa: T.ax + 26 };
+const rows = marksByTime().filter((m) => m.text[lang].length > 0);
+const rowLines = (m: Mark) => [...m.text[lang], laneShort[m.lane][lang]];
+const rowYs = spread(
+  rows.map((m) => ty(m.h) + 5),
+  rows.map((m) => rowLines(m).length * T.line + 12),
+);
+const tallMarks = MARKS.map((m) => ({ m, x: laneCol[m.lane], y: ty(m.h) }));
+const lastRow = rows.length - 1;
+const tallAxisEnd = T.top + T.len;
+const tallCapY = Math.max(
+  tallAxisEnd + 26,
+  (rowYs[lastRow] ?? 0) + (rowLines(rows[lastRow]!).length - 1) * T.line + 30,
+);
+const tallOffY = tallCapY + 48;
+const tallH = tallOffY + 100;
+const [tbA, tbB] = breakSpan(T.len).map((v) => T.top + v) as [number, number];
+
+const copy = {
+  axis: ja ? `時間（${SPLIT_H}時間より後は縮めて表示）` : `Time (compressed after ${SPLIT_H} h)`,
+  off: ja
+    ? "業務時間外に実行されたランサムウェア（Sophos、2025年のデータ）"
+    : "Ransomware deployed outside business hours (Sophos, 2025 data)",
+  offShort: ja
+    ? ["業務時間外に実行された", "ランサムウェア（Sophos、2025年）"]
+    : ["Ransomware deployed outside", "business hours (Sophos, 2025 data)"],
+  pct: `${OFF_HOURS_PCT.toFixed(2)}%`,
+  label: caption,
+};
+const pctW = (len: number) => (OFF_HOURS_PCT / 100) * len;
+const sources = [...new Set(LANES.map((l) => l.source)), "sophos-aar-2025"];
+---
+
+<Fig lang={lang} n={n} caption={caption} sources={sources}>
+  <div class="tl">
+    <svg class="dg tl-svg tl-wide" viewBox={`0 0 ${W.w} ${wideH}`} width={W.w} height={wideH} role="img" aria-label={copy.label}>
+      {
+        TICKS.map((tk) => (
+          <line class="tl-grid" x1={wx(tk.h)} y1={W.laneTop + 14} x2={wx(tk.h)} y2={axisY} />
+        ))
+      }
+      {
+        LANES.map((l, i) => {
+          const y = laneY(i);
+          return (
+            <g>
+              <text x={W.x0} y={y} font-size="16">
+                <tspan font-weight="700">{l.title[lang]}</tspan>
+                <tspan class="muted" dx="12">{l.origin[lang]}</tspan>
+              </text>
+              <line class="thin" x1={W.x0} y1={y + W.base} x2={brA} y2={y + W.base} />
+              <line class="thin" x1={brB} y1={y + W.base} x2={W.x0 + W.len} y2={y + W.base} />
+            </g>
+          );
+        })
+      }
+      {
+        MARKS.map((m) => {
+          const y = laneY(laneIndex(m.lane)) + W.base;
+          const x = wx(m.h);
+          if (m.kind === "range")
+            return (
+              <g>
+                <line class="tl-range" x1={W.x0} y1={y} x2={x} y2={y} />
+                <line class="tl-range-end" x1={x} y1={y - 9} x2={x} y2={y + 9} />
+              </g>
+            );
+          return <circle class={m.kind === "prior" ? "tl-prior" : "tl-pt"} cx={x} cy={y} r="6" />;
+        })
+      }
+      {
+        MARKS.map((m) => {
+          const lb = wideLabel(m);
+          return lb.lines.map((ln) => (
+            <text class={ln.first ? (m.kind === "prior" ? "label" : "tl-time") : "label"} x={lb.x} y={ln.y} text-anchor={lb.anchor} font-size="16">
+              {ln.s}
+            </text>
+          ));
+        })
+      }
+      <line class="thick" x1={W.x0} y1={axisY} x2={brA} y2={axisY} />
+      <line class="thick" x1={brB} y1={axisY} x2={W.x0 + W.len} y2={axisY} />
+      <line class="thick" x1={brA - 5} y1={axisY + 8} x2={brA + 5} y2={axisY - 8} />
+      <line class="thick" x1={brB - 5} y1={axisY + 8} x2={brB + 5} y2={axisY - 8} />
+      {
+        TICKS.map((tk) => (
+          <g>
+            <line class="thick" x1={wx(tk.h)} y1={axisY} x2={wx(tk.h)} y2={axisY + 7} />
+            <text class="label num" x={wx(tk.h)} y={axisY + 28} text-anchor={tk.h === 0 ? "start" : "middle"} font-size="16">
+              {tk.label[lang]}
+            </text>
+          </g>
+        ))
+      }
+      <text class="muted" x={W.x0 + W.len} y={axisY + 52} text-anchor="end" font-size="15">{copy.axis}</text>
+      <text x={W.x0} y={offY - 12} font-size="16" font-weight="700">{copy.off}</text>
+      <rect class="tl-track" x={W.x0} y={offY} width={W.len} height="18" />
+      <rect class="tl-fill" x={W.x0} y={offY} width={pctW(W.len)} height="18" />
+      <text class="tl-time num" x={W.x0 + pctW(W.len) - 8} y={offY + 42} text-anchor="end" font-size="16">{copy.pct}</text>
+      <text class="muted num" x={W.x0 + W.len} y={offY + 42} text-anchor="end" font-size="15">100%</text>
+    </svg>
+
+    <svg class="dg tl-svg tl-tall" viewBox={`0 0 ${T.w} ${tallH}`} width={T.w} height={tallH} role="img" aria-label={copy.label}>
+      {
+        LANES.map((l, i) => (
+          <g>
+            <text x="8" y={22 + i * 44} font-size="15" font-weight="700">
+              {laneShort[l.id][lang]}
+            </text>
+            <text class="muted" x="20" y={42 + i * 44} font-size="15">
+              {tallOrigin[l.id][lang]}
+            </text>
+          </g>
+        ))
+      }
+      <line class="thick" x1={T.ax} y1={T.top} x2={T.ax} y2={tbA} />
+      <line class="thick" x1={T.ax} y1={tbB} x2={T.ax} y2={tallAxisEnd} />
+      <line class="thick" x1={T.ax - 8} y1={tbA + 5} x2={T.ax + 8} y2={tbA - 5} />
+      <line class="thick" x1={T.ax - 8} y1={tbB + 5} x2={T.ax + 8} y2={tbB - 5} />
+      {
+        TICKS.map((tk) => (
+          <g>
+            <line class="thick" x1={T.ax - 7} y1={ty(tk.h)} x2={T.ax} y2={ty(tk.h)} />
+            <text class="label num" x={T.ax - 11} y={ty(tk.h) + 5} text-anchor="end" font-size="15">
+              {tk.label[lang]}
+            </text>
+          </g>
+        ))
+      }
+      {
+        tallMarks.map(({ m, x, y }) =>
+          m.kind === "range" ? (
+            <g>
+              <line class="tl-range" x1={x} y1={T.top} x2={x} y2={y} />
+              <line class="tl-range-end" x1={x - 7} y1={y} x2={x + 7} y2={y} />
+            </g>
+          ) : (
+            <circle class={m.kind === "prior" ? "tl-prior" : "tl-pt"} cx={x} cy={y} r="5.5" />
+          ),
+        )
+      }
+      {
+        rows.map((m, i) => {
+          const y0 = rowYs[i] as number;
+          const my = ty(m.h);
+          return (
+            <g>
+              <path class="thin" d={`M${laneCol[m.lane] + 8} ${my} L${T.lx - 18} ${my} L${T.lx - 6} ${y0 - 5}`} />
+              {rowLines(m).map((s, k) => (
+                <text
+                  class={k === 0 && m.kind !== "prior" ? "tl-time" : k === rowLines(m).length - 1 ? "muted" : "label"}
+                  x={T.lx}
+                  y={y0 + k * T.line}
+                  font-size={k === rowLines(m).length - 1 ? "15" : "16"}
+                >
+                  {s}
+                </text>
+              ))}
+            </g>
+          );
+        })
+      }
+      <text class="muted" x="8" y={tallCapY} font-size="15">{copy.axis}</text>
+      {
+        copy.offShort.map((s, i) => (
+          <text x="8" y={tallOffY + i * 20} font-size="15" font-weight="700">
+            {s}
+          </text>
+        ))
+      }
+      <rect class="tl-track" x="8" y={tallOffY + 30} width={T.w - 16} height="16" />
+      <rect class="tl-fill" x="8" y={tallOffY + 30} width={pctW(T.w - 16)} height="16" />
+      <text class="tl-time num" x={8 + pctW(T.w - 16) - 6} y={tallOffY + 70} text-anchor="end" font-size="16">{copy.pct}</text>
+    </svg>
+  </div>
+  <table slot="data">
+    <thead>
+      <tr>
+        <th>{ja ? "出典" : "Source"}</th>
+        <th>{ja ? "起点" : "Hour 0"}</th>
+        <th>{ja ? "出来事" : "Event"}</th>
+        <th class="num">{ja ? "時間" : "Hours"}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        MARKS.filter((m) => m.text[lang].length > 0).map((m) => {
+          const l = LANES[laneIndex(m.lane)]!;
+          return (
+            <tr>
+              <td>{l.title[lang]}</td>
+              <td>{l.origin[lang]}</td>
+              <td>{m.text[lang].join(", ")}</td>
+              <td class="num">{m.h.toFixed(2)}</td>
+            </tr>
+          );
+        })
+      }
+      <tr>
+        <td>Sophos</td>
+        <td>—</td>
+        <td>{copy.off}</td>
+        <td class="num">{copy.pct}</td>
+      </tr>
+    </tbody>
+  </table>
+</Fig>
+
+<style>
+  .tl {
+    container-type: inline-size;
+    inline-size: 100%;
+  }
+  .tl-svg {
+    display: block;
+  }
+  .tl > .tl-wide {
+    display: none;
+  }
+  .tl > .tl-tall {
+    max-inline-size: 30rem;
+    margin-inline: auto;
+  }
+  @container (min-width: 860px) {
+    .tl > .tl-wide {
+      display: block;
+    }
+    .tl > .tl-tall {
+      display: none;
+    }
+  }
+  .tl :global(.tl-grid) {
+    stroke: var(--hair);
+    stroke-width: 1;
+    stroke-dasharray: 3 4;
+  }
+  .tl :global(.tl-pt) {
+    fill: var(--intruder);
+    stroke: var(--sheet);
+    stroke-width: 2;
+  }
+  .tl :global(.tl-prior) {
+    fill: var(--sheet);
+    stroke: var(--intruder);
+    stroke-width: 2;
+  }
+  .tl :global(.tl-range) {
+    stroke: var(--intruder);
+    stroke-width: 5;
+  }
+  .tl :global(.tl-range-end) {
+    stroke: var(--intruder);
+    stroke-width: 2;
+  }
+  .tl :global(.tl-time) {
+    fill: var(--intruder-text);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .tl :global(.tl-track) {
+    fill: var(--room);
+    stroke: var(--line);
+    stroke-width: 1;
+  }
+  .tl :global(.tl-fill) {
+    fill: var(--intruder);
+  }
+</style>
