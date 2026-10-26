@@ -2,5 +2,9 @@ allowBuilds:
   esbuild: true
   sharp: false
 overrides:
+  # markdownlint (dev only) pulls katex 0.16: prototype-pollution advisory fixed in 0.18.2
+  katex@<0.18.2: ">=0.18.2 <0.19"
   # satori (OG images, build only) pins fflate 0.7.4: GHSA infinite loop on malformed ZIP64
   "fflate@>=0.7.0 <0.7.5": 0.7.5
+  # subset-font (font subsetting, build only) allows harfbuzzjs ^1.6.1; hold to a release older than two weeks
+  "subset-font>harfbuzzjs": 1.6.3

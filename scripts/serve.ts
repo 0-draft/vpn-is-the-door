@@ -1,8 +1,10 @@
 // Serve dist/ the way GitHub Pages does: under /vpn-is-the-door/, index.html
-// for directories, 404.html for misses. Used by Playwright and local checks.
+// for directories, 404.html for misses, gzip for text. Used by Playwright,
+// scripts/lighthouse.ts and local checks.
 import { createReadStream, existsSync, statSync } from "node:fs";
-import { createServer } from "node:http";
+import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { extname, join, normalize } from "node:path";
+import { createGzip } from "node:zlib";
 
 const BASE = "/vpn-is-the-door";
 const ROOT = join(import.meta.dirname, "..", "dist");
@@ -18,6 +20,18 @@ const TYPES: Record<string, string> = {
   ".txt": "text/plain",
   ".woff2": "font/woff2",
 };
+
+// Pages gzips text responses; fonts and images go out as they are.
+const COMPRESS = new Set([".html", ".css", ".js", ".svg", ".json", ".xml", ".txt"]);
+function send(req: IncomingMessage, res: ServerResponse, status: number, file: string): void {
+  const ext = extname(file);
+  const headers: Record<string, string> = { "content-type": TYPES[ext] ?? "application/octet-stream" };
+  const gzip = COMPRESS.has(ext) && /\bgzip\b/.test(String(req.headers["accept-encoding"] ?? ""));
+  if (gzip) Object.assign(headers, { "content-encoding": "gzip", vary: "Accept-Encoding" });
+  res.writeHead(status, headers);
+  const body = createReadStream(file);
+  (gzip ? body.pipe(createGzip()) : body).pipe(res);
+}
 
 createServer((req, res) => {
   const url = new URL(req.url ?? "/", "http://x");
@@ -40,11 +54,9 @@ createServer((req, res) => {
   }
   if (!existsSync(file)) {
     const nf = join(ROOT, "404.html");
-    res.writeHead(404, { "content-type": TYPES[".html"] });
-    if (existsSync(nf)) createReadStream(nf).pipe(res);
-    else res.end("not found");
+    if (existsSync(nf)) send(req, res, 404, nf);
+    else res.writeHead(404, { "content-type": TYPES[".html"] }).end("not found");
     return;
   }
-  res.writeHead(200, { "content-type": TYPES[extname(file)] ?? "application/octet-stream" });
-  createReadStream(file).pipe(res);
+  send(req, res, 200, file);
 }).listen(port, "127.0.0.1", () => console.log(`serving dist at http://127.0.0.1:${port}${BASE}/`));
