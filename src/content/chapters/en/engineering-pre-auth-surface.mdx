@@ -19,27 +19,26 @@ export const groups = byClass();
 export const n = (c) => groups.find((g) => g.cls === c).cves.length;
 
 <Summary lang="en">
-  <p>Before anyone logs in, the appliance already handles their connection: TLS, the web request, the login page, the files it loads, SAML messages. Anyone on the internet can send it that traffic. A flaw in this code needs no password, and multi-factor authentication (MFA) never sees the request.</p>
-  <p>The decision it implies: know which of your addresses show this surface to the internet, and turn off every part of it you do not use.</p>
+  <p>Before anyone logs in, the appliance already handles TLS, the web request, the login page, the files it loads and SAML messages. Anyone on the internet can send it that traffic. A flaw in this code needs no password, and multi-factor authentication (MFA) never sees the request.</p>
 </Summary>
 
 <SectionCut lang="en" />
 
-## Everything before the login form answers anyone
+## One request through the appliance
 
-Follow one connection down Fig. 5-2. The appliance terminates TLS, then a web daemon reads the request and hands it to a handler. On FortiOS that daemon is `sslvpnd`, the process Fortinet names in its advisory for CVE-2022-42475 ([FG-IR-22-398](https://www.fortiguard.com/psirt/FG-IR-22-398)). Everything in the shaded zone runs at this point: the login portal, the static files it loads, the VPN client download, the SAML or SSO endpoints, the clientless web mode, and on many deployments the management interface. Only below the zone does the appliance check a password, a second factor or a SAML assertion.
+The appliance terminates TLS, then a web daemon reads the request and hands it to a handler. On FortiOS that daemon is `sslvpnd`, the process Fortinet names in its advisory for CVE-2022-42475 ([FG-IR-22-398](https://www.fortiguard.com/psirt/FG-IR-22-398)). Everything in the shaded zone runs at this point. The password, second factor and SAML assertion are checked only after it.
 
-A pre-auth flaw sits inside that zone. The red line in the figure shows what exploitation does: the request goes from the web daemon to the operating system and on into the network without passing the authentication box. MFA settings make no difference to it. Of the {TOTAL} KEV-listed VPN and remote-access CVEs in the [door schedule](../../the-doors/), {PREAUTH} are reachable before login. The other {TOTAL - PREAUTH} were exploited in the wild chained behind one that is.
+Of the {TOTAL} KEV-listed VPN and remote-access CVEs in the [door schedule](../../the-doors/), {PREAUTH} are reachable before login. The other {TOTAL - PREAUTH} were exploited in the wild chained behind one that is.
 
 <Fig lang="en" n="5-2" caption="One request through an SSL-VPN appliance; the pre-auth zone is shaded" sources={["ch5-fg-ir-22-398", "cisa-kev"]} nts>
   <PreauthLifecycle lang="en" label="An SSL-VPN appliance from top to bottom: TLS termination, a web daemon that parses every request, a shaded pre-auth zone with login portal, static files, client download, SAML and SSO, clientless mode and management UI marked exposed, then authentication, session cookie, tunnel and the internal network. A red dashed route leaves the pre-auth zone into the appliance OS and reaches the internal network without passing authentication." />
 </Fig>
 
-## This code runs before the appliance knows who is asking
+## Bug classes
 
-Pre-auth code has to accept input from anyone, so it cannot rely on account limits or on who the sender is. In most SSL-VPN products the same web stack serves the login page and the logged-in portal. A bug anywhere in that request path is reachable from the internet.
+Pre-auth code has to accept input from anyone, so it cannot rely on account limits or on who the sender is. In most SSL-VPN products the same web stack serves the login page and the logged-in portal.
 
-Fig. 5-3 groups the {TOTAL} CVEs by bug class. Memory corruption is the largest group: buffer overflows, out-of-bounds reads and writes, one use-after-free. These bugs occur in code written in memory-unsafe languages such as C and C++. CISA and the FBI list CVE-2025-0282 (Ivanti Connect Secure) and CVE-2023-6549 (Citrix NetScaler) as buffer-overflow examples and say: "Threat actors frequently exploit these vulnerabilities to gain initial access to an organization's network and then move laterally to the wider network." The alert adds that the class "can be addressed by using memory safe languages". That much of this code is old C inside one large web daemon is this site's inference from the bug classes and from product lineages such as Pulse Secure to Ivanti; vendors do not publish it.
+Memory corruption is the largest group: buffer overflows, out-of-bounds reads and writes, one use-after-free. These bugs occur in memory-unsafe languages such as C and C++. CISA and the FBI list CVE-2025-0282 (Ivanti Connect Secure) and CVE-2023-6549 (Citrix NetScaler) as examples: "Threat actors frequently exploit these vulnerabilities to gain initial access to an organization's network and then move laterally to the wider network." That much of this code is old C inside one large web daemon is this site's inference from the bug classes and from lineages such as Pulse Secure to Ivanti; vendors do not publish it.
 
 <Fig lang="en" n="5-3" caption={`${TOTAL} KEV-listed VPN and remote-access CVEs, 2018–2026, one square per CVE, by bug class`} sources={["cisa-kev", "doors-cisa-bo-alert"]}>
   <BugClasses lang="en" label={`Unit chart. Memory corruption ${n("memory")}, authentication or authorization bypass ${n("auth")}, injection ${n("inject")}, file read or path traversal ${n("read")}.`} />
@@ -53,7 +52,7 @@ Fig. 5-3 groups the {TOTAL} CVEs by bug class. Memory corruption is the largest 
   </table>
 </Fig>
 
-The privilege that exploitation gives is stated in some advisories. That every appliance runs this code as root is an inference; the table lists only cases where the vendor or CISA said so.
+That every appliance runs this code as root is an inference. The table lists only cases where the vendor or CISA stated the privilege.
 
 <div class="table-scroll" tabindex="0">
 
@@ -67,15 +66,15 @@ The privilege that exploitation gives is stated in some advisories. That every a
 
 <SourceLine lang="en" ids={["ch5-paloalto-3400", "ch5-cisco-webvpn", "cisa-aa24-060b"]} />
 
-## Inventory the exposure from outside, on your own addresses
+## Inventory the exposure
 
-Start from what you own, then check what the internet sees. Every method below looks only at addresses and names that belong to you. Do not scan or probe addresses you do not control, and get written permission before scanning a range a provider or vendor operates for you.
+Only addresses and names that belong to you. Do not scan addresses you do not control, and get written permission before scanning a range a provider or vendor operates for you.
 
 <div class="table-scroll" tabindex="0">
 
 | Method | What it tells you | What it misses |
 | --- | --- | --- |
-| Asset register and contracts | Every internet-facing device, including boxes a vendor installed for remote maintenance. The Osaka intrusion came in through a catering vendor's appliance (p.45). | Devices nobody recorded |
+| Asset register and contracts | Every internet-facing device, including boxes a vendor installed for remote maintenance. Osaka was entered through a catering vendor's appliance (p.45). | Devices nobody recorded |
 | A scan of your own public IP ranges, by you or a contracted tester | Which ports answer, and which product and version the portal or TLS certificate reveals | Addresses outside the ranges you listed |
 | Exposure search engines (Shodan, Censys) queried for your own ranges and domains | What outside scanners have already indexed about you, with history | Anything they have not crawled yet |
 | Certificate transparency logs for your domains | Host names such as `vpn.example[.]com` that someone set up and forgot | Devices that use only an IP address |
@@ -85,9 +84,9 @@ Start from what you own, then check what the internet sees. Every method below l
 
 <SourceLine lang="en" ids={["osaka-report-2023", "cisa-eos-edge-2026"]} />
 
-## Turn off what does not need to answer
+## Cutting the surface down
 
-Fig. 5-4 is the same appliance after the surface is cut down. Each change removes a part of the shaded zone from the internet's reach. None of them fixes a vulnerable handler that stays enabled, so patching still applies.
+None of these changes fixes a vulnerable handler that stays enabled, so patching still applies.
 
 <Fig lang="en" n="5-4" caption="The same appliance with the management UI off the internet, unused modes disabled and a source-IP allow-list in front" sources={["cccs-itsm-80-101", "handa-report-tech", "ch5-jpcert-at-2024-0004"]} nts>
   <PreauthLifecycle lang="en" variant="reduced" label="The same appliance as Fig. 5-2. A green bar marks a source-IP allow-list in front of the appliance. Clientless mode is crossed out as disabled and the management UI is crossed out as moved off the internet. No red route." />
@@ -98,7 +97,7 @@ Fig. 5-4 is the same appliance after the surface is cut down. Each change remove
 | Change | What leaves the pre-auth zone | Basis |
 | --- | --- | --- |
 | Move the management interface to a separate management network | The administrative web UI and its API | CCCS: NMIs "should not be directly exposed to the Internet." |
-| Allow the portal only from known source addresses, where users connect from fixed sites | Every handler, for everyone outside the list | Handa had no source restriction, so "インターネット上のすべてのシステムからの接続が可能であった。" (technical volume, printed p.11). Mobile workers rarely have fixed addresses, so this fits partner and site-to-site access best. |
+| Allow the portal only from known source addresses, where users connect from fixed sites | Every handler, for everyone outside the list | Handa's appliance: "インターネット上のすべてのシステムからの接続が可能であった。" (technical volume, printed p.11). Fits partner and site-to-site access better than mobile workers. |
 | Disable features you do not use: clientless web mode, unused SSO integrations, legacy protocol versions | The code behind those features | CCCS: "Deactivate any functionality that is not required." CVE-2026-24858 affected only devices with FortiCloud SSO enabled. |
 | As a stopgap during an unpatched KEV, disable the SSL-VPN function | The whole portal | JPCERT/CC on CVE-2024-21762: "SSL VPN機能を無効にすることで本脆弱性の回避が可能です。" |
 

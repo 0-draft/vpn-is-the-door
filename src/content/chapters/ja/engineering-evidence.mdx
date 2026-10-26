@@ -16,15 +16,14 @@ import LogBars from "../../../components/ch5/LogBars.astro";
 import { ACTION_LABEL, ACTIONS, ITEMS, STATE_LABEL } from "../../../lib/ch5-evidence";
 
 <Summary lang="ja">
-  <p>調査の最初の問いには機器のログが答える。どのアカウントが、どこからログインし、機器の何が変わったか。多くの機器はこのログを容量の限られた本体内にしか置かない。日本の2つの病院の事案では、攻撃の後に業者がログを保存しないままファームウェアを更新し、調査委員会は侵入の経緯を確定できなかった。</p>
-  <p>ここから導かれる判断: 疑わしい機器を再起動、更新、初期化する前に、設定とログを書き出す。平時から、侵入者の手が届かない場所へログを送っておく。</p>
+  <p>どのアカウントがどこからログインし、機器の何が変わったか。調査の最初の問いには機器のログが答えるが、多くの機器はこれを容量の限られた本体内にしか置かない。日本の2つの病院では、攻撃の後に業者がログを保存しないままファームウェアを更新し、調査委員会は侵入の経緯を確定できなかった。</p>
 </Summary>
 
 <SectionCut lang="ja" />
 
 ## ログは3種類、多くは機器の中にある
 
-製品によって名前は違うが、SSL-VPN 機器はおおむね表の3種類の記録を残す。事故の後、それぞれが別の問いに答える。
+名前は製品ごとに違うが、SSL-VPN 機器はおおむね次の3種類の記録を残す。
 
 <div class="table-scroll" tabindex="0">
 
@@ -36,27 +35,25 @@ import { ACTION_LABEL, ACTIONS, ITEMS, STATE_LABEL } from "../../../lib/ch5-evid
 
 </div>
 
-図5-7は、Fortinet が CVE-2022-42475 の侵害の痕跡（IoC）として公表したクラッシュの記録である。システムログが残す項目の典型例でもある。
-
 <Fig lang="ja" n="5-7" caption="CVE-2022-42475 の侵害の痕跡として示された FortiOS のクラッシュログ" sources={["ch5-fg-ir-22-398"]}>
 
 ```text
 Logdesc=Application crashed and msg=[...] application:sslvpnd,[...], Signal 11 received, Backtrace: [...]
 ```
 
-- `Logdesc=Application crashed`: 事象の種類。プロセスが予期せず止まった。
-- `application:sslvpnd`: 止まったのは SSL-VPN デーモン、つまり認証前の要求を処理するコードである。
-- `Signal 11`: セグメンテーション違反。プロセスが触れてはならないメモリに触れた。CVE-2022-42475 のようなヒープオーバーフローの試行が失敗すると、この形で現れやすい。
+- `Logdesc=Application crashed`: プロセスが予期せず止まった。
+- `application:sslvpnd`: 止まったのは認証前の要求を処理する SSL-VPN デーモン。
+- `Signal 11`: セグメンテーション違反。CVE-2022-42475 のようなヒープオーバーフローの試行が失敗すると、この形で出やすい。
 
 </Fig>
 
-問題は記録の置き場所にある。英国 NCSC は2026年、ネットワーク機器では防御側が「can have fewer tools available to them than the attacker」と書き、製造者は調査に必要な証拠を集める手段を正式に用意すべきだとした（「manufacturers should provide supported mechanisms for gathering the evidence needed to investigate incidents」）。それが揃うまでは、ログを機器の外へ出すのが防御側の仕事になる。
+英国 NCSC は2026年、ネットワーク機器では防御側が「can have fewer tools available to them than the attacker」と書き、「manufacturers should provide supported mechanisms for gathering the evidence needed to investigate incidents」とした。
 
 <SourceLine lang="ja" ids={["ch5-jpcert-at-2026-0019", "doors-ncsc-uk-observability"]} />
 
 ## ログを全て保全できた被害は102件中25件
 
-警察庁はランサムウェアの被害組織に、ログが残っていたかを尋ねている。2025年に全て保全できたのは4分の1だった。挙げられた原因のうち「犯人による削除」と「暗号化」は、手の届く場所にあるログに対して侵入者が行う操作である。「保存期間経過」は設定の問題である。
+警察庁の調査で挙がった原因のうち、「犯人による削除」と「暗号化」は手の届く場所にあるログへの侵入者の操作で、「保存期間経過」は設定の問題だ。
 
 <Fig lang="ja" n="5-8" caption="2025年のランサムウェア被害: ログの保全状況と、使えなくなった原因" sources={["npa-r7-data"]}>
   <LogBars lang="ja" label="棒グラフ。ログの保全状況102件: 全て保全25、一部利用不可64、利用不可8、ログ取得無5。使えなくなった原因（回答68件）: 犯人による削除20、暗号化20、保存期間経過18、誤削除3、その他7。" />
@@ -80,8 +77,6 @@ Logdesc=Application crashed and msg=[...] application:sslvpnd,[...], Signal 11 r
 
 ## 2つの病院は復旧作業で VPN のログを失った
 
-2つの報告書は、言葉は違うが同じことを書いている。図5-9に該当箇所を引用する。
-
 <Fig lang="ja" n="5-9" caption="VPN のログの消失を記した2つの調査報告書" sources={["osaka-report-2023", "handa-report-main"]}>
 
 <blockquote><p>なお、C 社が 10 月 31 日の夕方にファイアウォール Z のファームウェアを、<mark>バックアップを取らずにバージョンアップしたため VPN 機器の Syslog が消失した</mark>。そのため、10 月 31 日の攻撃が単独で行われたか否かを断定することはできなかった。</p></blockquote>
@@ -94,11 +89,11 @@ Logdesc=Application crashed and msg=[...] application:sslvpnd,[...], Signal 11 r
 
 </Fig>
 
-大阪の報告書は、残っていたログの価値も示している。病院のファイアウォールのログは2022年4月までさかのぼることができ、10月の攻撃より何か月も前からの RDP 通信とログオン失敗が見つかった（p.39）。
+大阪では、病院のファイアウォールのログが2022年4月までさかのぼれた。そこから、10月の攻撃より何か月も前からの RDP 通信とログオン失敗が見つかっている（p.39）。
 
 ## 再起動、更新、初期化はそれぞれ何かを消す
 
-図5-10で作業を選ぶ。メモリ上のものは、どの作業でも消える。本体内のファイルは再起動ならたいてい残るが、更新ではそれを置く領域が置き換えられたり初期化されたりすることがある。2つの病院で起きたのはこれである。初期化はログと設定を消す。例外は侵入者が置いたファイルで、[パッチのページ](../patching-is-not-closing/)で挙げた勧告には、再起動や更新を、Ivanti では初期化まで生き延びた例がある。3つの作業のどれにも耐えるのは、すでに機器の外にある控えだけである。
+メモリ上のものはどの作業でも消える。本体内のファイルは再起動ならたいてい残るが、更新ではそれを置く領域が置き換えられたり初期化されたりすることがあり、2つの病院で起きたのはこれだ。初期化はログと設定を消す。侵入者が置いたファイルは例外で、[パッチのページ](../patching-is-not-closing/)の勧告には再起動や更新を、Ivanti では初期化まで生き延びた例がある。
 
 <Fig lang="ja" n="5-10" caption="再起動、ファームウェア更新、初期化の後に残る証拠。一般的な傾向であり、自機種についてはベンダーの資料で確かめる" sources={["osaka-report-2023", "handa-report-main", "doors-mivd-coathanger", "doors-cisa-ed-25-03", "cisa-aa24-060b"]}>
   <EvidenceSurvival lang="ja" label="機器の証拠を置き場所別に示す。メモリ、フラッシュ・ディスク、本体の外。選んだ作業の後の各項目の状態。" />
@@ -114,17 +109,17 @@ Logdesc=Application crashed and msg=[...] application:sslvpnd,[...], Signal 11 r
 
 ## 再起動の前に控えを取る
 
-疑わしい機器では、パッチ、再起動、初期化のどれよりも前に、次の順で作業する。インシデント対応の事業者が向かっているなら、機器に触れる前に指示を受ける。
+パッチ、再起動、初期化より前に、次の順で行う。インシデント対応の事業者が向かっているなら、機器に触れる前に指示を受ける。
 
 <div class="table-scroll" tabindex="0">
 
 | 手順 | 作業 | 理由 |
 | --- | --- | --- |
-| 1 | 現在時刻、機器の時計と正確な時刻源とのずれ、通報後に機器へログインした人を書き留める | 後で作る時系列は、機器、SIEM、ドメインコントローラ、ファイアウォールの時刻をそろえられるかで決まる |
-| 2 | 現在の設定を書き出す | 追加されたアカウントや変更された設定が分かる。秘密情報を含むので機密として保管する。Fortinet は「Treat all configuration as potentially compromised」としており、復元元ではなく証拠として扱う |
-| 3 | 本体内のログをすべて書き出す（システム・クラッシュ、VPN・認証、管理） | 2つの病院が失ったのはこれである |
-| 4 | ベンダーが用意する診断・調査用の収集機能を使い、事業者が対応できるならメモリも取得する | 英国 NCSC の製造者向け仕様は、機器が備えるべき機能に「Volatile data collection」（メモリ、プロセスの状態、通信表、クラッシュダンプ）を挙げている。まだ備えていない機器も多い |
-| 5 | 控えのハッシュ値を取り、機器の外に読み取り専用で保管する | 後で控えを信頼でき、機器に何が起きても残る |
+| 1 | 現在時刻、機器の時計と正確な時刻源とのずれ、通報後に機器へログインした人を書き留める | 機器、SIEM、ドメインコントローラ、ファイアウォールの時刻をそろえて時系列を作るため |
+| 2 | 現在の設定を書き出す | 追加されたアカウントや変更された設定が分かる。秘密情報を含むので機密として保管する。Fortinet: 「Treat all configuration as potentially compromised」。復元元にはしない |
+| 3 | 本体内のログをすべて書き出す（システム・クラッシュ、VPN・認証、管理） | 2つの病院が失ったもの |
+| 4 | ベンダーが用意する診断・調査用の収集機能を使い、事業者が対応できるならメモリも取得する | 英国 NCSC の製造者向け仕様は「Volatile data collection」（メモリ、プロセスの状態、通信表、クラッシュダンプ）を挙げている。備えていない機器も多い |
+| 5 | 控えのハッシュ値を取り、機器の外に読み取り専用で保管する | 控えの真正性を後で示せ、機器に何が起きても残る |
 | 6 | ここで初めてパッチ、再起動、初期化を行う | [流れ図](../patching-is-not-closing/#fig-5-6)の続きに戻る |
 
 </div>
@@ -133,17 +128,17 @@ Logdesc=Application crashed and msg=[...] application:sslvpnd,[...], Signal 11 r
 
 ## 侵入者の手が届かない場所にログを置く
 
-事故の後に取る控えは、機器にまだ残っているものしか含まない。毎日機器の外へ送るログは残りを補う。脆弱性の存在を誰も知らなかった数週間も、その範囲に入る。
+事故の後の控えには、機器にまだ残っているものしか入らない。毎日外へ送るログには、脆弱性が知られる前の数週間も入る。
 
 <div class="table-scroll" tabindex="0">
 
 | 設定 | 目標 | 根拠 |
 | --- | --- | --- |
-| 送り先 | 機器の外の SIEM または syslog 収集サーバ。ほぼ即時に受け取る | CCCS は「Enable centralized (off-device) logging and configure log levels to be as detailed as possible」と求めている。NCSC の仕様も「appropriate remote logging solutions where feasible.」を勧めている |
+| 送り先 | 機器の外の SIEM または syslog 収集サーバ。ほぼ即時に受け取る | CCCS: 「Enable centralized (off-device) logging and configure log levels to be as detailed as possible」。NCSC の仕様: 「appropriate remote logging solutions where feasible.」 |
 | 詳細度 | 認証、セッション、管理、設定、クラッシュの事象を、機器が出せる最も細かい水準で | 同じ CCCS の記述 |
-| 保存期間 | ゼロデイが公表されるまでの期間より長く。月単位で考える | CitrixBleed は2023年8月下旬から悪用され、10月10日に公表された。CVE-2025-0282 は2024年12月中旬から悪用され、2025年1月8日に公表された。警察庁の集計では、保存期間の経過でログを失った回答が18件あった |
-| 時刻 | 機器、収集サーバ、全サーバで同じ時刻源の NTP を使う | NCSC は「All systems should run the network time protocol (NTP) from reputable and redundant sources.」としている |
-| 警報 | 管理者ログインの成功、設定変更、ハードウェアの変更 | CCCS は「Alert on successful administrative log-ons, configuration changes and hardware changes」と求めている |
+| 保存期間 | ゼロデイが公表されるまでの期間より長く。月単位 | CitrixBleed は2023年8月下旬から悪用、10月10日に公表。CVE-2025-0282 は2024年12月中旬から悪用、2025年1月8日に公表。警察庁の集計で、保存期間の経過でログを失った回答は18件 |
+| 時刻 | 機器、収集サーバ、全サーバで同じ時刻源の NTP を使う | NCSC: 「All systems should run the network time protocol (NTP) from reputable and redundant sources.」 |
+| 警報 | 管理者ログインの成功、設定変更、ハードウェアの変更 | CCCS: 「Alert on successful administrative log-ons, configuration changes and hardware changes」 |
 
 </div>
 
