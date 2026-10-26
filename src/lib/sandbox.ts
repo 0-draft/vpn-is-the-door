@@ -177,16 +177,16 @@ type T = Record<Lang, string>;
 
 export const NOTE_TEXT: Record<NoteId, T> = {
   "patch.cut": {
-    en: "Patched within {d} days. Exploitation in this scenario starts on day 5, so the flaw is gone first.",
-    ja: "{d}日以内に修正した。この想定では悪用が5日目に始まるので、先に穴が塞がる。",
+    en: "Patched within {d} days, before exploitation starts on day 5.",
+    ja: "{d}日以内に修正した。悪用が始まる5日目より前。",
   },
   "patch.late": {
-    en: "Exploitation starts on day 5. A {d}-day deadline leaves the door open in the meantime.",
-    ja: "悪用は5日目に始まる。期限が{d}日では、その間扉は開いたままになる。",
+    en: "Exploitation starts on day 5, inside the {d}-day deadline.",
+    ja: "悪用は5日目に始まり、{d}日の期限より早い。",
   },
   "patch.zeroday": {
-    en: "No fix existed when exploitation began. No patch deadline closes a zero-day.",
-    ja: "悪用が始まった時点で修正版はなかった。ゼロデイはどの期限でも防げない。",
+    en: "No fix existed when exploitation began.",
+    ja: "悪用が始まった時点で修正版はなかった。",
   },
   "patch.password": {
     en: "The password was stolen before the patch. It still works after the patch.",
@@ -201,8 +201,8 @@ export const NOTE_TEXT: Record<NoteId, T> = {
     ja: "認証前の欠陥は錠を通らない。多要素認証は一度も求められない。",
   },
   "unused.cut": {
-    en: "The leaked password belonged to an account nobody used. Once deleted, it opens nothing.",
-    ja: "漏れたのは使われていないアカウントのパスワードだった。削除すれば何も開かない。",
+    en: "The leaked password belonged to an account nobody used, now deleted.",
+    ja: "漏れたのは使われていないアカウントのパスワードで、そのアカウントは削除済み。",
   },
   "unused.preauth": {
     en: "This flaw needs no account at all.",

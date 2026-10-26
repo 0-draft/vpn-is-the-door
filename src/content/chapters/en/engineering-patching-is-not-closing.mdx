@@ -15,15 +15,12 @@ import FailureLanes from "../../../components/ch5/FailureLanes.astro";
 import KevFlow from "../../../components/ch5/KevFlow.astro";
 
 <Summary lang="en">
-  <p>Applying the vendor's fix closes the flaw for anyone who arrives later. An intruder who came in before the fix keeps whatever they took: passwords, live sessions, files planted on the box. In NPA's 2025 survey, 31 of 71 victims said the device they were entered through was fully patched.</p>
-  <p>The decision it implies: treat a KEV entry for your appliance as a possible incident. The patch is step two of seven; credentials, sessions and the network behind the box come after it.</p>
+  <p>The vendor's fix closes the flaw for anyone who arrives later. An intruder who came in before it keeps passwords, live sessions and files planted on the box. In NPA's 2025 survey, 31 of 71 victims said the device they were entered through was fully patched.</p>
 </Summary>
 
 <SectionCut lang="en" />
 
 ## The intruder's access outlives the patch in five ways
-
-Each lane in Fig. 5-5 is one failure mode that advisories and incident reports have documented. The patch is the black line. The red line is the intruder's access, which starts before it and carries on after.
 
 <Fig lang="en" n="5-5" caption="Five ways an intruder's access survives the patch" sources={["npa-r8h1-data", "doors-fortinet-87000", "jpcert-ir-2024q2", "doors-mandiant-citrixbleed", "fortinet-psirt-2025-04", "doors-mivd-coathanger", "doors-cisa-ed-25-03", "cisa-aa24-060b", "mandiant-ivanti-2025", "jpcert-at-2025-0001"]} nts>
   <FailureLanes lang="en" label="Five lanes, each with a red line that starts before the patch and continues after it: credentials stolen, sessions stolen, persistence that survives upgrades, an integrity check that is fooled, compromise before disclosure." />
@@ -31,11 +28,11 @@ Each lane in Fig. 5-5 is one failure mode that advisories and incident reports h
 
 ### 1. Credentials stolen before the patch
 
-CVE-2018-13379 let anyone read the FortiOS SSL-VPN session file, with user names and passwords, without logging in. In September 2021 Fortinet reported that "a malicious actor has recently disclosed SSL-VPN access information to 87,000 FortiGate SSL-VPN devices" and warned: "While they may have since been patched, if the passwords were not reset, they remain vulnerable." Handa Hospital's address, ID and password were in that dump (technical volume, printed p.10). JPCERT/CC saw the same pattern in 2024 with CVE-2023-27997 and CVE-2024-21762: "In some of the cases, the products already had a fix (patch) applied … but the attacker used credentials they had stolen before the fix was applied to gain access to the network." NPA's survey points the same way: in 2025, 31 of the 71 victims who answered said the device they were entered through had every security patch applied.
+CVE-2018-13379 let anyone read the FortiOS SSL-VPN session file, with user names and passwords, without logging in. In September 2021 Fortinet reported that access information for 87,000 FortiGate SSL-VPN devices had been disclosed, and warned: "While they may have since been patched, if the passwords were not reset, they remain vulnerable." Handa Hospital's address, ID and password were in that dump (technical volume, printed p.10). JPCERT/CC reported the same in 2024 with CVE-2023-27997 and CVE-2024-21762: products that already had the fix applied, entered with credentials stolen before it.
 
 ### 2. Sessions stolen before the patch
 
-CitrixBleed (CVE-2023-4966) leaked memory that could hold a valid session cookie issued after multi-factor authentication (MFA). Mandiant: "An attacker with access to a valid cookie can establish an authenticated session to the NetScaler appliance without knowledge of the username, password, or access to a multi-factor authentication token or device." Upgrading does not end those sessions. NetScaler's own notice tells customers to upgrade and adds: "In addition, we also recommend killing all active and persistent sessions". LockBit 3.0 affiliates used the bug ([AA23-325A](https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-325a)).
+CitrixBleed (CVE-2023-4966) leaked memory that could hold a valid session cookie issued after multi-factor authentication (MFA). According to Mandiant, a valid cookie is enough to establish a session "without knowledge of the username, password, or access to a multi-factor authentication token or device." Upgrading does not end those sessions; NetScaler's notice adds to the upgrade: "In addition, we also recommend killing all active and persistent sessions". LockBit 3.0 affiliates used the bug ([AA23-325A](https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-325a)).
 
 ### 3. Persistence that survives upgrades
 
@@ -43,31 +40,31 @@ In April 2025 Fortinet described a symbolic link that attackers had left in the 
 
 ### 4. Integrity checks that are fooled
 
-Ivanti ships an Integrity Checker Tool (ICT) to tell whether the appliance's files have been altered. CISA reported in [AA24-060B](https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-060b) that "Ivanti's internal and previous external ICT failed to detect compromise." Mandiant adds a limit of design: "The ICT does not scan for malware or other Indicators of Compromise." A clean result from a check that runs on the suspect box is one input, not a verdict.
+Ivanti's Integrity Checker Tool (ICT) checks whether the appliance's files have been altered. CISA reported in [AA24-060B](https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-060b) that "Ivanti's internal and previous external ICT failed to detect compromise." Mandiant notes a limit of design: "The ICT does not scan for malware or other Indicators of Compromise."
 
 ### 5. Compromise before disclosure
 
-"Mandiant has identified zero-day exploitation of CVE-2025-0282 in the wild beginning mid-December 2024." Ivanti disclosed it on 2025-01-08. JPCERT/CC confirmed several Japanese victims from late December 2024, before disclosure (JPCERT-AT-2025-0001). CitrixBleed was exploited from late August 2023 and disclosed on 2023-10-10. For devices hit this way, the patch arrives after the intruder. CISA's [BOD 26-04](https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk) now pairs its three-day remediation tier with an order to "carry out a forensic triage of the asset to assess whether the system is compromised."
+"Mandiant has identified zero-day exploitation of CVE-2025-0282 in the wild beginning mid-December 2024." Ivanti disclosed it on 2025-01-08. JPCERT/CC confirmed several Japanese victims from late December 2024, before disclosure (JPCERT-AT-2025-0001). CitrixBleed was exploited from late August 2023 and disclosed on 2023-10-10. CISA's [BOD 26-04](https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk) now pairs its three-day remediation tier with an order to "carry out a forensic triage of the asset to assess whether the system is compromised."
 
 ## A KEV entry for your appliance: the order of work
 
-Fig. 5-6 puts the steps in order. Preservation comes first because every later step changes the box. The two branches handle the cases where no fixed firmware exists for your model and where the hunt cannot rule out compromise.
+Preservation comes first because every later step changes the box.
 
 <Fig lang="en" n="5-6" caption="Flowchart: a KEV entry names your VPN appliance" sources={["cisa-aa24-060b", "fortinet-psirt-2025-04", "ch5-netscaler-4966", "jpcert-ir-2024q2", "cisa-bod-26-04"]}>
-  <KevFlow lang="en" label="Flowchart. Start: a KEV entry names your appliance. 1 Preserve config, logs and memory. Decision: fixed version for your model? Yes: 2 upgrade from the vendor's clean image. No: apply the vendor mitigation or disconnect and plan replacement. Both lead to 3 reset every credential the box touched, 4 revoke all sessions and tokens, 5 hunt behind the box. Decision: any sign of compromise, or not sure? Yes: 6 factory reset or rebuild, restore a reviewed config, reset credentials again. Then, and on No: 7 report to the vendor, JPCERT/CC and the police." />
+  <KevFlow lang="en" label="Flowchart of the seven numbered steps below. Two branches: with no fixed version for your model, apply the vendor mitigation or disconnect and plan replacement; with any sign of compromise, or if unsure, go to step 6, factory reset or rebuild." />
 </Fig>
 
-1. Preserve. Export the configuration and every local log, and capture memory if your incident-response provider can. The [evidence page](../evidence/) lists what each later step erases.
+1. Preserve. Export the configuration and every local log, and capture memory if your incident-response provider can. The [evidence page](../evidence/) lists what each step erases.
 2. Patch. Upgrade from an image downloaded from the vendor, not from files already on the appliance. If your model has no fixed version, apply the vendor's mitigation or take the portal offline, and schedule the replacement.
-3. Reset every credential the box touched. The table below lists them. CISA: "Reset all credentials that may have been exposed during the compromise".
-4. Revoke sessions. Kill active and persistent VPN sessions and issued tokens, so a stolen cookie stops working.
-5. Hunt behind the box. Look for administrator or VPN accounts you did not create, logons to domain controllers and servers from VPN address pools, and RDP or SMB sessions from the appliance's internal address. CISA's advice on Ivanti is to "assume that threat actors hold full administrative access" to the appliance once compromise is suspected.
+3. Reset every credential the box touched (table below). CISA: "Reset all credentials that may have been exposed during the compromise".
+4. Revoke active and persistent VPN sessions and issued tokens.
+5. Hunt behind the box. Look for administrator or VPN accounts you did not create, logons to domain controllers and servers from VPN address pools, and RDP or SMB sessions from the appliance's internal address. CISA on Ivanti: once compromise is suspected, "assume that threat actors hold full administrative access".
 6. Rebuild if in doubt. Factory reset or reinstall, then restore a configuration you have reviewed line by line. Fortinet: "Treat all configuration as potentially compromised". On Ivanti even a factory reset was not proof (step 4 above), so rotate credentials again afterwards.
-7. Report. Tell the vendor, JPCERT/CC and the police, plus any regulator your sector or the data involved requires.
+7. Report to the vendor, JPCERT/CC, the police, and any regulator your sector or the data involved requires.
 
 ## Every credential the box touched
 
-The appliance holds or sees more secrets than its own admin password. CISA tells Ivanti customers to "assume that user and service account credentials stored within the affected Ivanti VPN appliances are likely compromised." Mandiant found the appliance's cache could contain "VPN sessions, session cookies, API keys, certificates, and credential material".
+CISA tells Ivanti customers to "assume that user and service account credentials stored within the affected Ivanti VPN appliances are likely compromised." Mandiant found the appliance's cache could contain "VPN sessions, session cookies, API keys, certificates, and credential material".
 
 <div class="table-scroll" tabindex="0">
 
