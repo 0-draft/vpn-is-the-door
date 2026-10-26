@@ -1,0 +1,53 @@
+---
+import Base from "../layouts/Base.astro";
+import { localePath } from "../lib/paths";
+
+// The server cannot tell which language the reader wanted, so the page says it in both.
+const base = import.meta.env.BASE_URL;
+const enHome = localePath("en", "/", base);
+const jaHome = localePath("ja", "/", base);
+---
+
+<Base lang="en" title="Page not found · ページが見つからない" description="This page does not exist. このページは存在しない。">
+  <article class="nf">
+    <p class="code mono">404</p>
+    <section aria-labelledby="nf-en">
+      <h1 id="nf-en">Page not found</h1>
+      <p>There is no page at this address. It may have moved when the report was revised.</p>
+      <p><a href={enHome} hreflang="en">Go to the English summary</a></p>
+    </section>
+    <section lang="ja" aria-labelledby="nf-ja">
+      <h2 id="nf-ja">ページが見つからない</h2>
+      <p>このアドレスにページはない。報告書の改訂で移動した可能性がある。</p>
+      <p><a href={jaHome} hreflang="ja">日本語の要旨へ</a></p>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .nf {
+    max-inline-size: var(--wide);
+    margin-inline: auto;
+    padding: 3rem var(--gutter) 0;
+    display: grid;
+    gap: 2rem;
+  }
+  .nf section {
+    max-inline-size: var(--measure);
+    border-block-start: 2px solid var(--ink);
+    padding-block-start: 1rem;
+  }
+  .code {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--ink-3);
+  }
+  .nf h2 {
+    font-size: clamp(2.125rem, 1.6rem + 2.2vw, 2.875rem);
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .nf section p:first-of-type {
+    margin-block-start: 1rem;
+  }
+</style>

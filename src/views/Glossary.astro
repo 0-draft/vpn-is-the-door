@@ -1,0 +1,142 @@
+---
+import Scale from "../components/Scale.astro";
+import { sortedTerms } from "../data/glossary";
+import { source } from "../data/sources";
+import { t } from "../i18n/ui";
+import Chapter from "../layouts/Chapter.astro";
+import { type Lang, localePath } from "../lib/paths";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const ja = lang === "ja";
+const base = import.meta.env.BASE_URL;
+const terms = sortedTerms(lang);
+const srcHref = (id: string) => `${localePath(lang, "/sources/", base)}#src-${id}`;
+
+const copy = ja
+  ? {
+      title: t(lang, "nav.glossary"),
+      desc: "このサイトで使う用語の意味。経営層向けの一文の説明と、技術者向けの補足を並べる。五十音順。",
+      legendShort: "一文の説明",
+      legendLong: "技術者向けの補足",
+      count: `全${terms.length}語`,
+    }
+  : {
+      title: t(lang, "nav.glossary"),
+      desc: "The terms this site uses. Each has a one-sentence definition for executives and a short note for engineers. Alphabetical.",
+      legendShort: "plain definition",
+      legendLong: "engineer's note",
+      count: `${terms.length} terms`,
+    };
+---
+
+<Chapter lang={lang} title={copy.title} description={copy.desc} chapter="glossary">
+  <p class="legend">
+    <span><Scale s="1:500" /> {copy.legendShort}</span>
+    <span><Scale s="1:5" /> {copy.legendLong}</span>
+    <span class="count">{copy.count}</span>
+  </p>
+  <dl class="gloss">
+    {
+      terms.map((g) => (
+        <div class="entry" id={`term-${g.id}`}>
+          <dt>
+            <dfn>{g.term[lang]}</dfn>
+            {ja && g.term.en !== g.term.ja && (
+              <span class="alt" lang="en">
+                {g.term.en}
+              </span>
+            )}
+          </dt>
+          <dd class="short">
+            <Scale s="1:500" />
+            <span>{g.short[lang]}</span>
+          </dd>
+          <dd class="long">
+            <Scale s="1:5" />
+            <span>
+              {g.long[lang]}
+              {g.sources?.map((id) => {
+                const s = source(id);
+                return (
+                  <a class="cite" href={srcHref(id)}>
+                    {t(lang, "source")}: {s.publisher[lang]}
+                  </a>
+                );
+              })}
+            </span>
+          </dd>
+        </div>
+      ))
+    }
+  </dl>
+</Chapter>
+
+<style>
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    align-items: baseline;
+    color: var(--ink-2);
+    font-size: 0.9375rem;
+    margin-block-end: 2rem;
+  }
+  .count {
+    color: var(--ink-3);
+  }
+  .gloss {
+    margin: 0;
+    max-inline-size: var(--measure);
+    border-block-start: 2px solid var(--ink);
+  }
+  .entry {
+    padding-block: 1.25rem;
+    border-block-end: 1px solid var(--hair);
+    scroll-margin-block-start: 1rem;
+  }
+  .entry:target {
+    background: var(--marker);
+  }
+  dt {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.75rem;
+    align-items: baseline;
+    margin-block-end: 0.5rem;
+  }
+  dfn {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 1.1875rem;
+  }
+  .alt {
+    color: var(--ink-3);
+    font-size: 0.9375rem;
+  }
+  dd {
+    margin: 0;
+    display: grid;
+    grid-template-columns: 4.5rem 1fr;
+    gap: 0.75rem;
+    align-items: baseline;
+  }
+  dd + dd {
+    margin-block-start: 0.4rem;
+  }
+  dd :global(.scale) {
+    justify-self: start;
+  }
+  .long {
+    color: var(--ink-2);
+    font-size: 1rem;
+  }
+  .cite {
+    margin-inline-start: 0.5em;
+    font-size: 0.875rem;
+    white-space: nowrap;
+  }
+</style>

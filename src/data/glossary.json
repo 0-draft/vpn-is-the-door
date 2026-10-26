@@ -1,0 +1,383 @@
+[
+  {
+    "id": "vpn",
+    "kana": "ぶいぴーえぬ",
+    "term": { "en": "VPN", "ja": "VPN（仮想プライベートネットワーク）" },
+    "short": {
+      "en": "An encrypted connection that lets staff use the office network from outside.",
+      "ja": "社外から社内ネットワークを使うための暗号化された接続。"
+    },
+    "long": {
+      "en": "The VPN appliance that accepts these connections can be reached from anywhere on the internet, and passing it puts the user on the internal network. NPA's survey of ransomware victims in Japan names it as the most common entry route.",
+      "ja": "接続を受ける VPN 装置はインターネットのどこからでも到達でき、通過すれば社内ネットワークに入れる。警察庁のランサムウェア被害調査では、最も多い侵入経路である。"
+    },
+    "sources": ["npa-r7-data"]
+  },
+  {
+    "id": "ssl-vpn",
+    "kana": "えすえすえるぶいぴーえぬ",
+    "term": { "en": "SSL-VPN", "ja": "SSL-VPN" },
+    "short": {
+      "en": "A VPN that users reach through an HTTPS web portal.",
+      "ja": "HTTPS の Web ポータルを通して接続する VPN。"
+    },
+    "long": {
+      "en": "The portal is a large web application on the appliance that anyone can reach before logging in. Many of the VPN flaws used by ransomware are in this part, including CVE-2018-13379 and CVE-2024-21762 in Fortinet FortiOS.",
+      "ja": "ポータルは装置上で動く大きな Web アプリケーションで、ログイン前から誰でも到達できる。ランサムウェアに悪用された VPN の脆弱性の多くはこの部分にあり、Fortinet FortiOS の CVE-2018-13379 や CVE-2024-21762 がその例である。"
+    }
+  },
+  {
+    "id": "edge-device",
+    "kana": "えっじでばいす",
+    "term": { "en": "Edge device", "ja": "エッジデバイス（境界機器）" },
+    "short": {
+      "en": "A device on the border between an organization's network and the internet.",
+      "ja": "組織のネットワークとインターネットの境目に置く機器。"
+    },
+    "long": {
+      "en": "Firewalls, VPN gateways, routers and load balancers. Most cannot run EDR and keep few logs, so an intrusion on them is hard to see.",
+      "ja": "ファイアウォール、VPN ゲートウェイ、ルーター、ロードバランサーなどを指す。多くは EDR を導入できず、ログも少ないため、侵入されても気づきにくい。"
+    }
+  },
+  {
+    "id": "pre-authentication",
+    "kana": "にんしょうまえ",
+    "term": { "en": "Pre-authentication", "ja": "認証前（pre-auth）" },
+    "short": {
+      "en": "Reachable or exploitable before anyone logs in.",
+      "ja": "ログインする前の段階で到達でき、悪用できること。"
+    },
+    "long": {
+      "en": "A pre-authentication remote code execution flaw in a VPN portal needs no credentials, so passwords and MFA do not stop it. On an internet-facing appliance it is the most severe class of flaw.",
+      "ja": "VPN ポータルの認証前リモートコード実行は認証情報を必要としないため、パスワードも MFA も防御にならない。インターネットに公開された装置では最も深刻な種類の脆弱性である。"
+    }
+  },
+  {
+    "id": "cve",
+    "kana": "しーぶいいー",
+    "term": { "en": "CVE", "ja": "CVE（共通脆弱性識別子）" },
+    "short": {
+      "en": "An ID number assigned to a publicly known security flaw.",
+      "ja": "公開された脆弱性に付く識別番号。"
+    },
+    "long": {
+      "en": "A CVE ID only names the flaw. It does not say whether the flaw is being exploited; KEV status and internet exposure answer that.",
+      "ja": "CVE 番号は脆弱性を特定するだけで、実際に悪用されているかどうかは示さない。それを判断する材料は、KEV への掲載とインターネットからの到達可否である。"
+    }
+  },
+  {
+    "id": "cvss",
+    "kana": "しーぶいえすえす",
+    "term": { "en": "CVSS", "ja": "CVSS（共通脆弱性評価システム）" },
+    "short": {
+      "en": "A score from 0 to 10 for how severe a flaw is.",
+      "ja": "脆弱性の深刻度を 0〜10 で表す評価値。"
+    },
+    "long": {
+      "en": "Severity is not risk. CVE-2023-20269 in Cisco ASA scores 5.0, and CISA's catalog records it as used in ransomware campaigns.",
+      "ja": "深刻度とリスクは別のものである。Cisco ASA の CVE-2023-20269 は CVSS 5.0 だが、CISA のカタログではランサムウェアでの悪用が記録されている。"
+    },
+    "sources": ["cisa-kev"]
+  },
+  {
+    "id": "kev",
+    "kana": "けぶ",
+    "term": { "en": "KEV", "ja": "KEV（悪用が確認された脆弱性カタログ）" },
+    "short": {
+      "en": "CISA's list of flaws known to be exploited in real attacks.",
+      "ja": "米 CISA が公開する、実際の攻撃で悪用が確認された脆弱性の一覧。"
+    },
+    "long": {
+      "en": "The clearest single signal that a flaw needs fixing now. Each entry carries a due date for US federal agencies and a knownRansomwareCampaignUse field that records whether ransomware groups are known to use it.",
+      "ja": "今すぐ修正すべきかを判断する、最も明確な指標である。各項目には米連邦機関向けの対応期限と、ランサムウェアでの悪用が知られているかを示す knownRansomwareCampaignUse 欄がある。"
+    },
+    "sources": ["cisa-kev"]
+  },
+  {
+    "id": "zero-day",
+    "kana": "ぜろでい",
+    "term": { "en": "Zero-day", "ja": "ゼロデイ" },
+    "short": {
+      "en": "A flaw attackers use before a fix exists.",
+      "ja": "修正プログラムが出る前に悪用される脆弱性。"
+    },
+    "long": {
+      "en": "No patch helps until the vendor ships one. CVE-2025-0282 in Ivanti Connect Secure was exploited as a zero-day; until a fix arrives, the only defenses are less exposure and closer monitoring.",
+      "ja": "メーカーが修正を出すまで、パッチでは防げない。Ivanti Connect Secure の CVE-2025-0282 はゼロデイとして悪用された。修正が出るまでは、露出を減らし、監視を強めるしかない。"
+    }
+  },
+  {
+    "id": "n-day",
+    "kana": "えぬでい",
+    "term": { "en": "N-day", "ja": "Nデイ" },
+    "short": {
+      "en": "A known flaw that has a fix, on a device where the fix has not been applied.",
+      "ja": "修正が公開済みなのに、まだ適用されていない既知の脆弱性。"
+    },
+    "long": {
+      "en": "The investigation reports on Handa Hospital (2021) and Osaka General Medical Center (2022) both name CVE-2018-13379 as the way in, a flaw Fortinet had fixed in 2019.",
+      "ja": "つるぎ町立半田病院（2021年）と大阪急性期・総合医療センター（2022年）の調査報告書は、いずれも侵入口として CVE-2018-13379 を挙げている。Fortinet が2019年に修正済みの脆弱性である。"
+    }
+  },
+  {
+    "id": "patch",
+    "kana": "ぱっち",
+    "term": { "en": "Patch", "ja": "パッチ（修正プログラム）" },
+    "short": {
+      "en": "A vendor update that fixes a flaw.",
+      "ja": "メーカーが出す、脆弱性の修正。"
+    },
+    "long": {
+      "en": "A patch closes the flaw. An intruder who is already inside stays, and credentials they stole stay valid, so a patch goes together with credential resets and a compromise check.",
+      "ja": "パッチは穴を塞ぐ。すでに入り込んだ攻撃者は残り、盗まれた認証情報も有効なままなので、認証情報の再設定と侵害調査を併せて行う。"
+    }
+  },
+  {
+    "id": "mfa",
+    "kana": "たようそにんしょう",
+    "term": { "en": "MFA (multi-factor authentication)", "ja": "多要素認証（MFA）" },
+    "short": {
+      "en": "Logging in with a second proof of identity in addition to a password.",
+      "ja": "パスワードに加えて、別の要素でも本人確認するログイン方式。"
+    },
+    "long": {
+      "en": "One-time codes and push prompts can be phished or bypassed; Arctic Wolf reported logins to OTP-protected SonicWall VPN accounts during the 2025 Akira intrusions. Phishing-resistant methods such as FIDO2 keys or certificates hold up better.",
+      "ja": "ワンタイムパスワードやプッシュ通知は、フィッシングなどで突破され得る。2025年の Akira による侵入では、OTP を設定した SonicWall の VPN アカウントにもログインされたと Arctic Wolf が報告している。FIDO2 の鍵や証明書のような、フィッシングに強い方式の方が破られにくい。"
+    }
+  },
+  {
+    "id": "session-token",
+    "kana": "せっしょんとーくん",
+    "term": { "en": "Session token", "ja": "セッショントークン" },
+    "short": {
+      "en": "The value that keeps a user logged in after they sign in.",
+      "ja": "ログイン後に、ログイン済みであることを示す値。"
+    },
+    "long": {
+      "en": "A stolen token skips the password and MFA. CitrixBleed (CVE-2023-4966) leaked tokens from appliance memory, so after a compromise every session has to be revoked as well as every password reset.",
+      "ja": "盗まれると、パスワードも MFA も経ずにログイン状態を使われる。CitrixBleed（CVE-2023-4966）は装置のメモリからトークンを漏らした。侵害後はパスワードの再設定に加え、全セッションを失効させる。"
+    }
+  },
+  {
+    "id": "active-directory",
+    "kana": "あくてぃぶでぃれくとり",
+    "term": { "en": "Active Directory (AD)", "ja": "Active Directory（AD）" },
+    "short": {
+      "en": "The Windows system that manages an organization's users, passwords and computers.",
+      "ja": "組織内の Windows のユーザー、パスワード、端末を一元管理する仕組み。"
+    },
+    "long": {
+      "en": "VPN appliances often check logins against AD with a service account stored on the appliance. An intruder who controls AD controls every Windows machine that trusts it.",
+      "ja": "VPN 装置は、装置に保存したサービスアカウントで AD に問い合わせてログインを確認することが多い。AD を握った攻撃者は、AD を信頼するすべての Windows 端末を操作できる。"
+    }
+  },
+  {
+    "id": "domain-admin",
+    "kana": "どめいんかんりしゃ",
+    "term": { "en": "Domain admin", "ja": "ドメイン管理者" },
+    "short": {
+      "en": "An account that can control every Windows machine in an Active Directory domain.",
+      "ja": "Active Directory ドメイン内のすべての Windows 端末を操作できる管理者アカウント。"
+    },
+    "long": {
+      "en": "The usual goal of privilege escalation. Intruders get it by dumping credentials from memory (ATT&CK T1003) or by reusing a local administrator password shared across machines, then use it to push ransomware to every machine at once.",
+      "ja": "権限昇格の主な目的である。メモリからの認証情報の窃取（ATT&CK T1003）や、複数台で共通のローカル管理者パスワードの使い回しで奪われ、全台へのランサムウェア配布に使われる。"
+    }
+  },
+  {
+    "id": "lateral-movement",
+    "kana": "よこてんかい",
+    "term": { "en": "Lateral movement", "ja": "横展開（ラテラルムーブメント）" },
+    "short": {
+      "en": "Moving from one compromised computer to others inside the network.",
+      "ja": "侵入した1台から、社内の別の端末へ移っていくこと。"
+    },
+    "long": {
+      "en": "Usually done over RDP, SMB or remote service execution with stolen or shared credentials. At Handa Hospital the built-in Administrator password was the same on every PC, which made it easy.",
+      "ja": "盗んだ認証情報や共通の認証情報を使い、RDP、SMB、リモートでのサービス実行で行うのが典型である。半田病院では全 PC の Built-in Administrator のパスワードが同じで、横展開が容易だった。"
+    }
+  },
+  {
+    "id": "ransomware",
+    "kana": "らんさむうぇあ",
+    "term": { "en": "Ransomware", "ja": "ランサムウェア" },
+    "short": {
+      "en": "Malware that encrypts data and demands payment to unlock it.",
+      "ja": "データを暗号化して使えなくし、復旧と引き換えに金銭を要求するマルウェア。"
+    },
+    "long": {
+      "en": "Today it is operated by people at a keyboard, often affiliates who rent the malware from a ransomware-as-a-service (RaaS) operator. Encryption is the last step of an intrusion that began hours or days earlier.",
+      "ja": "現在は人が直接操作する攻撃で、RaaS（サービスとしてのランサムウェア）の運営者からマルウェアを借りたアフィリエイトが実行することが多い。暗号化は、数時間から数日前に始まった侵入の最後の段階である。"
+    }
+  },
+  {
+    "id": "double-extortion",
+    "kana": "にじゅうきょうかつ",
+    "term": { "en": "Double extortion", "ja": "二重恐喝" },
+    "short": {
+      "en": "Copying data out and threatening to publish it, in addition to encrypting it.",
+      "ja": "暗号化に加え、持ち出したデータを公開すると脅す手口。"
+    },
+    "long": {
+      "en": "Backups recover from encryption but do nothing about the leak. Akira and LockBit affiliates copy data out before they encrypt.",
+      "ja": "バックアップで暗号化からは復旧できても、流出は取り消せない。Akira や LockBit のアフィリエイトは、暗号化の前にデータを持ち出す。"
+    }
+  },
+  {
+    "id": "ztna",
+    "kana": "ぜっとてぃーえぬえー",
+    "term": { "en": "ZTNA (zero trust network access)", "ja": "ZTNA（ゼロトラストネットワークアクセス）" },
+    "short": {
+      "en": "Access to specific applications only, after checking the user and device each time.",
+      "ja": "利用者と端末を毎回確認し、特定のアプリケーションだけへのアクセスを許す方式。"
+    },
+    "long": {
+      "en": "A stolen credential reaches less than it would through a network-level VPN. ZTNA gateways are still edge software with their own flaws: CVE-2025-0282 also affected Ivanti Neurons for ZTA gateways.",
+      "ja": "盗まれた認証情報で到達できる範囲は、ネットワーク単位の VPN より狭くなる。ただし ZTNA ゲートウェイもエッジで動くソフトウェアで、脆弱性はある。CVE-2025-0282 は Ivanti Neurons for ZTA のゲートウェイにも影響した。"
+    }
+  },
+  {
+    "id": "edr",
+    "kana": "いーでぃーあーる",
+    "term": { "en": "EDR (endpoint detection and response)", "ja": "EDR（エンドポイントでの検知と対応）" },
+    "short": {
+      "en": "Security software that watches computers for attacker behavior and can stop it.",
+      "ja": "端末上の不審な動作を監視し、攻撃を検知して止めるセキュリティソフトウェア。"
+    },
+    "long": {
+      "en": "It usually cannot be installed on a VPN appliance. Ransomware affiliates routinely try to uninstall or disable it before encrypting, sometimes by loading a vulnerable driver (BYOVD).",
+      "ja": "VPN 装置には通常インストールできない。ランサムウェアの実行者は暗号化の前に EDR の削除や無効化を試みることが多く、脆弱なドライバーを読み込ませる手口（BYOVD）も使われる。"
+    }
+  },
+  {
+    "id": "dwell-time",
+    "kana": "たいりゅうじかん",
+    "term": { "en": "Dwell time", "ja": "滞留時間（ドウェルタイム）" },
+    "short": {
+      "en": "How long an intruder is inside before being found.",
+      "ja": "侵入されてから発見されるまでの期間。"
+    },
+    "long": {
+      "en": "Ransomware ends its own dwell time, because encryption announces the intrusion. An intruder who stays on an edge device with little logging and never encrypts can remain unnoticed far longer.",
+      "ja": "ランサムウェアでは、暗号化が侵入を明らかにするため、滞留時間はそこで終わる。暗号化をせず、ログの乏しいエッジ機器に潜み続ける攻撃者は、はるかに長く見つからないことがある。"
+    }
+  },
+  {
+    "id": "vpn-appliance",
+    "kana": "ぶいぴーえぬそうち",
+    "term": { "en": "VPN appliance", "ja": "VPN 装置" },
+    "short": {
+      "en": "The device or virtual machine at the network edge that accepts VPN connections.",
+      "ja": "ネットワークの境目に置き、VPN 接続を受け付ける機器や仮想マシン。"
+    },
+    "long": {
+      "en": "Usually a firewall or gateway product such as FortiGate, Ivanti Connect Secure, Palo Alto Networks GlobalProtect, Cisco ASA or SonicWall. It runs vendor firmware the owner cannot inspect, and it often does not keep logs long enough to investigate an intrusion.",
+      "ja": "FortiGate、Ivanti Connect Secure、Palo Alto Networks の GlobalProtect、Cisco ASA、SonicWall などのファイアウォールやゲートウェイ製品が多い。中身は利用者が検査できないメーカーのファームウェアで、侵入を調べられるだけの期間ログを残していないことが多い。"
+    }
+  },
+  {
+    "id": "credential",
+    "kana": "にんしょうじょうほう",
+    "term": { "en": "Credential", "ja": "認証情報" },
+    "short": {
+      "en": "Anything that proves identity to a system, such as a password, key, certificate or token.",
+      "ja": "システムに対して本人であることを示すもの。パスワード、鍵、証明書、トークンなど。"
+    },
+    "long": {
+      "en": "Credentials taken through a flaw keep working after the flaw is patched. Lists of VPN credentials taken through CVE-2018-13379 were posted publicly, and the Handa Hospital report found the hospital's VPN credentials in one. After a compromise, reset every credential the appliance stored or handled.",
+      "ja": "脆弱性を突いて盗まれた認証情報は、パッチを当てた後も使える。CVE-2018-13379 で盗まれた VPN 認証情報の一覧は公開されており、半田病院の報告書は、同院の VPN 認証情報がその中にあったとしている。侵害後は、装置が保存した、または処理したすべての認証情報を再設定する。"
+    }
+  },
+  {
+    "id": "integrity-checker",
+    "kana": "せいごうせいちぇっくつーる",
+    "term": { "en": "Integrity checker", "ja": "整合性チェックツール" },
+    "short": {
+      "en": "A vendor tool that checks whether an appliance's system files have been altered.",
+      "ja": "装置のシステムファイルが改ざんされていないかを調べる、メーカー提供のツール。"
+    },
+    "long": {
+      "en": "It compares files against known hashes, so an attacker who controls the appliance can make it pass. CISA reported cases where Ivanti's Integrity Checker Tool failed to detect compromise (AA24-060B); run it alongside independent monitoring.",
+      "ja": "既知のハッシュ値と照合するだけなので、装置を握った攻撃者は検査を通過させることができる。CISA は、Ivanti の Integrity Checker Tool が侵害を検知できなかった事例を報告している（AA24-060B）。独立した監視と組み合わせて使う。"
+    }
+  },
+  {
+    "id": "end-of-life",
+    "kana": "さぽーとしゅうりょう",
+    "term": { "en": "End of life (EOL)", "ja": "サポート終了（EOL）" },
+    "short": {
+      "en": "The point after which a vendor stops releasing fixes for a product.",
+      "ja": "メーカーが製品の修正プログラムの提供をやめる時点。"
+    },
+    "long": {
+      "en": "An end-of-life appliance keeps working, but its next flaw will never be fixed. CISA, the FBI and the UK NCSC published a joint fact sheet in 2026 urging organizations to replace end-of-support edge devices.",
+      "ja": "サポートが終了した装置は動き続けるが、次に見つかる脆弱性は修正されない。米 CISA、FBI、英 NCSC は2026年、サポートが終了したエッジ機器の置き換えを求める共同文書を公表した。"
+    }
+  },
+  {
+    "id": "immutable-backup",
+    "kana": "へんこうふのうばっくあっぷ",
+    "term": { "en": "Immutable backup", "ja": "変更不能バックアップ" },
+    "short": {
+      "en": "A backup that cannot be changed or deleted for a set period, even by an administrator.",
+      "ja": "一定期間、管理者でも変更や削除ができないバックアップ。"
+    },
+    "long": {
+      "en": "Intruders with administrator rights delete or encrypt every backup they can reach before they encrypt anything else. An immutable or offline copy survives that and makes recovery possible, though it does nothing about data already copied out.",
+      "ja": "管理者権限を得た攻撃者は、暗号化の前に到達できるバックアップを削除するか暗号化する。変更不能なコピーやオフラインのコピーはそれでも残り、復旧を可能にする。ただし、すでに持ち出されたデータには効果がない。"
+    }
+  },
+  {
+    "id": "ioc",
+    "kana": "しんがいしひょう",
+    "term": { "en": "Indicator of compromise (IoC)", "ja": "侵害指標（IoC）" },
+    "short": {
+      "en": "A trace that suggests a system has been breached, such as a file, IP address or log entry.",
+      "ja": "システムが侵害された可能性を示す痕跡。ファイル、IP アドレス、ログの記録など。"
+    },
+    "long": {
+      "en": "Advisories publish IoCs so defenders can search their own systems for them. Finding none does not prove a device is clean: attackers change their tools, and appliance logs are often missing or wiped.",
+      "ja": "注意喚起やアドバイザリは、利用者が自組織を調べられるよう IoC を公開する。見つからなくても安全とは限らない。攻撃者は道具を変え、装置のログは欠けていたり消されていたりすることが多い。"
+    }
+  },
+  {
+    "id": "attack",
+    "kana": "まいたーあたっく",
+    "term": { "en": "MITRE ATT&CK", "ja": "MITRE ATT&CK" },
+    "short": {
+      "en": "MITRE's public catalog of attacker techniques, each with an ID.",
+      "ja": "MITRE が公開している攻撃手法の体系。手法ごとに ID が付いている。"
+    },
+    "long": {
+      "en": "IDs such as T1190 (Exploit Public-Facing Application) and T1133 (External Remote Services) name each step of an intrusion, so advisories, logs and detection rules can refer to the same thing.",
+      "ja": "T1190（公開アプリケーションの悪用）や T1133（外部リモートサービス）のような ID で侵入の各段階を表すため、アドバイザリ、ログ、検知ルールの間で同じ行為を同じ名前で扱える。"
+    }
+  },
+  {
+    "id": "rdp",
+    "kana": "あーるでぃーぴー",
+    "term": { "en": "RDP (Remote Desktop Protocol)", "ja": "RDP（リモートデスクトップ）" },
+    "short": {
+      "en": "Microsoft's protocol for operating a Windows computer remotely.",
+      "ja": "Windows 端末を遠隔操作するための Microsoft のプロトコル。"
+    },
+    "long": {
+      "en": "Inside a network it is a common tool for lateral movement. Exposed to the internet it is an entry point of its own, and NPA's victim survey lists it as the second most common route after VPN appliances.",
+      "ja": "社内では横展開によく使われる。インターネットに公開していればそれ自体が入口になり、警察庁の被害調査では VPN 機器に次いで多い侵入経路である。"
+    },
+    "sources": ["npa-r7-data"]
+  },
+  {
+    "id": "web-shell",
+    "kana": "うぇぶしぇる",
+    "term": { "en": "Web shell", "ja": "Web シェル" },
+    "short": {
+      "en": "A small script planted on a web server that lets an attacker run commands through ordinary web requests.",
+      "ja": "Web サーバーに仕込まれ、通常の Web 通信を通じて攻撃者がコマンドを実行できるようにする小さなスクリプト。"
+    },
+    "long": {
+      "en": "On a VPN appliance it sits inside the portal's web application and can survive patching. CISA found web shells on Ivanti systems that the vendor's integrity checker had reported as clean.",
+      "ja": "VPN 装置ではポータルの Web アプリケーション内に置かれ、パッチを当てた後も残ることがある。CISA は、メーカーの整合性チェックツールが問題なしと判定した Ivanti の装置で Web シェルを見つけている。"
+    }
+  }
+]
