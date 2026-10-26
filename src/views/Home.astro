@@ -23,7 +23,6 @@ const href = (p: string) => localePath(lang, p, base);
 const bf = HEADLINE.backupFail2025;
 
 const copy = {
-  kicker: ja ? "侵入事案調査報告書" : "Break-in investigation report",
   title: ja ? "扉はVPNだった" : "The door was the VPN",
   dek: ja
     ? "日本でランサムウェアの被害に遭い、侵入経路を回答した組織の3分の2は、VPN 機器から侵入されていた。社外から社内に入るために設けた扉が、そのまま侵入口になっている。"
@@ -48,7 +47,6 @@ const copy = {
 <Base lang={lang} chapter="home">
   <article class="home">
     <header class="cover">
-      <p class="kicker">{copy.kicker}</p>
       <h1>{copy.title}</h1>
       <p class="dek">{copy.dek}</p>
     </header>
@@ -175,7 +173,6 @@ const copy = {
                 <span class="toc-n num">{chapterLabel(lang, c.num)}</span>
                 <span class="toc-t">{c.title[lang]}</span>
                 <span class="toc-dots" aria-hidden="true" />
-                <span class="toc-s mono">{c.scales.map((s) => `S=${s}`).join(" ")}</span>
               </a>
             </li>
           ))
@@ -194,13 +191,6 @@ const copy = {
   }
   .cover {
     max-inline-size: 52rem;
-  }
-  .kicker {
-    margin: 0 0 0.75rem;
-    font-size: 0.9375rem;
-    font-weight: 700;
-    color: var(--ink-3);
-    letter-spacing: 0.06em;
   }
   .cover h1 {
     font-size: clamp(2.5rem, 1.6rem + 4vw, 4.25rem);
@@ -305,21 +295,12 @@ const copy = {
     transform: translateY(-0.3em);
     min-inline-size: 1rem;
   }
-  .toc-s {
-    color: var(--ink-3);
-    font-size: 0.875rem;
-    white-space: nowrap;
-  }
   @media (max-width: 40em) {
     .toc a {
       flex-wrap: wrap;
     }
     .toc-dots {
       display: none;
-    }
-    .toc-s {
-      flex-basis: 100%;
-      padding-inline-start: 0;
     }
     .toc-n {
       flex-basis: auto;

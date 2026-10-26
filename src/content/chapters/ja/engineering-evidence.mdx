@@ -8,7 +8,6 @@ order: 3
 ---
 
 import Fig from "../../../components/Fig.astro";
-import Scale from "../../../components/Scale.astro";
 import SectionCut from "../../../components/SectionCut.astro";
 import SourceLine from "../../../components/SourceLine.astro";
 import Summary from "../../../components/Summary.astro";
@@ -23,7 +22,7 @@ import { ACTION_LABEL, ACTIONS, ITEMS, STATE_LABEL } from "../../../lib/ch5-evid
 
 <SectionCut lang="ja" />
 
-## <Scale s="1:5" /> ログは3種類、多くは機器の中にある
+## ログは3種類、多くは機器の中にある
 
 製品によって名前は違うが、SSL-VPN 機器はおおむね表の3種類の記録を残す。事故の後、それぞれが別の問いに答える。
 
@@ -55,7 +54,7 @@ Logdesc=Application crashed and msg=[...] application:sslvpnd,[...], Signal 11 r
 
 <SourceLine lang="ja" ids={["ch5-jpcert-at-2026-0019", "doors-ncsc-uk-observability"]} />
 
-## <Scale s="1:5" /> ログを全て保全できた被害は102件中25件
+## ログを全て保全できた被害は102件中25件
 
 警察庁はランサムウェアの被害組織に、ログが残っていたかを尋ねている。2025年に全て保全できたのは4分の1だった。挙げられた原因のうち「犯人による削除」と「暗号化」は、手の届く場所にあるログに対して侵入者が行う操作である。「保存期間経過」は設定の問題である。
 
@@ -79,7 +78,7 @@ Logdesc=Application crashed and msg=[...] application:sslvpnd,[...], Signal 11 r
 
 対象は回答したランサムウェア被害の全体で、VPN から侵入された事案に限らない。ログもサーバや PC のものを含む。
 
-## <Scale s="1:5" /> 2つの病院は復旧作業で VPN のログを失った
+## 2つの病院は復旧作業で VPN のログを失った
 
 2つの報告書は、言葉は違うが同じことを書いている。図5-9に該当箇所を引用する。
 
@@ -97,7 +96,7 @@ Logdesc=Application crashed and msg=[...] application:sslvpnd,[...], Signal 11 r
 
 大阪の報告書は、残っていたログの価値も示している。病院のファイアウォールのログは2022年4月までさかのぼることができ、10月の攻撃より何か月も前からの RDP 通信とログオン失敗が見つかった（p.39）。
 
-## <Scale s="1:5" /> 再起動、更新、初期化はそれぞれ何かを消す
+## 再起動、更新、初期化はそれぞれ何かを消す
 
 図5-10で作業を選ぶ。メモリ上のものは、どの作業でも消える。本体内のファイルは再起動ならたいてい残るが、更新ではそれを置く領域が置き換えられたり初期化されたりすることがある。2つの病院で起きたのはこれである。初期化はログと設定を消す。例外は侵入者が置いたファイルで、[パッチのページ](../patching-is-not-closing/)で挙げた勧告には、再起動や更新を、Ivanti では初期化まで生き延びた例がある。3つの作業のどれにも耐えるのは、すでに機器の外にある控えだけである。
 
@@ -113,7 +112,7 @@ Logdesc=Application crashed and msg=[...] application:sslvpnd,[...], Signal 11 r
   </table>
 </Fig>
 
-## <Scale s="1:5" /> 再起動の前に控えを取る
+## 再起動の前に控えを取る
 
 疑わしい機器では、パッチ、再起動、初期化のどれよりも前に、次の順で作業する。インシデント対応の事業者が向かっているなら、機器に触れる前に指示を受ける。
 
@@ -132,7 +131,7 @@ Logdesc=Application crashed and msg=[...] application:sslvpnd,[...], Signal 11 r
 
 <SourceLine lang="ja" ids={["fortinet-psirt-2025-04", "ch5-ncsc-forensics-spec", "doors-ncsc-uk-observability"]} />
 
-## <Scale s="1:5" /> 侵入者の手が届かない場所にログを置く
+## 侵入者の手が届かない場所にログを置く
 
 事故の後に取る控えは、機器にまだ残っているものしか含まない。毎日機器の外へ送るログは残りを補う。脆弱性の存在を誰も知らなかった数週間も、その範囲に入る。
 

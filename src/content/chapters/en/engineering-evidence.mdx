@@ -8,7 +8,6 @@ order: 3
 ---
 
 import Fig from "../../../components/Fig.astro";
-import Scale from "../../../components/Scale.astro";
 import SectionCut from "../../../components/SectionCut.astro";
 import SourceLine from "../../../components/SourceLine.astro";
 import Summary from "../../../components/Summary.astro";
@@ -23,7 +22,7 @@ import { ACTION_LABEL, ACTIONS, ITEMS, STATE_LABEL } from "../../../lib/ch5-evid
 
 <SectionCut lang="en" />
 
-## <Scale s="1:5" /> Three kinds of log, mostly kept on the box
+## Three kinds of log, mostly kept on the box
 
 Product names differ, but SSL-VPN appliances generally write the three kinds of record in the table. Each answers a different question after an incident.
 
@@ -55,7 +54,7 @@ Where these records live is the problem. The UK NCSC wrote in 2026 that with net
 
 <SourceLine lang="en" ids={["ch5-jpcert-at-2026-0019", "doors-ncsc-uk-observability"]} />
 
-## <Scale s="1:5" /> Only 25 of 102 victims kept all their logs
+## Only 25 of 102 victims kept all their logs
 
 NPA asks ransomware victims in Japan whether their logs survived. For 2025, a quarter had all of them. Two of the named causes, deletion by the attacker and encryption, are what an intruder does to logs left within reach. A third, an expired retention period, is a setting.
 
@@ -79,7 +78,7 @@ NPA asks ransomware victims in Japan whether their logs survived. For 2025, a qu
 
 These are all ransomware victims who answered, not only those entered through a VPN, and the logs include servers and PCs as well as appliances.
 
-## <Scale s="1:5" /> The hospitals lost the VPN logs to the fix
+## The hospitals lost the VPN logs to the fix
 
 Both reports say the same thing in different words. Fig. 5-9 quotes them in the original Japanese with this site's translation.
 
@@ -97,7 +96,7 @@ Handa Hospital report, main volume, printed p.16. Translation: "We tried to anal
 
 The Osaka report also shows what a kept log is worth. The hospital's firewall logs reached back to April 2022 and showed RDP traffic and failed logons going back months before the October attack (p.39).
 
-## <Scale s="1:5" /> A reboot, an upgrade and a reset each erase something
+## A reboot, an upgrade and a reset each erase something
 
 Choose an action in Fig. 5-10. Anything in memory is gone after any of them. Files on the appliance usually survive a reboot; an upgrade may replace or reformat the partition that holds them, which is what happened at both hospitals. A factory reset removes logs and configuration. Files the intruder planted are the exception: the advisories on the [patching page](../patching-is-not-closing/) describe implants that survived reboots, upgrades and, on Ivanti, a factory reset. Only copies already off the box are safe from all three.
 
@@ -113,7 +112,7 @@ Choose an action in Fig. 5-10. Anything in memory is gone after any of them. Fil
   </table>
 </Fig>
 
-## <Scale s="1:5" /> Before the reboot, take copies
+## Before the reboot, take copies
 
 Do these in order on a suspect appliance, before any patch, reboot or reset. If your incident-response provider is on the way, ask them before you touch the box at all.
 
@@ -132,7 +131,7 @@ Do these in order on a suspect appliance, before any patch, reboot or reset. If 
 
 <SourceLine lang="en" ids={["fortinet-psirt-2025-04", "ch5-ncsc-forensics-spec", "doors-ncsc-uk-observability"]} />
 
-## <Scale s="1:5" /> Keep logs where the intruder cannot reach them
+## Keep logs where the intruder cannot reach them
 
 The copies taken during an incident only cover what the appliance still holds. Logs sent off the box every day cover the rest, including the weeks before anyone knew there was a vulnerability.
 

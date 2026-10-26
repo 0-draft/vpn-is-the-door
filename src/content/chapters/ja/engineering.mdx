@@ -7,7 +7,6 @@ order: 0
 ---
 
 import Fig from "../../../components/Fig.astro";
-import Scale from "../../../components/Scale.astro";
 import SectionCut from "../../../components/SectionCut.astro";
 import SourceLine from "../../../components/SourceLine.astro";
 import Summary from "../../../components/Summary.astro";
@@ -20,7 +19,7 @@ import DoorMap from "../../../components/ch5/DoorMap.astro";
 
 <SectionCut lang="ja" />
 
-## <Scale s="1:5" /> 各ページが扉の一部を受け持つ
+## 各ページが扉の一部を受け持つ
 
 [第3章](../the-doors/)では VPN 機器を扉として描き、部位に名前を付けた。この縮尺では比喩をやめて実際の部品で呼ぶ。外側のインターホンは、ログイン前に応答する Web ポータルである。扉の内側に掛かる合鍵は、ログイン後に機器が発行するセッション Cookie とトークンにあたる。枠と蝶番は OS、デーモン、ファイル群、扉の上のカメラは機器自身のログである。図5-1は各部位と、それを扱うページの対応を示す。錠そのもの、つまり認証と多要素認証は第3章と第6章で扱う。
 
@@ -32,7 +31,7 @@ import DoorMap from "../../../components/ch5/DoorMap.astro";
 - [パッチで扉は閉まらない](patching-is-not-closing/): パッチ後も侵入者のアクセスが残る5つの経路と、自社の機器が KEV に載ったときの作業順序。
 - [再起動の前に証拠を残す](evidence/): 機器が何をどこに記録するか、再起動、更新、初期化でそれぞれ何が消えるか。
 
-## <Scale s="1:5" /> 自社の機器について答えるべき10の問い
+## 自社の機器について答えるべき10の問い
 
 この表は記録の点検表である。各行に、問い、十分な答えの形、その問いを置いた理由となる実例を並べた。答えが特定の担当者の記憶に頼っているなら、答えはないものとして扱う。
 

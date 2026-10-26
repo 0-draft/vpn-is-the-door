@@ -10,7 +10,6 @@ import Signs from "../../../components/ch2/Signs.astro";
 import Timeline from "../../../components/ch2/Timeline.astro";
 import Fig from "../../../components/Fig.astro";
 import IntruderRoute from "../../../components/IntruderRoute.astro";
-import Scale from "../../../components/Scale.astro";
 import SectionCut from "../../../components/SectionCut.astro";
 import SourceLine from "../../../components/SourceLine.astro";
 import Step from "../../../components/Step.astro";
@@ -49,7 +48,7 @@ import Summary from "../../../components/Summary.astro";
   </Step>
 </IntruderRoute>
 
-## <Scale s="1:100" /> Each step leaves a trace the IT team could see
+## Each step leaves a trace the IT team could see
 
 None of the steps above is invisible. Each one leaves a record in a log that most companies already have: the VPN appliance, Active Directory, the file server, the backup software. The trouble is that nobody reads those logs at 03:00 on a Sunday. Below, step by step, is what the record looks like in plain terms and how soon after entry it appears. The sheet for each step lists what a person checking the logs would have seen; the examples are typical patterns, not events at Minato Precision.
 
@@ -134,7 +133,7 @@ Encryption is the first step anyone notices without reading a log.
   <SourceLine lang="en" ids={["arcticwolf-akira-2025", "osaka-report-2023", "handa-report-main"]} />
 </Signs>
 
-## <Scale s="1:100" /> The fastest cases fit inside one night
+## The fastest cases fit inside one night
 
 In the fastest measured cases, the full route from VPN login to encryption takes a few hours; the medians for data theft run to days. Fig. 2-2 sets three sources on one time axis. Each lane starts its clock at a different point, written next to its name. The first four hours are drawn at full width; after the break, four hours to four days are compressed so the slower Sophos medians still fit.
 
@@ -142,7 +141,7 @@ In the fastest measured cases, the full route from VPN login to encryption takes
 
 In the Akira campaign against SonicWall VPNs, encryption followed the VPN login in under four hours in almost all intrusions, and in some cases the interval was 55 minutes. At Handa Hospital, the first recorded remote desktop activity was at 23:57 on a Saturday and the ransom note was opened at 03:04. A weekday-only monitoring rota and a monthly patch cycle are both slower than this route.
 
-## <Scale s="1:100" /> One hospital followed the same route
+## One hospital followed the same route
 
 The route above is a composite. Osaka General Medical Center (大阪急性期・総合医療センター) went through each step in October 2022, and its investigation committee published what happened, with page numbers. The report names the companies only by letter (E社, C社) and does not name the VPN product; it does name the vulnerability. Fig. 2-3 maps each step of the scrolly to what the report says.
 
@@ -199,7 +198,7 @@ Both hospitals lost the VPN logs the same way: the box was upgraded before anyon
 
 <SectionCut lang="en" />
 
-## <Scale s="1:5" /> The route in ATT&CK terms, with the log that shows each step
+## The route in ATT&CK terms, with the log that shows each step
 
 Fig. 2-5 maps the route to [MITRE ATT&CK](https://attack.mitre.org/techniques/enterprise/) techniques and, for each, the log or telemetry that records it. Event IDs link to Microsoft's reference pages for the Windows Security log; Sysmon, Defender and System log IDs are named without links. Most Security log events need the matching audit policy enabled, and nothing on the appliance side helps unless its logs leave the box before an upgrade.
 

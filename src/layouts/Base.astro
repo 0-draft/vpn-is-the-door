@@ -122,11 +122,6 @@ const pfMeta = [
         <a class="mark" href={home}>
           <span class="mark-title">{siteTitle}</span>
         </a>
-        <p class="report mono">
-          <span>{SITE.report}</span>
-          <span>{t(lang, "site.rev")} {SITE.revision}</span>
-          <time datetime={SITE.updated}>{SITE.updated}</time>
-        </p>
         <div class="controls">
           <button type="button" class="ctl search-open" data-search-open aria-haspopup="dialog" aria-keyshortcuts="/ Control+K Meta+K">
             <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6.5"></circle><path d="M15 15 L21 21"></path></svg>
@@ -170,7 +165,6 @@ const pfMeta = [
                 >
                   <span class="strip-n">{c.num}</span>
                   <span class="strip-t">{c.short[lang]}</span>
-                  <span class="strip-s mono">{c.scales.map((s) => `S=${s}`).join(" ")}</span>
                 </a>
               </li>
             ))
@@ -195,7 +189,7 @@ const pfMeta = [
           <li><a href={SITE.repo}>{t(lang, "foot.source")}</a></li>
         </ul>
         <p class="mono foot-meta">
-          {SITE.report} · {t(lang, "foot.revised")}{" "}
+          {t(lang, "foot.revised")}{" "}
           <time datetime={SITE.updated}>{SITE.updated}</time> · {t(lang, "foot.license")}
         </p>
       </div>
@@ -269,14 +263,6 @@ const pfMeta = [
     font-weight: 800;
     font-size: 1.125rem;
     letter-spacing: -0.005em;
-  }
-  .report {
-    margin: 0;
-    display: flex;
-    gap: 0.75rem;
-    color: var(--ink-3);
-    font-size: 0.875rem;
-    flex-wrap: wrap;
   }
   .controls {
     margin-inline-start: auto;
@@ -376,20 +362,8 @@ const pfMeta = [
     font-weight: 700;
     grid-row: span 2;
   }
-  .strip-s {
-    font-size: 0.75rem;
-    grid-column: 2;
-    color: var(--ink-3);
-    font-weight: 400;
-  }
   /* Scale tags under the strip are a nice-to-have; drop them on narrow screens. */
   @media (max-width: 45em) {
-    .strip-s {
-      display: none;
-    }
-    .report {
-      display: none;
-    }
     /* One fixed-height row: its height must not depend on which font has loaded,
        or the whole page shifts when the web fonts arrive (CLS on slow networks). */
     .controls {

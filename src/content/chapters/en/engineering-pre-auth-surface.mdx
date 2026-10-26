@@ -8,7 +8,6 @@ order: 1
 ---
 
 import Fig from "../../../components/Fig.astro";
-import Scale from "../../../components/Scale.astro";
 import SectionCut from "../../../components/SectionCut.astro";
 import SourceLine from "../../../components/SourceLine.astro";
 import Summary from "../../../components/Summary.astro";
@@ -26,7 +25,7 @@ export const n = (c) => groups.find((g) => g.cls === c).cves.length;
 
 <SectionCut lang="en" />
 
-## <Scale s="1:5" /> Everything before the login form answers anyone
+## Everything before the login form answers anyone
 
 Follow one connection down Fig. 5-2. The appliance terminates TLS, then a web daemon reads the request and hands it to a handler. On FortiOS that daemon is `sslvpnd`, the process Fortinet names in its advisory for CVE-2022-42475 ([FG-IR-22-398](https://www.fortiguard.com/psirt/FG-IR-22-398)). Everything in the shaded zone runs at this point: the login portal, the static files it loads, the VPN client download, the SAML or SSO endpoints, the clientless web mode, and on many deployments the management interface. Only below the zone does the appliance check a password, a second factor or a SAML assertion.
 
@@ -36,7 +35,7 @@ A pre-auth flaw sits inside that zone. The red line in the figure shows what exp
   <PreauthLifecycle lang="en" label="An SSL-VPN appliance from top to bottom: TLS termination, a web daemon that parses every request, a shaded pre-auth zone with login portal, static files, client download, SAML and SSO, clientless mode and management UI marked exposed, then authentication, session cookie, tunnel and the internal network. A red dashed route leaves the pre-auth zone into the appliance OS and reaches the internal network without passing authentication." />
 </Fig>
 
-## <Scale s="1:5" /> This code runs before the appliance knows who is asking
+## This code runs before the appliance knows who is asking
 
 Pre-auth code has to accept input from anyone, so it cannot rely on account limits or on who the sender is. In most SSL-VPN products the same web stack serves the login page and the logged-in portal. A bug anywhere in that request path is reachable from the internet.
 
@@ -68,7 +67,7 @@ The privilege that exploitation gives is stated in some advisories. That every a
 
 <SourceLine lang="en" ids={["ch5-paloalto-3400", "ch5-cisco-webvpn", "cisa-aa24-060b"]} />
 
-## <Scale s="1:5" /> Inventory the exposure from outside, on your own addresses
+## Inventory the exposure from outside, on your own addresses
 
 Start from what you own, then check what the internet sees. Every method below looks only at addresses and names that belong to you. Do not scan or probe addresses you do not control, and get written permission before scanning a range a provider or vendor operates for you.
 
@@ -86,7 +85,7 @@ Start from what you own, then check what the internet sees. Every method below l
 
 <SourceLine lang="en" ids={["osaka-report-2023", "cisa-eos-edge-2026"]} />
 
-## <Scale s="1:5" /> Turn off what does not need to answer
+## Turn off what does not need to answer
 
 Fig. 5-4 is the same appliance after the surface is cut down. Each change removes a part of the shaded zone from the internet's reach. None of them fixes a vulnerable handler that stays enabled, so patching still applies.
 
