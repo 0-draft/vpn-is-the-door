@@ -181,107 +181,109 @@ export const wide: Layout = {
   labelSize: 18,
 };
 
+// Phones: the building is 330 wide in a 490 viewBox, so a 19-unit label lands
+// at >= 14.8px on a 390px screen (the figure runs edge to edge there).
 export const tall: Layout = {
   name: "tall",
-  viewBox: [16, 0, 490, 830],
-  outer: { x: 40, y: 100, w: 320, h: 580 },
+  viewBox: [30, 0, 490, 830],
+  outer: { x: 40, y: 100, w: 330, h: 580 },
   innerWalls: [
     [
-      [180, 100],
-      [180, 680],
+      [190, 100],
+      [190, 680],
     ],
     [
-      [236, 100],
-      [236, 680],
+      [246, 100],
+      [246, 680],
     ],
     [
       [40, 330],
-      [180, 330],
+      [190, 330],
     ],
     [
       [40, 500],
-      [180, 500],
+      [190, 500],
     ],
     [
       [40, 590],
-      [180, 590],
+      [190, 590],
     ],
     [
-      [236, 260],
-      [360, 260],
+      [246, 260],
+      [370, 260],
     ],
     [
-      [236, 470],
-      [360, 470],
+      [246, 470],
+      [370, 470],
     ],
   ],
   rooms: [
-    { id: "office", rect: { x: 40, y: 100, w: 140, h: 230 }, label: [110, 150] },
-    { id: "it", rect: { x: 40, y: 330, w: 140, h: 170 }, label: [110, 360] },
-    { id: "server", rect: { x: 40, y: 500, w: 140, h: 90 }, label: [92, 552] },
-    { id: "backup", rect: { x: 40, y: 590, w: 140, h: 90 }, label: [110, 610] },
-    { id: "corridor", rect: { x: 180, y: 100, w: 56, h: 580 }, label: [208, 160] },
-    { id: "meeting", rect: { x: 236, y: 100, w: 124, h: 160 }, label: [298, 190] },
-    { id: "reception", rect: { x: 236, y: 260, w: 124, h: 210 }, label: [298, 462] },
-    { id: "store", rect: { x: 236, y: 470, w: 124, h: 210 }, label: [298, 520] },
+    { id: "office", rect: { x: 40, y: 100, w: 150, h: 230 }, label: [115, 150] },
+    { id: "it", rect: { x: 40, y: 330, w: 150, h: 170 }, label: [115, 362] },
+    { id: "server", rect: { x: 40, y: 500, w: 150, h: 90 }, label: [90, 552] },
+    { id: "backup", rect: { x: 40, y: 590, w: 150, h: 90 }, label: [115, 612] },
+    { id: "corridor", rect: { x: 190, y: 100, w: 56, h: 580 }, label: [218, 160] },
+    { id: "meeting", rect: { x: 246, y: 100, w: 124, h: 160 }, label: [308, 190] },
+    { id: "reception", rect: { x: 246, y: 260, w: 124, h: 210 }, label: [308, 462] },
+    { id: "store", rect: { x: 246, y: 470, w: 124, h: 210 }, label: [308, 522] },
   ],
   doors: [
-    { id: "vpn", hinge: [186, 680], along: "e", swing: "n", len: 44, outer: "vpn" },
-    { id: "main", hinge: [360, 330], along: "s", swing: "w", len: 56, outer: "mail" },
-    { id: "loading", hinge: [360, 560], along: "s", swing: "w", len: 56, outer: "other" },
-    { id: "office", hinge: [180, 270], along: "s", swing: "w", len: 40 },
-    { id: "it", hinge: [180, 395], along: "s", swing: "w", len: 40 },
-    { id: "backup", hinge: [180, 615], along: "s", swing: "w", len: 40 },
-    { id: "server", hinge: [176, 500], along: "w", swing: "s", len: 36 },
-    { id: "meeting", hinge: [236, 200], along: "s", swing: "e", len: 40 },
-    { id: "reception", hinge: [236, 330], along: "s", swing: "e", len: 40 },
-    { id: "store", hinge: [236, 560], along: "s", swing: "e", len: 40 },
+    { id: "vpn", hinge: [196, 680], along: "e", swing: "n", len: 44, outer: "vpn" },
+    { id: "main", hinge: [370, 330], along: "s", swing: "w", len: 56, outer: "mail" },
+    { id: "loading", hinge: [370, 560], along: "s", swing: "w", len: 56, outer: "other" },
+    { id: "office", hinge: [190, 270], along: "s", swing: "w", len: 40 },
+    { id: "it", hinge: [190, 395], along: "s", swing: "w", len: 40 },
+    { id: "backup", hinge: [190, 615], along: "s", swing: "w", len: 40 },
+    { id: "server", hinge: [186, 500], along: "w", swing: "s", len: 36 },
+    { id: "meeting", hinge: [246, 200], along: "s", swing: "e", len: 40 },
+    { id: "reception", hinge: [246, 330], along: "s", swing: "e", len: 40 },
+    { id: "store", hinge: [246, 560], along: "s", swing: "e", len: 40 },
   ],
-  windows: [{ id: "rdp", from: [270, 100], to: [330, 100] }],
+  windows: [{ id: "rdp", from: [278, 100], to: [338, 100] }],
   tallies: [
-    { opening: "vpn", origin: [208, 696], grow: "s", along: "e", label: [282, 712], anchor: "start" },
-    { opening: "rdp", origin: [300, 84], grow: "n", along: "e", label: [236, 40], anchor: "end" },
-    { opening: "mail", origin: [376, 358], grow: "e", along: "s", label: [392, 346], anchor: "start" },
-    { opening: "other", origin: [376, 588], grow: "e", along: "s", label: [392, 576], anchor: "start" },
+    { opening: "vpn", origin: [218, 696], grow: "s", along: "e", label: [292, 714], anchor: "start" },
+    { opening: "rdp", origin: [308, 84], grow: "n", along: "e", label: [244, 38], anchor: "end" },
+    { opening: "mail", origin: [386, 358], grow: "e", along: "s", label: [402, 344], anchor: "start" },
+    { opening: "other", origin: [386, 588], grow: "e", along: "s", label: [402, 574], anchor: "start" },
   ],
   fixtures: [
     { id: "keys", room: "it", rect: { x: 50, y: 440, w: 30, h: 30 } },
-    { id: "fileserver", room: "server", rect: { x: 128, y: 558, w: 42, h: 24 } },
+    { id: "fileserver", room: "server", rect: { x: 138, y: 558, w: 42, h: 24 } },
     { id: "nas", room: "backup", rect: { x: 50, y: 640, w: 34, h: 30 } },
-    { id: "pcs", room: "office", rect: { x: 56, y: 200, w: 108, h: 36 } },
+    { id: "pcs", room: "office", rect: { x: 61, y: 200, w: 108, h: 36 } },
   ],
-  stations: { s1: [208, 680], s2: [208, 350], s3: [110, 415], s4: [130, 636] },
+  stations: { s1: [218, 680], s2: [218, 350], s3: [110, 415], s4: [130, 636] },
   route: {
     in: [
-      [208, 790],
-      [208, 680],
-      [208, 350],
+      [218, 790],
+      [218, 680],
+      [218, 350],
     ],
     toKeys: [
-      [208, 350],
-      [208, 415],
+      [218, 350],
+      [218, 415],
       [110, 415],
     ],
     toBackup: [
       [110, 415],
-      [208, 415],
-      [208, 636],
+      [218, 415],
+      [218, 636],
       [130, 636],
     ],
     out: [
       [130, 648],
-      [222, 648],
-      [222, 690],
-      [222, 790],
+      [232, 648],
+      [232, 690],
+      [232, 790],
     ],
   },
   openingLabels: {
-    vpn: { at: [240, 704], anchor: "start" },
-    rdp: { at: [300, 60], anchor: "middle" },
-    mail: { at: [376, 314], anchor: "start" },
-    other: { at: [376, 546], anchor: "start" },
+    vpn: { at: [250, 706], anchor: "start" },
+    rdp: { at: [308, 60], anchor: "middle" },
+    mail: { at: [386, 312], anchor: "start" },
+    other: { at: [386, 544], anchor: "start" },
   },
-  labelSize: 17,
+  labelSize: 19,
 };
 
 export const LAYOUTS = [wide, tall] as const;
@@ -384,21 +386,40 @@ export function walls(l: Layout): [Pt, Pt][] {
 
 // Phone scrolly: the tall plan is drawn at full width and panned so the part
 // each step talks about sits in the sticky window (viewBox y-range per step).
+// Steps 2-7 keep the VPN door and its two-line label (down to y=742) in range:
+// the door is where the intruder came in and where the data leaves.
+export const VPN_LABEL_BOTTOM = 742;
 export const STEP_FOCUS_TALL: Record<number, [number, number]> = {
   0: [0, 400],
   1: [0, 400],
-  2: [600, 740],
+  2: [600, VPN_LABEL_BOTTOM],
   3: [330, 800],
-  4: [300, 600],
-  5: [400, 700],
+  4: [250, VPN_LABEL_BOTTOM],
+  5: [400, VPN_LABEL_BOTTOM],
   6: [600, 800],
-  7: [130, 760],
+  7: [130, VPN_LABEL_BOTTOM],
 };
 
-// Pixel offset that centres the focus range in a window of winPx, clamped to the drawing.
+// "Show all steps" grid on a phone: each frame is cropped to what its step is
+// about (viewBox y-range); wider screens show the whole building per frame.
+export const GRID_CROP_TALL: Record<number, [number, number]> = {
+  1: [88, 340],
+  2: [590, 750],
+  3: [300, 800],
+  4: [250, 750],
+  5: [330, 750],
+  6: [590, 800],
+  7: [88, 800],
+};
+
+// Pixel offset that brings the focus range into a window of winPx, clamped to
+// the drawing. A range that fits is centred; one taller than the window keeps
+// its end in view, because the door sits at the bottom of the tall plan.
 export function panOffset(focus: [number, number], vb: [number, number], svgPx: number, winPx: number): number {
   const max = Math.max(0, svgPx - winPx);
   const k = svgPx / vb[1];
-  const centre = ((focus[0] + focus[1]) / 2 - vb[0]) * k;
-  return Math.round(Math.min(max, Math.max(0, centre - winPx / 2)));
+  const top = (focus[0] - vb[0]) * k;
+  const bottom = (focus[1] - vb[0]) * k;
+  const want = bottom - top > winPx ? Math.ceil(bottom - winPx) : Math.round((top + bottom) / 2 - winPx / 2);
+  return Math.min(Math.ceil(max), Math.max(0, want));
 }

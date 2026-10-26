@@ -104,7 +104,7 @@ const L = ja
               <span class="gap-zero" style={`inset-inline-start:${pos(0)}%`} />
               <span
                 class:list={["gap-bar", { "gap-zero-day": zero, "gap-open": g.open, "gap-clip": g.from < MIN }]}
-                style={`inset-inline-start:${a}%;inline-size:max(6px, ${b - a}%)`}
+                style={`inset-inline-start:min(${a}%, calc(100% - 6px));inline-size:max(6px, ${b - a}%)`}
               />
               <span
                 class:list={["gap-kev", { "gap-kev-out": k > MAX }]}

@@ -1,8 +1,13 @@
 ---
+import { ROUTE_VIEW } from "../i18n/plan";
 // Sticky floor plan + scrolling steps (design §4.2). The plan state follows the
 // step crossing the middle of the viewport; scrolling back snaps, never replays.
+// "Show all steps" (#all-steps, design §8.1) swaps in a static grid of the
+// seven plan states; motion-off readers on a phone get the grid by default.
 import { figLabel } from "../i18n/ui";
 import type { Lang } from "../lib/paths";
+import { GRID_CROP_TALL } from "../lib/plan";
+import { ALL_STEPS_HASH, STEP_COUNT, showFor, titlesFromHtml } from "../lib/steps";
 import FloorPlan from "./FloorPlan.astro";
 
 interface Props {
@@ -12,38 +17,91 @@ interface Props {
 }
 
 const { lang, n, caption } = Astro.props;
+const stepsHtml = await Astro.slots.render("default");
+const titles = titlesFromHtml(stepsHtml);
+const nums = Array.from({ length: STEP_COUNT }, (_, i) => i + 1);
+const tag = lang === "ja" ? "複合事例（実在しない会社）" : "Composite scenario, fictional company";
 ---
 
-<div class="scrolly" data-scrolly>
-  <div class="scrolly-fig">
-    <figure class="scrolly-sticky" id={`fig-${n}`} aria-labelledby={`fig-${n}-cap`}>
-      <div class="scrolly-win">
-        <FloorPlan lang={lang} mode="route" uid={`route-${n}`} doors="closed" label={caption} decorative />
-      </div>
-      <figcaption id={`fig-${n}-cap`}>
-        <strong>{figLabel(lang, n)}</strong>
-        <span class="scrolly-cap">{caption}</span>
-        <span class="scrolly-tag">{lang === "ja" ? "複合事例（実在しない会社）" : "Composite scenario, fictional company"}</span>
-      </figcaption>
-    </figure>
+<div class="route-views" data-route data-view="scroll">
+  <p class="route-switch">
+    <a href={ALL_STEPS_HASH} class="route-to-grid">{ROUTE_VIEW.showAll[lang]}</a>
+    <a href="#step-1" class="route-to-scroll">{ROUTE_VIEW.showScroll[lang]}</a>
+  </p>
+
+  <figure class="steps-grid" id={ALL_STEPS_HASH.slice(1)} aria-labelledby={`fig-${n}-grid-cap`}>
+    <ol class="sg-list">
+      {
+        nums.map((s) => {
+          const [c0, c1] = GRID_CROP_TALL[s] ?? [88, 800];
+          return (
+            <li class="sg-item" data-grid-step={s} style={`--c0:${c0};--c1:${c1}`}>
+              <p class="sg-t">
+                <span class="sg-n num" aria-hidden="true">
+                  {s}
+                </span>
+                <a href={`#step-${s}`}>{titles[s] ?? ""}</a>
+              </p>
+              <div class="sg-frame">
+                <FloorPlan
+                  lang={lang}
+                  mode="route"
+                  uid={`route-${n}-g${s}`}
+                  show={showFor(s)}
+                  doors="closed"
+                  label=""
+                  decorative
+                  only="tall"
+                />
+              </div>
+            </li>
+          );
+        })
+      }
+    </ol>
+    <figcaption id={`fig-${n}-grid-cap`}>
+      <strong>{figLabel(lang, n)}</strong>
+      <span>{caption}: {ROUTE_VIEW.gridCaption[lang]}</span>
+      <span class="scrolly-tag">{tag}</span>
+    </figcaption>
+  </figure>
+
+  <div class="scrolly" data-scrolly>
+    <div class="scrolly-fig">
+      <figure class="scrolly-sticky" id={`fig-${n}`} aria-labelledby={`fig-${n}-cap`}>
+        <div class="scrolly-win">
+          <FloorPlan lang={lang} mode="route" uid={`route-${n}`} doors="closed" label={caption} decorative />
+        </div>
+        <figcaption id={`fig-${n}-cap`}>
+          <strong>{figLabel(lang, n)}</strong>
+          <span class="scrolly-cap">{caption}</span>
+          <span class="scrolly-tag">{tag}</span>
+        </figcaption>
+      </figure>
+    </div>
+    <ol class="scrolly-steps">
+      <Fragment set:html={stepsHtml} />
+    </ol>
   </div>
-  <ol class="scrolly-steps">
-    <slot />
-  </ol>
 </div>
 
 <script>
   import { panOffset, STEP_FOCUS_TALL } from "../lib/plan";
-  import { showFor, stepFromHash } from "../lib/steps";
+  import { showFor, stepFromHash, viewFor } from "../lib/steps";
 
   // Phones: the plan is drawn at full width inside a fixed window and panned to
   // the part the active step is about, so labels keep their size.
   const narrow = matchMedia("(max-width: 60em)");
+  const phone = matchMedia("(max-width: 45em)");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)");
+  const html = document.documentElement;
+  const preferStatic = () => phone.matches && (reduce.matches || html.dataset.motion === "off");
 
-  for (const root of document.querySelectorAll<HTMLElement>("[data-scrolly]")) {
-    const plan = root.querySelector<HTMLElement>(".plan");
-    const steps = [...root.querySelectorAll<HTMLElement>("[data-step]")];
-    if (!plan || steps.length === 0) continue;
+  for (const views of document.querySelectorAll<HTMLElement>("[data-route]")) {
+    const root = views.querySelector<HTMLElement>("[data-scrolly]");
+    const plan = root?.querySelector<HTMLElement>(".plan");
+    const steps = [...(root?.querySelectorAll<HTMLElement>("[data-step]") ?? [])];
+    if (!root || !plan || steps.length === 0) continue;
     const win = root.querySelector<HTMLElement>(".scrolly-win");
     const tall = plan.querySelector<SVGSVGElement>(".plan-tall");
     let current = -1;
@@ -74,17 +132,147 @@ const { lang, n, caption } = Astro.props;
       { rootMargin: "-62% 0px -34% 0px" },
     );
     for (const s of steps) io.observe(s);
-    const fromHash = stepFromHash(location.hash);
-    set(fromHash ?? 0);
+
+    // Scroll version or grid. The hash wins; without one, the motion setting decides.
+    const applyView = (scrollToTarget: boolean) => {
+      const view = viewFor(location.hash, preferStatic());
+      if (views.dataset.view === view && !scrollToTarget) return;
+      views.dataset.view = view;
+      if (view === "scroll") pan();
+      if (!scrollToTarget || !location.hash) return;
+      const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      if (target && views.contains(target)) target.scrollIntoView({ block: "start" });
+    };
+    addEventListener("hashchange", () => {
+      const s = stepFromHash(location.hash);
+      if (s !== null) set(s);
+      applyView(true);
+    });
+    for (const m of [phone, reduce]) m.addEventListener("change", () => applyView(false));
+    new MutationObserver(() => applyView(false)).observe(html, { attributes: true, attributeFilter: ["data-motion"] });
+
+    set(stepFromHash(location.hash) ?? 0);
+    applyView(views.dataset.view !== viewFor(location.hash, preferStatic()));
   }
 </script>
 
 <style>
-  .scrolly {
+  .route-switch {
+    margin: 2rem 0 0;
+    font-size: 0.9375rem;
+  }
+  .route-views[data-view="scroll"] .route-to-scroll,
+  .route-views[data-view="grid"] .route-to-grid {
+    display: none;
+  }
+
+  /* --- grid of the seven states ------------------------------------------- */
+  .steps-grid {
+    display: none;
+    margin: 1rem 0 2.5rem;
+    padding: 1rem;
+    background: var(--sheet);
+    border-block: 2px solid var(--ink);
+  }
+  .route-views[data-view="grid"] .steps-grid {
+    display: block;
+  }
+  .sg-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    /* 17rem keeps a 19-unit label at >= 14.8px in a frame cropped to 350 units */
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+    gap: 1.5rem 1rem;
+  }
+  .sg-item {
+    container-type: inline-size;
+    /* whole building per frame (x 34..384, y 88..800 of the tall plan) */
+    --y0: 88;
+    --y1: 800;
+  }
+  .sg-t {
+    display: flex;
+    gap: 0.5rem;
+    align-items: baseline;
+    margin: 0 0 0.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+  .sg-t a {
+    color: var(--ink);
+    text-decoration-color: var(--line);
+  }
+  .sg-n {
+    flex: none;
+    display: inline-grid;
+    place-items: center;
+    inline-size: 1.6rem;
+    block-size: 1.6rem;
+    border: 1.5px solid var(--intruder);
+    border-radius: 50%;
+    color: var(--intruder-text);
+    font-size: 0.875rem;
+    background: var(--sheet);
+  }
+  .sg-frame {
+    overflow: hidden;
+    block-size: calc((var(--y1) - var(--y0)) * 100cqw / 350);
+  }
+  .sg-frame :global(.plan) {
+    container-type: normal;
+  }
+  .sg-frame :global(.plan-svg) {
+    inline-size: calc(100cqw * 490 / 350);
+    max-inline-size: none;
+    margin: calc(-100cqw * var(--y0) / 350) 0 0 calc(-100cqw * 4 / 350);
+  }
+  /* only the VPN door is part of this story; the other openings' labels would be cut */
+  .sg-frame :global(:is(.opening-rdp, .opening-mail, .opening-other)) {
+    display: none;
+  }
+  /* one column on a phone: crop each frame to what its step is about */
+  @media (max-width: 36em) {
+    .sg-item {
+      --y0: var(--c0);
+      --y1: var(--c1);
+    }
+  }
+  .steps-grid figcaption {
+    margin-block-start: 1rem;
+    font-size: 0.875rem;
+    color: var(--ink-2);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.6rem;
+  }
+  .route-views[data-view="grid"] .scrolly {
+    display: block;
+    margin-block-start: 0;
+  }
+  .route-views[data-view="grid"] .scrolly-fig {
+    display: none;
+  }
+  .route-views[data-view="grid"] .scrolly-steps :global([data-step]) {
+    min-block-size: 0;
+    justify-content: flex-start;
+    padding-block: 0.75rem;
+  }
+  .route-views[data-view="grid"] .scrolly-steps :global(.step-card) {
+    border-inline-start-color: var(--hair);
+    max-inline-size: var(--measure);
+  }
+
+  /* --- scroll version ------------------------------------------------------ */
+  .scrolly {
+    /* the plan column is as wide as the tall plan drawn at the viewport's height */
+    --plan-w: clamp(23rem, calc((100svh - 7rem) * 490 / 830), 31rem);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) calc(var(--plan-w) + 2rem);
     gap: 2rem;
-    margin-block: 2.5rem;
+    margin-block: 0.75rem 2.5rem;
   }
   .scrolly-fig {
     grid-column: 2;
@@ -112,8 +300,8 @@ const { lang, n, caption } = Astro.props;
     padding: 0 0.4em;
   }
   .scrolly-sticky :global(.plan-svg) {
-    max-block-size: calc(100svh - 7rem);
-    inline-size: auto;
+    inline-size: 100%;
+    max-inline-size: var(--plan-w);
     margin-inline: auto;
   }
   .scrolly-steps {
@@ -138,6 +326,7 @@ const { lang, n, caption } = Astro.props;
     min-block-size: 70svh;
   }
   .scrolly-steps :global(.step-card) {
+    max-inline-size: var(--measure);
     border-inline-start: 3px solid var(--hair);
     padding-inline-start: 1rem;
     transition: border-color 160ms var(--ease);
@@ -177,8 +366,7 @@ const { lang, n, caption } = Astro.props;
       overflow: hidden;
     }
     .scrolly-sticky :global(.plan-svg) {
-      max-block-size: none;
-      inline-size: 100%;
+      max-inline-size: 31rem;
       block-size: auto;
       transform: translateY(var(--pan, 0px));
       transition: transform 400ms var(--ease);

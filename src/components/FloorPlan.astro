@@ -37,9 +37,12 @@ interface Props {
   label: string;
   // inside a figure whose text already narrates every state (the scrolly)
   decorative?: boolean;
+  // render one layout only, whatever the container width (the step grid)
+  only?: Layout["name"];
 }
 
-const { lang, mode, uid, show = "", doors = "open", label, decorative = false } = Astro.props;
+const { lang, mode, uid, show = "", doors = "open", label, decorative = false, only } = Astro.props;
+const layouts = only ? LAYOUTS.filter((l) => l.name === only) : LAYOUTS;
 const year = latest();
 const counts = year.counts;
 const fixtureIds = ["keys", "fileserver", "nas", "pcs"] as const;
@@ -83,8 +86,8 @@ function fixtureLabel(l: Layout, id: (typeof fixtureIds)[number]) {
 const stationIds = ["s1", "s2", "s3", "s4"] as const;
 const openingIds = ["vpn", "rdp", "mail", "other"] as const;
 
-// Text sizes per layout: the tall plan renders at ~0.8x on a phone, so its
-// route-mode labels stay at the full label size to land at >= 13px.
+// Text sizes per layout: the tall plan renders at ~0.78x on a 390px phone, so
+// its route-mode labels stay at the full label size to land at >= 14px.
 const routeSize = (l: Layout) => (l.name === "tall" ? l.labelSize : l.labelSize - 1);
 
 function notes(l: Layout) {
@@ -104,9 +107,9 @@ function notes(l: Layout) {
   }
   // tall: two lines, below the swing of the reception and main-entrance doors
   const two = lang === "ja" ? ["受付を", "通らない"] : ["skips", "reception"];
-  const y0 = rec.rect.y + 132;
+  const y0 = rec.rect.y + 126;
   return {
-    bypass: { rect: { x: cx - 56, y: y0, w: 112, h: 48 }, size: 18, lines: lines([cx, y0 + 20], two, 18) },
+    bypass: { rect: { x: cx - 56, y: y0, w: 112, h: 52 }, size: 19, lines: lines([cx, y0 + 21], two, 19) },
     wiped: { x: b.rect.x + b.rect.w / 2 + 18, y: b.rect.y + b.rect.h - 8, s: PLAN_NOTE.wiped[lang] },
   };
 }
@@ -132,9 +135,9 @@ const ids = (l: Layout) => ({
 });
 ---
 
-<div class="plan" data-plan={uid} data-mode={mode} data-show={show} data-doors={doors}>
+<div class="plan" data-plan={uid} data-mode={mode} data-show={show} data-doors={doors} data-only={only}>
   {
-    LAYOUTS.map((l) => {
+    layouts.map((l) => {
       const id = ids(l);
       const nt = notes(l);
       const [vx, vy, vw, vh] = l.viewBox;
@@ -278,7 +281,7 @@ const ids = (l: Layout) => ({
               <g class="bypass-note caution-tag">
                 <rect x={nt.bypass.rect.x} y={nt.bypass.rect.y} width={nt.bypass.rect.w} height={nt.bypass.rect.h} />
                 {nt.bypass.lines.map((ln) => (
-                  <text x={ln.x} y={ln.y} text-anchor="middle" style={`font-size:${nt.bypass.size}px`}>
+                  <text x={ln.x} y={ln.y} text-anchor="middle" font-size={nt.bypass.size}>
                     {ln.text}
                   </text>
                 ))}
@@ -304,9 +307,9 @@ const ids = (l: Layout) => ({
                   <circle cx={l.stations[sid][0]} cy={l.stations[sid][1]} r={stationR(l)} />
                   <text
                     x={l.stations[sid][0]}
-                    y={l.stations[sid][1] + (l.name === "tall" ? 6 : 5)}
+                    y={l.stations[sid][1] + (l.name === "tall" ? 7 : 5)}
                     text-anchor="middle"
-                    style={l.name === "tall" ? "font-size:18px" : undefined}
+                    font-size={l.name === "tall" ? 19 : undefined}
                   >
                     {stationNum[sid]}
                   </text>
@@ -342,6 +345,9 @@ const ids = (l: Layout) => ({
     .plan > .plan-tall {
       display: none;
     }
+  }
+  .plan[data-only] > .plan-svg {
+    display: block;
   }
   .plan .wall {
     fill: none;

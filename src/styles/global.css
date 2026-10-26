@@ -295,7 +295,7 @@ mark {
 .prose > * {
   max-inline-size: var(--measure);
 }
-.prose > :is(figure, .wide, table, .table-scroll, .cut, .summary, .scrolly, .explorer, .sandbox) {
+.prose > :is(figure, .wide, table, .table-scroll, .cut, .summary, .scrolly, .route-views, .explorer, .sandbox) {
   max-inline-size: none;
 }
 .prose h2 {
@@ -362,10 +362,11 @@ svg.dg {
   max-inline-size: 100%;
   overflow: visible;
   font-family: var(--font);
+  /* default size is inherited, so a font-size attribute on a text or g wins */
+  font-size: 18px;
 }
 .dg text {
   fill: var(--ink);
-  font-size: 18px;
 }
 .dg .label {
   fill: var(--ink-2);
@@ -375,6 +376,8 @@ svg.dg {
 }
 .dg .mono {
   font-family: var(--font-mono);
+}
+.dg .mono:not([font-size]) {
   font-size: 16px;
 }
 .dg .wall {
@@ -463,8 +466,10 @@ svg.dg {
 .dg .station text {
   font-family: var(--font-en);
   font-weight: 700;
-  font-size: 15px;
   fill: var(--intruder-text);
+}
+.dg .station text:not([font-size]) {
+  font-size: 15px;
 }
 .dg .safe-bar {
   stroke: var(--safe);

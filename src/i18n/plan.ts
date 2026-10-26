@@ -50,3 +50,10 @@ export const PLAN_NOTE = {
 export function countLabel(lang: Lang, count: number, pct: string): string {
   return lang === "ja" ? `${count}件 · ${pct}%` : `${count} · ${pct}%`;
 }
+
+// Chapter 2 scrolly: the switch between the scroll version and the step grid.
+export const ROUTE_VIEW = {
+  showAll: { en: "Show all steps", ja: "すべての段階を見る" },
+  showScroll: { en: "Back to the scrolling plan", ja: "スクロールの平面図に戻る" },
+  gridCaption: { en: "all seven steps", ja: "7つの段階の一覧" },
+} as const;
