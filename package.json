@@ -17,7 +17,8 @@
     "lint:md": "markdownlint-cli2",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "validate:data": "node scripts/validate-data.ts"
+    "validate:data": "node scripts/validate-data.ts",
+    "perf": "node scripts/lighthouse.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^8.1.1",
@@ -32,14 +33,19 @@
     "@astrojs/check": "^0.9.12",
     "@axe-core/playwright": "^4.14.0",
     "@biomejs/biome": "^2.6.2",
+    "@expo-google-fonts/biz-udpgothic": "0.4.2",
     "@fontsource/public-sans": "5.3.0",
     "@playwright/test": "^1.64.1",
     "@resvg/resvg-js": "2.6.2",
     "@types/node": "^26.6.5",
     "@vitest/coverage-v8": "^5.0.5",
+    "chrome-launcher": "1.2.1",
+    "fontverter": "2.0.0",
+    "lighthouse": "13.5.0",
     "markdownlint-cli2": "^0.24.0",
     "pagefind": "1.5.2",
     "satori": "0.33.5",
+    "subset-font": "2.9.0",
     "typescript": "^6.0.3",
     "vitest": "^5.0.5"
   }

@@ -1,8 +1,7 @@
 ---
 // Self-hosted fonts (design §6). Fontsource splits each family by unicode-range,
-// so a page downloads only the subsets its text uses.
-import "@fontsource/biz-udpgothic/400.css";
-import "@fontsource/biz-udpgothic/700.css";
+// so a page downloads only the subsets its text uses. BIZ UDPGothic is the
+// exception: scripts/font-subset.ts cuts it to the site's own characters.
 import "@fontsource/atkinson-hyperlegible-mono/400.css";
 import "@fontsource/atkinson-hyperlegible-mono/600.css";
 import "../styles/global.css";
@@ -44,15 +43,22 @@ const psRange = {
   latinExt:
     "U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF",
 };
+// One BIZ UDPGothic subset per language and weight; the build rewrites these
+// placeholder URLs to the hashed files (scripts/font-subset.ts).
+const bizFont = (w: 400 | 700) => `${base}__fonts/biz-udpgothic-${lang}-${w}.woff2`;
 const fontFace = [
-  [psLatinExt, psRange.latinExt],
-  [psLatin, psRange.latin],
-]
-  .map(
+  ...[
+    [psLatinExt, psRange.latinExt],
+    [psLatin, psRange.latin],
+  ].map(
     ([src, range]) =>
       `@font-face{font-family:"Public Sans";font-style:normal;font-display:swap;font-weight:100 900;src:url(${src}) format("woff2");unicode-range:${range}}`,
-  )
-  .join("");
+  ),
+  ...([400, 700] as const).map(
+    (w) =>
+      `@font-face{font-family:"BIZ UDPGothic";font-style:normal;font-display:swap;font-weight:${w};src:url(${bizFont(w)}) format("woff2")}`,
+  ),
+].join("");
 
 // Search index: the 404 page stays out; every other page indexes its <main>.
 const local = stripLocale(stripBase(Astro.url.pathname, base));
@@ -98,6 +104,7 @@ const pfMeta = [
     <meta name="twitter:image:alt" content={fullTitle} />
     <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
     {lang === "en" && <link rel="preload" href={psLatin} as="font" type="font/woff2" crossorigin />}
+    {lang === "ja" && <link rel="preload" href={bizFont(400)} as="font" type="font/woff2" crossorigin />}
     <style is:inline set:html={fontFace} />
     <script is:inline>
       // Apply stored theme / motion before first paint.

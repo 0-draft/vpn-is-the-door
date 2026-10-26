@@ -54,6 +54,7 @@ pnpm check               # astro check
 pnpm test                # Vitest (data, geometry, interaction logic)
 pnpm test:e2e            # Playwright + axe on desktop and mobile (run pnpm build first)
 pnpm validate:data       # sources, references, EN/JA text checks
+pnpm perf                # Lighthouse (mobile, median of 3) against budgets (run pnpm build first)
 ```
 
 | Path | Contents |
@@ -66,7 +67,7 @@ pnpm validate:data       # sources, references, EN/JA text checks
 
 ## CI and deployment
 
-`.github/workflows/ci.yml` runs Biome, markdownlint, `astro check`, Vitest with coverage, the data validator, `pnpm audit`, dependency review on pull requests, the build, Playwright with axe in light and dark themes on desktop and mobile, an offline link check that also verifies `#fragments`, and actionlint + zizmor on the workflows. CodeQL runs on every push and weekly. Dependabot proposes npm and Actions updates every Monday with a seven-day cooldown. `kev-drift.yml` compares the door schedule with the live KEV catalog every Monday and keeps one issue open when a listed row changed or new remote-access entries need research; rows are never added automatically. All actions are pinned by commit SHA.
+`.github/workflows/ci.yml` runs Biome, markdownlint, `astro check`, Vitest with coverage, the data validator, `pnpm audit`, dependency review on pull requests, the build, Playwright with axe in light and dark themes on desktop and mobile, an offline link check that also verifies `#fragments`, Lighthouse on five pages (performance ≥ 0.9, accessibility 1, CLS ≤ 0.05, a transfer budget per page), and actionlint + zizmor on the workflows. The Japanese font is subset at build time to the characters the site uses, one file per language and weight; the build fails if a page needs a glyph the subset lacks. CodeQL runs on every push and weekly. Dependabot proposes npm and Actions updates every Monday with a seven-day cooldown. `kev-drift.yml` compares the door schedule with the live KEV catalog every Monday and keeps one issue open when a listed row changed or new remote-access entries need research; rows are never added automatically. All actions are pinned by commit SHA.
 
 A push to `main` deploys to GitHub Pages only after every check passes.
 
