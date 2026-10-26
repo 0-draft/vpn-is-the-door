@@ -319,7 +319,7 @@
       "cvss": [
         {
           "score": 5.9,
-          "by": "NVD"
+          "by": "Fortinet"
         }
       ],
       "class": {
@@ -654,7 +654,7 @@
       "cvss": [
         {
           "score": 8.6,
-          "by": null
+          "by": "Ivanti"
         }
       ],
       "class": {
@@ -1272,7 +1272,12 @@
       "product": "sonicwall",
       "productDetail": "SMA 1000 (Work Place interface)",
       "nickname": null,
-      "cvss": [],
+      "cvss": [
+        {
+          "score": 10.0,
+          "by": "CISA-ADP"
+        }
+      ],
       "class": {
         "en": "Server-side request forgery, chained with a code injection (CVE-2026-15410)",
         "ja": "サーバサイドリクエストフォージェリ（コードインジェクション CVE-2026-15410 と連鎖）"
@@ -1517,7 +1522,7 @@
       "cvss": [
         {
           "score": 9.3,
-          "by": null
+          "by": "CISA-ADP"
         }
       ],
       "class": {
