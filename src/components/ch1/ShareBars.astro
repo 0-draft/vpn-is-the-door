@@ -1,0 +1,168 @@
+---
+// Horizontal share bars on a 0–100% track, one row per year. A row may stack
+// two parts (VPN + remote desktop); the value is the share of the stacked total.
+import { pct } from "../../data/stats";
+import type { Lang } from "../../lib/paths";
+
+export interface ShareRow {
+  label: string;
+  n: number;
+  parts: { count: number; tone: "hot" | "ink" }[];
+  partial?: boolean;
+  total?: boolean;
+}
+
+interface Props {
+  lang: Lang;
+  rows: ShareRow[];
+  /** direct labels for the stacked parts, placed over the first row's segments */
+  keys?: string[];
+}
+
+const { lang, rows, keys } = Astro.props;
+const keyRow = rows[0];
+const keyAt = (i: number) => {
+  if (!keyRow) return 0;
+  const before = keyRow.parts.slice(0, i).reduce((s, p) => s + p.count, 0);
+  const own = keyRow.parts[i]?.count ?? 0;
+  return ((before + own / 2) / keyRow.n) * 100;
+};
+const of = (v: number, n: number) => (lang === "ja" ? `${n}件中${v}件` : `${v} of ${n}`);
+---
+
+<ol class="sb" aria-hidden="true">
+  {
+    keys && (
+      <li class="sb-row sb-key">
+        <span />
+        <span class="sb-keys">
+          {keys.map((k, i) => (
+            <span class={`sb-k sb-k-${keyRow?.parts[i]?.tone ?? "ink"}`} style={`inset-inline-start:${keyAt(i)}%`}>
+              {k}
+            </span>
+          ))}
+        </span>
+        <span />
+      </li>
+    )
+  }
+  {
+    rows.map((r) => {
+      const sum = r.parts.reduce((s, p) => s + p.count, 0);
+      let start = 0;
+      return (
+        <li class:list={["sb-row", { "sb-partial": r.partial, "sb-total": r.total }]}>
+          <span class="sb-y num">{r.label}</span>
+          <span class="sb-track">
+            {r.parts.map((p) => {
+              const left = start;
+              const w = (p.count / r.n) * 100;
+              start += w;
+              return <span class={`sb-fill sb-${p.tone}`} style={`inset-inline-start:${left}%;inline-size:${w}%`} />;
+            })}
+            <span class="sb-50" />
+          </span>
+          <span class="sb-v num">
+            <strong>{pct(sum, r.n)}%</strong> <span class="sb-n">{of(sum, r.n)}</span>
+          </span>
+        </li>
+      );
+    })
+  }
+</ol>
+
+<style is:global>
+  .sb {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+    font-size: 1rem;
+  }
+  .sb .sb-row {
+    display: grid;
+    grid-template-columns: 7.5em minmax(0, 1fr) 10em;
+    gap: 0.75rem;
+    align-items: center;
+  }
+  .sb .sb-total {
+    border-block-start: 1px solid var(--ink);
+    padding-block-start: 0.5rem;
+    margin-block-start: 0.25rem;
+  }
+  .sb .sb-total .sb-y {
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .sb .sb-y {
+    color: var(--ink-2);
+  }
+  .sb .sb-keys {
+    position: relative;
+    block-size: 1.4em;
+  }
+  .sb .sb-k {
+    position: absolute;
+    inset-block-end: 0;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--ink-2);
+  }
+  .sb .sb-k-hot {
+    color: var(--intruder-text);
+  }
+  .sb .sb-track {
+    position: relative;
+    block-size: 0.875rem;
+    background: var(--room);
+    border: 1px solid var(--line);
+  }
+  .sb .sb-fill {
+    position: absolute;
+    inset-block: -1px;
+  }
+  .sb .sb-hot {
+    background: var(--intruder);
+  }
+  .sb .sb-ink {
+    background: var(--ink-2);
+  }
+  .sb .sb-partial .sb-hot {
+    background: repeating-linear-gradient(45deg, var(--intruder) 0 2px, transparent 2px 6px);
+    outline: 1px solid var(--intruder);
+  }
+  .sb .sb-partial .sb-ink {
+    background: repeating-linear-gradient(45deg, var(--ink-2) 0 2px, transparent 2px 6px);
+    outline: 1px solid var(--ink-2);
+  }
+  .sb .sb-50 {
+    position: absolute;
+    inset-block: -4px;
+    inset-inline-start: 50%;
+    border-inline-start: 1px dashed var(--ink-3);
+  }
+  .sb .sb-n {
+    color: var(--ink-3);
+    font-size: 0.875rem;
+  }
+  @media (max-width: 30em) {
+    .sb .sb-row {
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas: "y v" "t t";
+      row-gap: 0.25rem;
+    }
+    .sb .sb-y {
+      grid-area: y;
+    }
+    .sb .sb-v {
+      grid-area: v;
+    }
+    .sb .sb-track,
+    .sb .sb-keys {
+      grid-area: t;
+    }
+  }
+</style>
