@@ -514,8 +514,8 @@
       "ja": "国交省の委員会は保守用 VPN 機器と「見ることが適切」とするが、断定はしていない"
     },
     "openingNote": {
-      "en": "The association said only \"remote connection device\", and the drawing keeps to that. The MLIT committee wrote that it is \"appropriate\" to regard the maintenance VPN device as the route, but could not conclude definitively because the logs were encrypted, and it also listed USB media and the network link with port transport operators as candidates. That is the committee's reading, not the association's statement.",
-      "ja": "協会の表現は「リモート接続機器」だけで、図もそれに従う。国土交通省の委員会は、ログが暗号化されたため経路を断定できないとしつつ、保守用 VPN 機器からの侵入と「見ることが適切」とした。USB メモリと港運事業者とのネットワーク連携も候補に挙げている。これは委員会の見方であり、協会の説明ではない。"
+      "en": "The association said only \"remote connection device\". The MLIT committee wrote that it is \"appropriate\" to regard the maintenance VPN device as the route, but could not conclude definitively because the logs were encrypted, and it also listed USB media and the network link with port transport operators as candidates.",
+      "ja": "協会の表現は「リモート接続機器」だけである。国土交通省の委員会は、ログが暗号化されたため経路を断定できないとしつつ、保守用 VPN 機器からの侵入と「見ることが適切」とした。USB メモリと港運事業者とのネットワーク連携も候補に挙げている。"
     },
     "product": null,
     "cve": [],
@@ -982,8 +982,8 @@
       "ja": "ソフトバンクのブログ記事は VPN と書くが、会社の発表は VPN に触れていない"
     },
     "openingNote": {
-      "en": "The company's notice says only \"connection point with external networks\", and the drawing keeps to that. An article on SoftBank's business blog (2025), based on an interview with Kantsu's IT department, writes in its own narration that preliminary forensics found a server intrusion through leaked VPN credentials. The company's own notices do not say VPN.",
-      "ja": "会社の発表は「外部ネットワークとの接続口」までで、図もそれに従う。関通の情報システム部門への取材に基づくソフトバンクのビジネスブログ記事（2025年）は、記事の地の文で、フォレンジック速報により VPN 認証情報の漏洩によるサーバ侵入が原因と判明したと書いている。会社自身の発表は VPN に触れていない。"
+      "en": "The company's notice says only \"connection point with external networks\". An article on SoftBank's business blog (2025), based on an interview with Kantsu's IT department, writes in its own narration that preliminary forensics found a server intrusion through leaked VPN credentials. The company's own notices do not say VPN.",
+      "ja": "会社の発表は「外部ネットワークとの接続口」までである。関通の情報システム部門への取材に基づくソフトバンクのビジネスブログ記事（2025年）は、記事の地の文で、フォレンジック速報により VPN 認証情報の漏洩によるサーバ侵入が原因と判明したと書いている。会社自身の発表は VPN に触れていない。"
     },
     "product": null,
     "cve": [],

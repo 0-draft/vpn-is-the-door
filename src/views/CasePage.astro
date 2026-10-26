@@ -76,9 +76,7 @@ const h = ja
       back: "Back to the index of cases",
     };
 
-const caption = ja
-  ? `${c.short.ja}の侵入口。使われた開口部だけを描く`
-  : `${c.short.en}, the way in. Only the opening that was used is drawn`;
+const caption = ja ? `${c.short.ja}の侵入口` : `${c.short.en}, the way in`;
 const blockLabel = `${c.short[lang]}: ${openingName(lang, c)}`;
 const pub = (id: string) => source(id);
 ---
