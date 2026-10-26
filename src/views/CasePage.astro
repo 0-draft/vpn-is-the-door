@@ -1,0 +1,323 @@
+---
+// One case, laid out as a short accident report: JTSB chapter words
+// (1 概要 … 5 再発防止策) in NTSB order, so the summary and the probable cause
+// come before the evidence.
+import { getCollection } from "astro:content";
+import CaseBlock from "../components/ch4/CaseBlock.astro";
+import { openingName, STATUS, stamp } from "../components/ch4/labels";
+import Fig from "../components/Fig.astro";
+import Scale from "../components/Scale.astro";
+import SourceLine from "../components/SourceLine.astro";
+import Summary from "../components/Summary.astro";
+import { caseBySlug, caseNumber, ordered } from "../data/cases";
+import { source } from "../data/sources";
+import Chapter from "../layouts/Chapter.astro";
+import { type Lang, localePath } from "../lib/paths";
+
+interface Props {
+  lang: Lang;
+  slug: string;
+}
+
+const { lang, slug } = Astro.props;
+const ja = lang === "ja";
+const base = import.meta.env.BASE_URL;
+const c = caseBySlug(slug);
+const n = caseNumber(slug);
+const list = ordered();
+const next = list[n] ?? list[0];
+const index = (await getCollection("chapters", (e) => e.id === `${lang}/cases`))[0];
+const parentTitle = index?.data.title ?? (ja ? "事例" : "Cases");
+const parentPath = index?.data.path ?? "/cases/";
+
+const h = ja
+  ? {
+      summary: "1 概要",
+      cause: "推定原因",
+      facts: "2 事実情報",
+      door: "2.1 侵入口",
+      after: "2.2 侵入後",
+      impact: "2.3 被害",
+      events: "2.4 経過表",
+      analysis: "3 分析",
+      conclusion: "4 結論",
+      recs: "5 再発防止策",
+      sources: "出典",
+      cols: ["時刻", "主体", "出来事", "出典"],
+      acols: ["項目", "判断", "出典"],
+      product: "製品",
+      cve: "CVE",
+      none: "記載なし",
+      norecs: "本調査で読んだ資料には、再発防止策の一覧は公表されていない。",
+      by: "提言・実施の主体",
+      next: "次の事例",
+      back: "事例の一覧へ戻る",
+    }
+  : {
+      summary: "1 Summary",
+      cause: "Probable cause",
+      facts: "2 Factual information",
+      door: "2.1 The way in",
+      after: "2.2 After entry",
+      impact: "2.3 Damage",
+      events: "2.4 Sequence of events",
+      analysis: "3 Analysis",
+      conclusion: "4 Conclusions",
+      recs: "5 Recommendations",
+      sources: "Sources",
+      cols: ["Time", "Actor", "Event", "Source"],
+      acols: ["Point", "Finding", "Source"],
+      product: "Product",
+      cve: "CVE",
+      none: "Not stated",
+      norecs: "The sources read for this page publish no list of measures.",
+      by: "Recommended or carried out by",
+      next: "Next case",
+      back: "Back to the index of cases",
+    };
+
+const caption = ja
+  ? `${c.short.ja}の侵入口。使われた開口部だけを描く`
+  : `${c.short.en}, the way in. Only the opening that was used is drawn`;
+const blockLabel = `${c.short[lang]}: ${openingName(lang, c)}`;
+const pub = (id: string) => source(id);
+---
+
+<Chapter
+  lang={lang}
+  title={c.org[lang]}
+  description={c.cause[lang]}
+  chapter="cases"
+  parentTitle={parentTitle}
+  parentPath={parentPath}
+>
+  <p class="case-meta">
+    <span>{c.sector[lang]}</span>
+    <span class="num">{c.country}</span>
+    <span>{c.kindNote[lang]}</span>
+  </p>
+
+  <Summary lang={lang} title={h.summary}>
+    <p>{c.summary[lang]}</p>
+    <p class="case-cause"><strong>{h.cause}:</strong> {c.cause[lang]}</p>
+  </Summary>
+
+  <Fig lang={lang} n={`4-${n}-1`} caption={caption} sources={[c.vectorSource]}>
+    <div class="case-block">
+      <CaseBlock lang={lang} c={c} uid={`p-${c.slug}`} label={blockLabel} size="large" />
+    </div>
+  </Fig>
+  {c.openingNote && <p class="case-note">{c.openingNote[lang]}</p>}
+
+  <h2><Scale s="1:100" /> {h.facts}</h2>
+
+  <h3>{h.door}</h3>
+  <blockquote class="case-quote">
+    <p>{c.vectorWording[lang]}</p>
+  </blockquote>
+  <SourceLine lang={lang} ids={[c.vectorSource]} />
+  <dl class="case-dl">
+    <dt>{h.product}</dt>
+    <dd>{c.product ? c.product[lang] : h.none}</dd>
+    <dt>{h.cve}</dt>
+    <dd>{c.cve.length ? c.cve.map((v, i) => <><span class="mono">{v}</span>{i < c.cve.length - 1 && ", "}</>) : h.none}</dd>
+  </dl>
+
+  <h3>{h.after}</h3>
+  <p>{c.after[lang]}</p>
+
+  <h3>{h.impact}</h3>
+  <p>{c.impact[lang]}</p>
+
+  <h3 id="events">{h.events}</h3>
+  <div class="table-scroll" tabindex="0" role="region" aria-labelledby="events">
+    <table class="ev">
+      <thead>
+        <tr>{h.cols.map((x) => <th scope="col">{x}</th>)}</tr>
+      </thead>
+      <tbody>
+        {
+          c.events.map((e) => (
+            <tr>
+              <td class="num ev-t">{stamp(lang, e.date, e.approx)}</td>
+              <td class="ev-a">{e.actor[lang]}</td>
+              <td>{ja ? e.event_ja : e.event_en}</td>
+              <td class="ev-s">
+                <a href={pub(e.source).url}>{pub(e.source).publisher[lang]}</a>
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <h2><Scale s="1:100" /> {h.analysis}</h2>
+  <div class="table-scroll" tabindex="0" role="region" aria-label={h.analysis}>
+    <table class="an">
+      <thead>
+        <tr>{h.acols.map((x) => <th scope="col">{x}</th>)}</tr>
+      </thead>
+      <tbody>
+        {
+          c.analysis.map((a) => (
+            <tr>
+              <td>{a[lang]}</td>
+              <td>
+                <span class={`an-s an-${a.status}`}>{STATUS[a.status][lang]}</span>
+              </td>
+              <td class="ev-s">
+                <a href={pub(a.source).url}>{pub(a.source).publisher[lang]}</a>
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <h2><Scale s="1:100" /> {h.conclusion}</h2>
+  <div class="case-concl">
+    <p>{c.conclusion[lang]}</p>
+  </div>
+
+  <h2><Scale s="1:100" /> {h.recs}</h2>
+  {
+    c.recommendations.items.length ? (
+      <>
+        <p class="case-by">
+          {h.by}: {c.recommendations.by[lang]}
+        </p>
+        <ol class="case-recs">
+          {c.recommendations.items.map((r) => (
+            <li>{r[lang]}</li>
+          ))}
+        </ol>
+        <SourceLine lang={lang} ids={c.recommendations.sources} />
+      </>
+    ) : (
+      <p class="case-by">{h.norecs}</p>
+    )
+  }
+
+  <h2 class="case-src-h">{h.sources}</h2>
+  <SourceLine lang={lang} ids={c.sources} />
+
+  <nav class="case-nav" aria-label={ja ? "事例" : "Cases"}>
+    <a href={localePath(lang, parentPath, base)}>{h.back}</a>
+    {
+      next && next.slug !== c.slug && (
+        <a href={localePath(lang, `/cases/${next.slug}/`, base)} rel="next">
+          <span class="case-nav-k">{h.next}</span> {next.org[lang]}
+        </a>
+      )
+    }
+  </nav>
+</Chapter>
+
+<style>
+  .case-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    margin: -1rem 0 0;
+    font-size: 0.9375rem;
+    color: var(--ink-3);
+  }
+  .case-cause {
+    margin-block-start: 0.75rem;
+  }
+  .case-block {
+    display: flex;
+    justify-content: center;
+  }
+  .case-note {
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+    border-inline-start: 4px solid var(--caution);
+    padding-inline-start: 0.75rem;
+  }
+  .case-quote {
+    margin-block-end: 0.25rem;
+  }
+  .case-dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.25rem 1rem;
+    margin: 1rem 0 0;
+    font-size: 0.9375rem;
+  }
+  .case-dl dt {
+    font-weight: 700;
+    color: var(--ink-2);
+  }
+  .case-dl dd {
+    margin: 0;
+  }
+  .ev,
+  .an {
+    min-inline-size: 36rem;
+    font-size: 0.9375rem;
+  }
+  .ev-t {
+    white-space: nowrap;
+    text-align: start;
+    inline-size: 9.5rem;
+  }
+  .ev-a {
+    inline-size: 9rem;
+    color: var(--ink-2);
+  }
+  .ev-s {
+    inline-size: 9rem;
+    font-size: 0.875rem;
+  }
+  .an-s {
+    display: inline-block;
+    font-size: 0.875rem;
+    font-weight: 700;
+    padding: 0 0.4em;
+    border: 1px solid var(--ink);
+    white-space: nowrap;
+  }
+  .an-unknown {
+    border-style: dashed;
+    color: var(--ink-3);
+    border-color: var(--line);
+  }
+  .an-presumed {
+    border-color: var(--line);
+  }
+  .case-concl {
+    border-block: 2px solid var(--ink);
+    padding-block: 1rem 0.25rem;
+    background: var(--sheet);
+    padding-inline: 1rem;
+  }
+  .case-by {
+    color: var(--ink-2);
+    font-size: 0.9375rem;
+  }
+  .case-recs li {
+    margin-block: 0.4em;
+  }
+  .case-src-h {
+    font-size: 1.125rem;
+  }
+  .case-nav {
+    margin-block-start: 3rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    border-block-start: 2px solid var(--ink);
+    padding-block-start: 1rem;
+    font-weight: 700;
+  }
+  .case-nav-k {
+    display: block;
+    font-weight: 400;
+    font-size: 0.875rem;
+    color: var(--ink-3);
+  }
+</style>
