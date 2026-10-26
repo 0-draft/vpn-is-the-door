@@ -225,9 +225,9 @@ const tag = lang === "ja" ? "複合事例（実在しない会社）" : "Composi
     container-type: normal;
   }
   .sg-frame :global(.plan-svg) {
-    inline-size: calc(100cqw * 490 / 350);
+    inline-size: calc(100cqw * 486 / 350);
     max-inline-size: none;
-    margin: calc(-100cqw * var(--y0) / 350) 0 0 calc(-100cqw * 4 / 350);
+    margin: calc(-100cqw * var(--y0) / 350) 0 0 calc(-100cqw * 6 / 350);
   }
   /* only the VPN door is part of this story; the other openings' labels would be cut */
   .sg-frame :global(:is(.opening-rdp, .opening-mail, .opening-other)) {
@@ -268,7 +268,7 @@ const tag = lang === "ja" ? "複合事例（実在しない会社）" : "Composi
   /* --- scroll version ------------------------------------------------------ */
   .scrolly {
     /* the plan column is as wide as the tall plan drawn at the viewport's height */
-    --plan-w: clamp(23rem, calc((100svh - 7rem) * 490 / 830), 31rem);
+    --plan-w: clamp(23rem, calc((100svh - 7rem) * 486 / 830), 31rem);
     display: grid;
     grid-template-columns: minmax(0, 1fr) calc(var(--plan-w) + 2rem);
     gap: 2rem;
