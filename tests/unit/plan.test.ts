@@ -6,8 +6,10 @@ import {
   LAYOUTS,
   type Layout,
   type Pt,
+  panOffset,
   polylineLength,
   type Rect,
+  STEP_FOCUS_TALL,
   swingPath,
   tallySquares,
   walls,
@@ -128,5 +130,17 @@ describe.each(LAYOUTS.map((l) => [l.name, l] as const))("floor plan (%s)", (_nam
 
   it("route lengths are positive for stroke animation", () => {
     for (const pts of Object.values(l.route)) expect(polylineLength(pts)).toBeGreaterThan(0);
+  });
+});
+
+describe("panOffset", () => {
+  it("centres the focus range and clamps to the drawing", () => {
+    expect(panOffset([400, 500], [0, 1000], 1000, 400)).toBe(250);
+    expect(panOffset([0, 100], [0, 1000], 1000, 400)).toBe(0);
+    expect(panOffset([900, 1000], [0, 1000], 1000, 400)).toBe(600);
+    expect(panOffset([0, 1000], [0, 500], 400, 600)).toBe(0);
+  });
+  it("covers every scrolly step", () => {
+    for (let n = 0; n <= 7; n++) expect(STEP_FOCUS_TALL[n]).toBeDefined();
   });
 });

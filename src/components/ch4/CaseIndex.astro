@@ -64,18 +64,18 @@ const head = ja
                   )}
                   {c.openingQualifier && <span class="ci-sub">{c.openingQualifier[lang]}</span>}
                 </td>
-                <td>
+                <td data-l={head[2]}>
                   {c.product ? c.product[lang] : "—"}
                   {c.cve.map((v) => (
                     <span class="ci-cve mono">{v}</span>
                   ))}
                 </td>
-                <td class="num ci-date">
+                <td class="num ci-date" data-l={head[3]}>
                   {c.detected ?? c.disclosed}
                   {!c.detected && <span class="ci-sub">{ja ? "（公表日）" : "(disclosed)"}</span>}
                 </td>
-                <td>{c.impactShort[lang]}</td>
-                <td class="ci-src">
+                <td data-l={head[4]}>{c.impactShort[lang]}</td>
+                <td class="ci-src" data-l={head[5]}>
                   {byPublisher(c).map(([pub, docs], i) => (
                     <>
                       {i > 0 && <span aria-hidden="true">; </span>}
@@ -148,5 +148,54 @@ const head = ja
     position: relative;
     font-size: 0.875rem;
     inline-size: 11rem;
+  }
+  /* phone: six columns cannot fit 390px; each case becomes a short labelled record */
+  @media (max-width: 40rem) {
+    .ci {
+      min-inline-size: 0;
+    }
+    .ci thead {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+    .ci,
+    .ci :is(tbody, tr, th, td) {
+      display: block;
+    }
+    .ci tr:not(.ci-group) {
+      padding-block: 0.75rem;
+      border-block-end: 1px solid var(--hair);
+    }
+    .ci tr :is(th, td) {
+      inline-size: auto;
+      padding: 0;
+      border: 0;
+    }
+    .ci tr:not(.ci-group) td {
+      margin-block-start: 0.25rem;
+    }
+    .ci .ci-group th {
+      padding-block: 1.25rem 0.4rem;
+      border-block-end: 1px solid var(--ink);
+    }
+    .ci tr td[data-l] {
+      padding-inline-start: 6.75rem;
+    }
+    .ci td[data-l]::before {
+      content: attr(data-l);
+      display: inline-block;
+      inline-size: 6.75rem;
+      margin-inline-start: -6.75rem;
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--ink-3);
+    }
+    .ci-cve {
+      display: inline;
+      margin-inline-start: 0.4em;
+    }
   }
 </style>

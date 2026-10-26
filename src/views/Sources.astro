@@ -267,4 +267,44 @@ const copy = ja
   .revs {
     max-inline-size: 40rem;
   }
+  /* phone: three columns do not fit 390px; stack each row instead of scrolling it */
+  @media (max-width: 40rem) {
+    .method,
+    .srcs {
+      min-inline-size: 0;
+    }
+    .method thead,
+    .srcs thead {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+    .method tr,
+    .srcs tr {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.25rem 1rem;
+      padding-block: 0.6rem;
+      border-block-end: 1px solid var(--hair);
+    }
+    .method :is(th, td),
+    .srcs td {
+      display: block;
+      inline-size: auto;
+      padding: 0;
+      border: 0;
+    }
+    .method :is(th, td),
+    .method th[scope="row"],
+    .srcs td:first-child {
+      grid-column: 1 / -1;
+      inline-size: auto;
+      border: 0;
+    }
+    .method td:last-child {
+      color: var(--ink-2);
+    }
+  }
 </style>

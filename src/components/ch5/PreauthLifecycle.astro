@@ -58,8 +58,8 @@ const ep = (i: number) => ({ x: col[i % 2] as number, y: rows[Math.floor(i / 2)]
   {
     red && (
       <g>
-        <line class="safe-bar" x1="104" y1="56" x2="230" y2="56" />
-        <text class="safe-text pal-small" x="236" y="61">
+        <line class="safe-bar" x1="120" y1="56" x2="214" y2="56" />
+        <text class="safe-text pal-small" x="220" y="61">
           {t.allow}
         </text>
       </g>
@@ -99,8 +99,8 @@ const ep = (i: number) => ({ x: col[i % 2] as number, y: rows[Math.floor(i / 2)]
   {
     !red && (
       <g class="caution-tag">
-        <rect x={ja ? 264 : 242} y="397" width={ja ? 44 : 66} height="20" />
-        <text class="pal-small" x={ja ? 271 : 248} y="412">
+        <rect x={ja ? 258 : 226} y="398" width={ja ? 52 : 84} height="20" />
+        <text class="pal-small" x={ja ? 284 : 268} y="413" text-anchor="middle">
           {t.exposed}
         </text>
       </g>
@@ -122,8 +122,9 @@ const ep = (i: number) => ({ x: col[i % 2] as number, y: rows[Math.floor(i / 2)]
   <text x="167" y="625" text-anchor="middle">{t.tun}</text>
   <line class="pal-flow" x1="167" y1="636" x2="167" y2="674" marker-end={`url(#${ah})`}></line>
 
+  <!-- label sits below y=300 so the red route crossing the bar does not strike it -->
   <rect class="pal-os" x="334" y="156" width="70" height="480"></rect>
-  <text class="label" transform="translate(362 396) rotate(-90)" text-anchor="middle">{t.os}</text>
+  <text class="label" transform="translate(362 470) rotate(-90)" text-anchor="middle">{t.os}</text>
 
   <rect class="pal-box" x="16" y="676" width="388" height="38"></rect>
   <text x="210" y="701" text-anchor="middle">{t.lan}</text>
@@ -200,5 +201,14 @@ const ep = (i: number) => ({ x: col[i % 2] as number, y: rows[Math.floor(i / 2)]
   }
   .pal-route-ah {
     fill: var(--intruder);
+  }
+  /* phone: the 420-unit drawing renders at ~0.85; size text up so it stays >= 14px */
+  @media (max-width: 30rem) {
+    .pal text,
+    .pal .pal-small,
+    .pal .mono,
+    .pal .pal-ep text {
+      font-size: 16.5px;
+    }
   }
 </style>

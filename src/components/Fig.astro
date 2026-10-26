@@ -67,22 +67,21 @@ const hasData = Astro.slots.has("data");
       margin-inline: -0.5rem;
     }
   }
+  /* inline flow: the figure number stays at the start of the first line however long the caption */
   figcaption {
     margin-block-start: 1rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem 0.75rem;
-    align-items: baseline;
     font-size: 0.9375rem;
     line-height: 1.5;
     color: var(--ink-2);
   }
   .fig-n {
+    margin-inline-end: 0.6em;
     font-weight: 700;
     color: var(--ink);
     font-variant-numeric: tabular-nums;
   }
   .fig-tags {
+    margin-inline-start: 0.6em;
     display: inline-flex;
     flex-wrap: wrap;
     gap: 0.5rem;

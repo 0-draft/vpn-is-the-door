@@ -17,10 +17,12 @@ const { lang, n, caption } = Astro.props;
 <div class="scrolly" data-scrolly>
   <div class="scrolly-fig">
     <figure class="scrolly-sticky" id={`fig-${n}`} aria-labelledby={`fig-${n}-cap`}>
-      <FloorPlan lang={lang} mode="route" uid={`route-${n}`} doors="closed" label={caption} />
+      <div class="scrolly-win">
+        <FloorPlan lang={lang} mode="route" uid={`route-${n}`} doors="closed" label={caption} />
+      </div>
       <figcaption id={`fig-${n}-cap`}>
         <strong>{figLabel(lang, n)}</strong>
-        {caption}
+        <span class="scrolly-cap">{caption}</span>
         <span class="scrolly-tag">{lang === "ja" ? "複合事例（実在しない会社）" : "Composite scenario, fictional company"}</span>
       </figcaption>
     </figure>
@@ -31,19 +33,40 @@ const { lang, n, caption } = Astro.props;
 </div>
 
 <script>
+  import { panOffset, STEP_FOCUS_TALL } from "../lib/plan";
   import { showFor, stepFromHash } from "../lib/steps";
+
+  // Phones: the plan is drawn at full width inside a fixed window and panned to
+  // the part the active step is about, so labels keep their size.
+  const narrow = matchMedia("(max-width: 60em)");
 
   for (const root of document.querySelectorAll<HTMLElement>("[data-scrolly]")) {
     const plan = root.querySelector<HTMLElement>(".plan");
     const steps = [...root.querySelectorAll<HTMLElement>("[data-step]")];
     if (!plan || steps.length === 0) continue;
+    const win = root.querySelector<HTMLElement>(".scrolly-win");
+    const tall = plan.querySelector<SVGSVGElement>(".plan-tall");
     let current = -1;
+    const pan = () => {
+      if (!win || !tall) return;
+      if (!narrow.matches || getComputedStyle(tall).display === "none") {
+        tall.style.removeProperty("--pan");
+        return;
+      }
+      const vb = tall.viewBox.baseVal;
+      const focus = STEP_FOCUS_TALL[Math.max(0, current)] ?? STEP_FOCUS_TALL[0]!;
+      const px = panOffset(focus, [vb.y, vb.height], tall.getBoundingClientRect().height, win.clientHeight);
+      tall.style.setProperty("--pan", `${-px}px`);
+    };
     const set = (n: number) => {
       if (n === current) return;
       current = n;
       plan.dataset.show = showFor(n);
       for (const s of steps) s.toggleAttribute("data-active", Number(s.dataset.step) === n);
+      pan();
     };
+    addEventListener("resize", pan);
+    narrow.addEventListener("change", pan);
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) if (e.isIntersecting) set(Number((e.target as HTMLElement).dataset.step));
@@ -142,14 +165,33 @@ const { lang, n, caption } = Astro.props;
     }
     .scrolly-sticky {
       position: static;
-      padding: 0.5rem;
+      padding: 0;
+      border-block-start: 0;
+      display: flex;
+      flex-direction: column;
+      max-block-size: 62svh;
+    }
+    .scrolly-win {
+      flex: 1 1 auto;
+      min-block-size: 0;
+      overflow: hidden;
     }
     .scrolly-sticky :global(.plan-svg) {
-      max-block-size: 52svh;
-      inline-size: auto;
-      margin-inline: auto;
+      max-block-size: none;
+      inline-size: 100%;
+      block-size: auto;
+      transform: translateY(var(--pan, 0px));
+      transition: transform 400ms var(--ease);
     }
     .scrolly-sticky figcaption {
+      flex: none;
+      margin: 0;
+      padding: 0.3rem var(--gutter);
+      border-block-start: 1px solid var(--hair);
+      font-size: 0.875rem;
+      line-height: 1.4;
+    }
+    .scrolly-sticky figcaption .scrolly-cap {
       display: none;
     }
     .scrolly-steps :global([data-step]) {

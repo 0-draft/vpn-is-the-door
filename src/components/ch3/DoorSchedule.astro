@@ -232,7 +232,8 @@ const total = VULNS.filter((v) => matches(v, all)).length;
                       <dl class="ex-dl">
                         <dt>{S.product}</dt>
                         <dd>
-                          {p.name[lang]} <span class="ex-sub">({v.productDetail})</span>
+                          {p.name[lang]}{" "}
+                          {!p.name.en.includes(v.productDetail) && <span class="ex-sub">({v.productDetail})</span>}
                         </dd>
                         <dt>{S.class}</dt>
                         <dd>{v.class[lang]}</dd>
@@ -339,6 +340,10 @@ const total = VULNS.filter((v) => matches(v, all)).length;
         else if (rec && ok) rec.hidden = !r.hasAttribute("data-selected");
       }
       for (const g of groups) g.hidden = !g.querySelector("tr.ex-row:not([hidden])");
+      // the drawing must never show a row the filters just hid
+      const sel = rows.find((r) => r.hasAttribute("data-selected"));
+      const firstShown = rows.find((r) => !r.hidden);
+      if (sel?.hidden && firstShown) select(firstShown.dataset.cve ?? "", true);
       if (count) count.textContent = root.dataset.lang === "ja" ? `${total}件中${n}件を表示` : `Showing ${n} of ${total}`;
     };
 
@@ -446,6 +451,10 @@ const total = VULNS.filter((v) => matches(v, all)).length;
       grid-template-columns: 23rem minmax(0, 1fr);
       gap: 2rem;
       align-items: start;
+    }
+    /* the column must span the table's height, or the sticky drawing has nowhere to travel */
+    .ex-fig {
+      align-self: stretch;
     }
     .ex-sticky {
       position: sticky;

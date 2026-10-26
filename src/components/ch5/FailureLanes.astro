@@ -32,7 +32,9 @@ const h = TOP + lanes.length * LANE;
 ---
 
 <svg class="dg lanes" viewBox={`0 0 420 ${h}`} role="img" aria-label={label}>
-  <text class="label" x="0" y="20">{ja ? "パッチ前" : "Before the patch"}</text>
+  <text class="label" x={PX - 10} y="20" text-anchor="end">
+    {ja ? "パッチ前" : "Before the patch"}
+  </text>
   <text class="label" x="222" y="20">{ja ? "パッチ後" : "After the patch"}</text>
   <line class="lanes-patch" x1={PX} y1="30" x2={PX} y2="50"></line>
   <text class="lanes-patch-t" x={PX + 6} y="44">{ja ? "パッチ適用" : "patch applied"}</text>
@@ -50,7 +52,7 @@ const h = TOP + lanes.length * LANE;
           <path class="route" d={`M68 ${ty} H404`} />
           <line class="lanes-patch" x1={PX} y1={ty - 16} x2={PX} y2={ty + 16} />
           <path class="lanes-ah" d={`M404 ${ty - 6} L416 ${ty} L404 ${ty + 6} Z`} />
-          <text class="hot-text lanes-small" x="0" y={ty + 26}>
+          <text class="hot-text lanes-small" x={PX - 10} y={ty + 26} text-anchor="end">
             {before}
           </text>
           <text class="hot-text lanes-small" x="222" y={ty + 26}>
@@ -90,5 +92,15 @@ const h = TOP + lanes.length * LANE;
   }
   .lanes-ah {
     fill: var(--intruder);
+  }
+  /* phone: the 420-unit drawing renders at ~0.85, so size the text up to stay >= 14px */
+  @media (max-width: 30rem) {
+    .lanes text {
+      font-size: 17px;
+    }
+    .lanes .lanes-small,
+    .lanes .lanes-patch-t {
+      font-size: 16.5px;
+    }
   }
 </style>
