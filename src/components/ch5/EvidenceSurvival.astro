@@ -15,11 +15,13 @@ import {
 import type { Lang } from "../../lib/paths";
 
 interface Props {
+  /** radio group name; give each copy on a page its own */
+  uid?: string;
   lang: Lang;
   label: string;
 }
 
-const { lang, label } = Astro.props;
+const { lang, label, uid = "evs" } = Astro.props;
 const ja = lang === "ja";
 const ROW = 38;
 const zones: Zone[] = ["ram", "disk", "off"];
@@ -42,7 +44,7 @@ const sums = Object.fromEntries(ACTIONS.map((a) => [a, summary(lang, a)]));
     {
       ACTIONS.map((a) => (
         <label>
-          <input type="radio" name="evs-action" value={a} checked={a === DEFAULT_ACTION} />
+          <input type="radio" name={`${uid}-action`} value={a} checked={a === DEFAULT_ACTION} />
           <span>{ACTION_LABEL[lang][a]}</span>
         </label>
       ))
@@ -92,7 +94,7 @@ const sums = Object.fromEntries(ACTIONS.map((a) => [a, summary(lang, a)]));
   for (const root of document.querySelectorAll<HTMLElement>("[data-evs]")) {
     const sums = JSON.parse(root.dataset.sums ?? "{}") as Record<Action, string>;
     const out = root.querySelector<HTMLElement>(".evs-sum");
-    const radios = [...root.querySelectorAll<HTMLInputElement>('input[name="evs-action"]')];
+    const radios = [...root.querySelectorAll<HTMLInputElement>('input[name={`${uid}-action`}]')];
     const set = (a: Action, push: boolean) => {
       root.dataset.action = a;
       for (const r of radios) r.checked = r.value === a;
