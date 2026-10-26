@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { openingName, openingTag, stamp, wrap } from "../../src/components/ch4/labels";
+import { openingName, openingTag, STATUS, stamp, wrap } from "../../src/components/ch4/labels";
 import { CASES, CaseSchema, caseNumber, citedIds, openingCounts, ordered } from "../../src/data/cases";
 
 // Read the source files from disk so the check does not depend on what the bundler globbed.
@@ -103,14 +103,23 @@ describe("cases.json", () => {
     expect(stamp("en", "2024-05-20")).toBe("2024-05-20");
   });
 
-  it("follows the victim's own words: Nagoya is a remote connection device, not a VPN", () => {
-    const c = CASES.find((x) => x.slug === "nagoya-port");
-    expect(c?.opening).toBe("network-device-unspecified");
-    expect(c?.openingLabel?.ja).toBe("リモート接続機器");
-    expect(c?.vectorWording.ja).not.toMatch(/VPN/);
+  it("follows the victims' own words: Nagoya and Kantsu are devices of undisclosed type, not VPNs", () => {
+    const expected = { "nagoya-port": "リモート接続機器", kantsu: "外部ネットワークとの接続口" } as const;
+    for (const [slug, label] of Object.entries(expected)) {
+      const c = CASES.find((x) => x.slug === slug);
+      expect(c?.opening, slug).toBe("network-device-unspecified");
+      expect(c?.openingLabel?.ja, slug).toBe(label);
+      expect(c?.vectorWording.ja, slug).not.toMatch(/VPN/);
+      expect(c?.vectorWording.en, slug).not.toMatch(/VPN/);
+    }
     const n = openingCounts();
-    expect(n.vpn).toBe(10);
-    expect(n["network-device-unspecified"]).toBe(4);
+    expect(n.vpn).toBe(9);
+    expect(n["network-device-unspecified"]).toBe(5);
+    expect(n.other).toBe(1);
+  });
+
+  it("labels a sentence as stated only when the source states it", () => {
+    expect(STATUS.stated.ja).toBe("記載");
   });
 
   it("opening counts add up", () => {

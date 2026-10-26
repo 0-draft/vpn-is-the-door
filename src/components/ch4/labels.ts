@@ -24,7 +24,7 @@ export function openingTag(lang: Lang, o: Opening): string | undefined {
 }
 
 export const STATUS: Record<"stated" | "presumed" | "unknown", Record<Lang, string>> = {
-  stated: { en: "Stated", ja: "認定" },
+  stated: { en: "Stated", ja: "記載" },
   presumed: { en: "Presumed", ja: "推定" },
   unknown: { en: "Unknown", ja: "不明" },
 };

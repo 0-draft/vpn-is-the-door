@@ -12,6 +12,38 @@ export interface Revision {
 
 export const REVISIONS: Revision[] = [
   {
+    rev: 3,
+    date: "2026-10-26",
+    change: {
+      en: "Corrections after a full read against the sources: Kantsu reclassified to its own wording 'connection point with external networks' (9 VPN, 5 undisclosed, 1 other); case facts, hedges and attributions fixed across chapters 1 to 4 and 6; Ryomo now cites its own third report.",
+      ja: "出典との全面照合による訂正。関通を自社の表現「外部ネットワークとの接続口」に変更（VPN 9件、種類非公表5件、その他1件）。第1〜4章と第6章で事例の事実、断定の度合い、帰属を修正。両毛システムズは自社の第3報を出典とした。",
+    },
+    pages: [
+      "/",
+      "/where-they-came-in/",
+      "/after-the-door/",
+      "/the-doors/",
+      "/cases/",
+      "/cases/handa-hospital/",
+      "/cases/osaka-general-medical-center/",
+      "/cases/nagoya-port/",
+      "/cases/okayama-psychiatric/",
+      "/cases/kantsu/",
+      "/cases/askul/",
+      "/cases/asahi/",
+      "/cases/anabuki/",
+      "/cases/ycc/",
+      "/cases/seidensha/",
+      "/cases/ryomo-systems/",
+      "/cases/colonial-pipeline/",
+      "/cases/boeing-distribution/",
+      "/cases/cisa-csat/",
+      "/cases/mitre/",
+      "/what-to-do/",
+      "/sources/",
+    ],
+  },
+  {
     rev: 2,
     date: "2026-10-26",
     change: {

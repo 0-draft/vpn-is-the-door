@@ -26,7 +26,7 @@ const copy = {
   kicker: ja ? "侵入事案調査報告書" : "Break-in investigation report",
   title: ja ? "扉はVPNだった" : "The door was the VPN",
   dek: ja
-    ? "日本でランサムウェアの被害に遭い、侵入経路が判明した組織の3分の2は、VPN 機器から侵入されていた。社外から社内に入るために設けた扉が、そのまま侵入口になっている。"
+    ? "日本でランサムウェアの被害に遭い、侵入経路を回答した組織の3分の2は、VPN 機器から侵入されていた。社外から社内に入るために設けた扉が、そのまま侵入口になっている。"
     : "Of the Japanese ransomware victims that could say how the attacker got in, two thirds were entered through their VPN appliance. The door they installed so staff could work from outside became the way in.",
   heroNote: ja
     ? `侵入経路が判明した${y.n}件のうち${y.counts.vpn}件`
@@ -61,7 +61,7 @@ const copy = {
               2025年、侵入経路が判明したランサムウェア被害92件のうち61件（66.3%）が VPN 機器からの侵入だった。不審メールは2件。
             </li>
             <li>VPN 機器は、社員が受付を通らずに外から入れるように外壁に付けた扉にあたる。インターネット上の誰でもこの扉の前に立てる。</li>
-            <li>扉の機器そのものに欠陥があると、ログインの前に破られる。パスワードも多要素認証も確かめられないまま通過される。</li>
+            <li>扉の機器そのものの欠陥の多くは、ログインの前に突かれる。その場合、パスワードも多要素認証も確かめられないまま通過されることがある。</li>
             <li>
               侵入者は社内の鍵（Active Directory）を奪い、バックアップを消し、データを持ち出し、最後に暗号化する。2025年、バックアップから復元を試みた{bf.n}件のうち{bf.failed}件が元に戻せなかった。
             </li>
@@ -75,7 +75,7 @@ const copy = {
               In 2025, 61 of the 92 Japanese ransomware victims that could say how the attacker got in named their VPN appliance (66.3%). Email accounted for two.
             </li>
             <li>A VPN appliance is a door in the outer wall that lets staff in without passing reception. Anyone on the internet can walk up to it.</li>
-            <li>If the appliance itself has a flaw, it can be broken before anyone logs in. The password and multi-factor authentication (MFA) are never checked.</li>
+            <li>Most flaws in the appliance itself can be used before anyone logs in, and then the password and multi-factor authentication (MFA) may never be checked.</li>
             <li>
               Once inside, intruders take the master keys (Active Directory), delete the backups, copy data out and encrypt last. In 2025, {bf.failed} of {bf.n} victims that tried to restore from backup could not.
             </li>
