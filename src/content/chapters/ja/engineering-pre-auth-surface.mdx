@@ -14,7 +14,10 @@ import SourceLine from "../../../components/SourceLine.astro";
 import Summary from "../../../components/Summary.astro";
 import BugClasses from "../../../components/ch5/BugClasses.astro";
 import PreauthLifecycle from "../../../components/ch5/PreauthLifecycle.astro";
-import { byClass, CLASS_LABEL } from "../../../lib/ch5-classes";
+import { byClass, CLASS_LABEL, PREAUTH, TOTAL } from "../../../lib/ch5-classes";
+
+export const groups = byClass();
+export const n = (c) => groups.find((g) => g.cls === c).cves.length;
 
 <Summary lang="ja">
   <p>利用者がログインする前から、機器はその接続を処理している。TLS、Web の要求、ログイン画面、画面が読み込むファイル、SAML のメッセージである。インターネット上の誰でもこの処理を起動できる。ここに欠陥があれば、パスワードは要らず、多要素認証はその要求を見ることもない。</p>
@@ -27,7 +30,7 @@ import { byClass, CLASS_LABEL } from "../../../lib/ch5-classes";
 
 図5-2で1つの接続を上から追う。機器は TLS を終端し、Web デーモンが要求を読んで処理先に振り分ける。FortiOS ではこのデーモンが `sslvpnd` で、Fortinet は CVE-2022-42475 の勧告でこのプロセスを名指ししている（[FG-IR-22-398](https://www.fortiguard.com/psirt/FG-IR-22-398)）。網掛けの範囲はすべてこの段階で動く。ログイン画面、画面が読み込む静的ファイル、VPN クライアントの配布、SAML や SSO の受け口、クライアントレスの Web 接続、そして多くの環境では管理画面である。パスワード、第2要素、SAML アサーションの確認は、この範囲を抜けた後にしか行われない。
 
-認証前の欠陥はこの範囲の中にある。図の赤線は悪用されたときの流れを示す。要求は Web デーモンから OS に渡り、認証の箱を通らずに社内へ届く。多要素認証の設定はこの流れに関係しない。本サイトが集めた KEV 登録済みの VPN・リモートアクセス製品の CVE 32件のうち、30件はログイン前に到達できる。残る2件も、実際の攻撃ではログイン前に到達できる欠陥と組み合わせて使われた。
+認証前の欠陥はこの範囲の中にある。図の赤線は悪用されたときの流れを示す。要求は Web デーモンから OS に渡り、認証の箱を通らずに社内へ届く。多要素認証の設定はこの流れに関係しない。[建具表](../../the-doors/)に載せた KEV 登録済みの VPN・リモートアクセス製品の CVE {TOTAL}件のうち、{PREAUTH}件はログイン前に到達できる。残る{TOTAL - PREAUTH}件も、実際の攻撃ではログイン前に到達できる欠陥と組み合わせて使われた。
 
 <Fig lang="ja" n="5-2" caption="SSL-VPN 機器を通る1つの要求。網掛けが認証前の範囲" sources={["ch5-fg-ir-22-398", "ch5-vulns-classes"]} nts>
   <PreauthLifecycle lang="ja" label="SSL-VPN 機器を上から下へ。TLS の終端、全要求を解析する Web デーモン、網掛けの認証前の範囲（ログイン画面、静的ファイル、クライアント配布、SAML・SSO、クライアントレス、露出した管理画面）、認証、セッション Cookie、トンネル、社内ネットワーク。赤い破線は認証前の範囲から機器の OS に入り、認証を通らずに社内ネットワークへ届く。" />
@@ -37,14 +40,14 @@ import { byClass, CLASS_LABEL } from "../../../lib/ch5-classes";
 
 認証前のコードは誰からの入力でも受け付けなければならない。アカウントごとの制限も、送り手の身元も当てにできない。多くの SSL-VPN 製品では、ログイン画面とログイン後のポータルを同じ Web 処理系が担う。その処理経路のどこかに欠陥があれば、インターネットから届く。
 
-図5-3は、集めた32件の CVE を欠陥の種類で分けたものである。最も多いのはメモリ破壊である。大半はバッファオーバーフローと範囲外の読み書きで、解放後使用（use-after-free）が1件ある。この種の欠陥は C や C++ のようなメモリ安全でない言語で書かれたコードで起きる。CISA と FBI は、バッファオーバーフローの例に CVE-2025-0282（Ivanti Connect Secure）と CVE-2023-6549（Citrix NetScaler）を挙げ、「Threat actors frequently exploit these vulnerabilities to gain initial access to an organization's network and then move laterally to the wider network.」と書いた。この種類は「can be addressed by using memory safe languages」とも述べている。こうしたコードの多くが1つの大きな Web デーモンに収まった古い C であるという見方は、欠陥の種類と Pulse Secure から Ivanti に至る製品系譜から本サイトが推測したものである。ベンダーはこれを公表していない。
+図5-3は、建具表の{TOTAL}件の CVE を欠陥の種類で分けたものである。最も多いのはメモリ破壊である。大半はバッファオーバーフローと範囲外の読み書きで、解放後使用（use-after-free）が1件ある。この種の欠陥は C や C++ のようなメモリ安全でない言語で書かれたコードで起きる。CISA と FBI は、バッファオーバーフローの例に CVE-2025-0282（Ivanti Connect Secure）と CVE-2023-6549（Citrix NetScaler）を挙げ、「Threat actors frequently exploit these vulnerabilities to gain initial access to an organization's network and then move laterally to the wider network.」と書いた。この種類は「can be addressed by using memory safe languages」とも述べている。こうしたコードの多くが1つの大きな Web デーモンに収まった古い C であるという見方は、欠陥の種類と Pulse Secure から Ivanti に至る製品系譜から本サイトが推測したものである。ベンダーはこれを公表していない。
 
-<Fig lang="ja" n="5-3" caption="KEV 登録済みの VPN・リモートアクセス製品の CVE 32件（2018〜2026年）。四角1つが1件、欠陥の種類別" sources={["ch5-vulns-classes", "ch5-cisa-sbd-buffer-overflow"]}>
-  <BugClasses lang="ja" label="ユニットチャート。メモリ破壊13件、認証・認可の回避9件、インジェクション5件、ファイル読み出し・パストラバーサル5件。" />
+<Fig lang="ja" n="5-3" caption={`KEV 登録済みの VPN・リモートアクセス製品の CVE ${TOTAL}件（2018〜2026年）。四角1つが1件、欠陥の種類別`} sources={["ch5-vulns-classes", "ch5-cisa-sbd-buffer-overflow"]}>
+  <BugClasses lang="ja" label={`ユニットチャート。メモリ破壊${n("memory")}件、認証・認可の回避${n("auth")}件、インジェクション${n("inject")}件、ファイル読み出し・パストラバーサル${n("read")}件。`} />
   <table slot="data">
     <thead><tr><th>種類</th><th class="num">件数</th><th>CVE</th></tr></thead>
     <tbody>
-      {byClass().map((g) => (
+      {groups.map((g) => (
         <tr><td>{CLASS_LABEL.ja[g.cls]}</td><td class="num">{g.cves.length}</td><td class="mono">{g.cves.join(", ")}</td></tr>
       ))}
     </tbody>
