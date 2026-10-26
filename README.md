@@ -28,14 +28,14 @@ The chapters follow the order of an incident:
 | 3 | The doors | The products, the door detail drawing, and a schedule of 30+ KEV-listed vulnerabilities you can filter. |
 | 4 | Cases | Incidents where the organization itself said how the attacker got in, each as a short report with a sequence-of-events table. |
 | 5 | For engineers | What is reachable before login, why a patch does not close the door, what evidence survives a reboot. |
-| 6 | What to do | Actions by owner, and a sandbox where each control cuts the route only where it really works. |
+| 6 | What to do | Actions by owner, and a sandbox where each control cuts the route only at the point where it works. |
 
 ## What every number rests on
 
-- **NPA statistics** are taken from the National Police Agency's own statistical workbooks (`*_jousei_data.xlsx`), cited by sheet name. Percentages are computed in one place (`src/data/stats.ts`) and unit-tested against NPA's published roundings.
-- **Vulnerabilities** were checked field by field against the CISA Known Exploited Vulnerabilities catalog (version 2026.10.23). KEV's "Unknown" ransomware flag is shown as unknown, never as "no".
-- **Incidents** come only from the organization's own statements or official investigation reports. Where an organization said "network device" without naming a VPN, the site says "network device".
-- **Minato Precision is fictional** and labelled as a composite wherever it appears. It is never mixed into a real case.
+- NPA statistics are taken from the National Police Agency's own statistical workbooks (`*_jousei_data.xlsx`), cited by sheet name. Percentages are computed in one place (`src/data/stats.ts`) and unit-tested against NPA's published roundings.
+- Vulnerabilities were checked field by field against the CISA Known Exploited Vulnerabilities catalog (version 2026.10.23). KEV's "Unknown" ransomware flag is shown as unknown, never as "no".
+- Incidents come only from the organization's own statements or official investigation reports. Where an organization said "network device" without naming a VPN, the site says "network device".
+- Minato Precision is fictional and labelled as a composite wherever it appears. It is never mixed into a real case.
 - Anything the research could not confirm from a primary source is left out. The working notes, including what was excluded and why, are in [`research/`](research/).
 
 No exploit code, payloads or attack steps appear anywhere. Vulnerability classes are described conceptually and link to the vendor advisory.

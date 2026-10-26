@@ -20,7 +20,7 @@ export const groups = byClass();
 export const n = (c) => groups.find((g) => g.cls === c).cves.length;
 
 <Summary lang="en">
-  <p>Before anyone logs in, the appliance already handles their connection: TLS, the web request, the login page, the files it loads, SAML messages. Anyone on the internet can send it that traffic. A flaw in this code needs no password, and MFA never sees the request.</p>
+  <p>Before anyone logs in, the appliance already handles their connection: TLS, the web request, the login page, the files it loads, SAML messages. Anyone on the internet can send it that traffic. A flaw in this code needs no password, and multi-factor authentication (MFA) never sees the request.</p>
   <p>The decision it implies: know which of your addresses show this surface to the internet, and turn off every part of it you do not use.</p>
 </Summary>
 

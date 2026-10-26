@@ -9,7 +9,7 @@
     },
     "long": {
       "en": "The VPN appliance that accepts these connections can be reached from anywhere on the internet, and passing it puts the user on the internal network. NPA's survey of ransomware victims in Japan names it as the most common entry route.",
-      "ja": "接続を受ける VPN 装置はインターネットのどこからでも到達でき、通過すれば社内ネットワークに入れる。警察庁のランサムウェア被害調査では、最も多い侵入経路である。"
+      "ja": "接続を受ける VPN 機器はインターネットのどこからでも到達でき、通過すれば社内ネットワークに入れる。警察庁のランサムウェア被害調査では、最も多い侵入経路である。"
     },
     "sources": ["npa-r7-data"]
   },
@@ -23,7 +23,7 @@
     },
     "long": {
       "en": "The portal is a large web application on the appliance that anyone can reach before logging in. Many of the VPN flaws used by ransomware are in this part, including CVE-2018-13379 and CVE-2024-21762 in Fortinet FortiOS.",
-      "ja": "ポータルは装置上で動く大きな Web アプリケーションで、ログイン前から誰でも到達できる。ランサムウェアに悪用された VPN の脆弱性の多くはこの部分にあり、Fortinet FortiOS の CVE-2018-13379 や CVE-2024-21762 がその例である。"
+      "ja": "ポータルは機器上で動く大きな Web アプリケーションで、ログイン前から誰でも到達できる。ランサムウェアに悪用された VPN の脆弱性の多くはこの部分にあり、Fortinet FortiOS の CVE-2018-13379 や CVE-2024-21762 がその例である。"
     }
   },
   {
@@ -36,7 +36,7 @@
     },
     "long": {
       "en": "Firewalls, VPN gateways, routers and load balancers. Most cannot run EDR and keep few logs, so an intrusion on them is hard to see.",
-      "ja": "ファイアウォール、VPN ゲートウェイ、ルーター、ロードバランサーなどを指す。多くは EDR を導入できず、ログも少ないため、侵入されても気づきにくい。"
+      "ja": "ファイアウォール、VPN ゲートウェイ、ルータ、ロードバランサーなどを指す。多くは EDR を導入できず、ログも少ないため、侵入されても気づきにくい。"
     }
   },
   {
@@ -49,7 +49,7 @@
     },
     "long": {
       "en": "A pre-authentication remote code execution flaw in a VPN portal needs no credentials, so passwords and MFA do not stop it. On an internet-facing appliance it is the most severe class of flaw.",
-      "ja": "VPN ポータルの認証前リモートコード実行は認証情報を必要としないため、パスワードも MFA も防御にならない。インターネットに公開された装置では最も深刻な種類の脆弱性である。"
+      "ja": "VPN ポータルの認証前リモートコード実行は認証情報を必要としないため、パスワードも多要素認証も防御にならない。インターネットに公開された機器では最も深刻な種類の脆弱性である。"
     }
   },
   {
@@ -103,7 +103,7 @@
     },
     "long": {
       "en": "No patch helps until the vendor ships one. CVE-2025-0282 in Ivanti Connect Secure was exploited as a zero-day; until a fix arrives, the only defenses are less exposure and closer monitoring.",
-      "ja": "メーカーが修正を出すまで、パッチでは防げない。Ivanti Connect Secure の CVE-2025-0282 はゼロデイとして悪用された。修正が出るまでは、露出を減らし、監視を強めるしかない。"
+      "ja": "ベンダーが修正を出すまで、パッチでは防げない。Ivanti Connect Secure の CVE-2025-0282 はゼロデイとして悪用された。修正が出るまでは、露出を減らし、監視を強めるしかない。"
     }
   },
   {
@@ -125,11 +125,11 @@
     "term": { "en": "Patch", "ja": "パッチ（修正プログラム）" },
     "short": {
       "en": "A vendor update that fixes a flaw.",
-      "ja": "メーカーが出す、脆弱性の修正。"
+      "ja": "ベンダーが出す、脆弱性の修正。"
     },
     "long": {
       "en": "A patch closes the flaw. An intruder who is already inside stays, and credentials they stole stay valid, so a patch goes together with credential resets and a compromise check.",
-      "ja": "パッチは穴を塞ぐ。すでに入り込んだ攻撃者は残り、盗まれた認証情報も有効なままなので、認証情報の再設定と侵害調査を併せて行う。"
+      "ja": "パッチは穴を塞ぐ。すでに入り込んだ攻撃者は残り、盗まれた認証情報も有効なままなので、パッチと併せて認証情報を再設定し、侵害の有無を調べる。"
     }
   },
   {
@@ -155,7 +155,7 @@
     },
     "long": {
       "en": "A stolen token skips the password and MFA. CitrixBleed (CVE-2023-4966) leaked tokens from appliance memory, so after a compromise every session has to be revoked as well as every password reset.",
-      "ja": "盗まれると、パスワードも MFA も経ずにログイン状態を使われる。CitrixBleed（CVE-2023-4966）は装置のメモリからトークンを漏らした。侵害後はパスワードの再設定に加え、全セッションを失効させる。"
+      "ja": "盗まれると、パスワードも多要素認証も経ずにログイン状態を使われる。CitrixBleed（CVE-2023-4966）は機器のメモリからトークンを漏らした。侵害後はパスワードの再設定に加え、全セッションを失効させる。"
     }
   },
   {
@@ -168,7 +168,7 @@
     },
     "long": {
       "en": "VPN appliances often check logins against AD with a service account stored on the appliance. An intruder who controls AD controls every Windows machine that trusts it.",
-      "ja": "VPN 装置は、装置に保存したサービスアカウントで AD に問い合わせてログインを確認することが多い。AD を握った攻撃者は、AD を信頼するすべての Windows 端末を操作できる。"
+      "ja": "VPN 機器は、機器に保存したサービスアカウントで AD に問い合わせてログインを確認することが多い。AD を握った攻撃者は、AD を信頼するすべての Windows 端末を操作できる。"
     }
   },
   {
@@ -194,7 +194,7 @@
     },
     "long": {
       "en": "Usually done over RDP, SMB or remote service execution with stolen or shared credentials. At Handa Hospital the built-in Administrator password was the same on every PC, which made it easy.",
-      "ja": "盗んだ認証情報や共通の認証情報を使い、RDP、SMB、リモートでのサービス実行で行うのが典型である。半田病院では全 PC の Built-in Administrator のパスワードが同じで、横展開が容易だった。"
+      "ja": "盗んだ認証情報や共通の認証情報を使い、RDP、SMB、リモートでのサービス実行で行うのが典型である。半田病院では全 PC の ビルトイン Administrator のパスワードが同じで、横展開が容易だった。"
     }
   },
   {
@@ -246,7 +246,7 @@
     },
     "long": {
       "en": "It usually cannot be installed on a VPN appliance. Ransomware affiliates routinely try to uninstall or disable it before encrypting, sometimes by loading a vulnerable driver (BYOVD).",
-      "ja": "VPN 装置には通常インストールできない。ランサムウェアの実行者は暗号化の前に EDR の削除や無効化を試みることが多く、脆弱なドライバーを読み込ませる手口（BYOVD）も使われる。"
+      "ja": "VPN 機器には通常インストールできない。ランサムウェアの実行者は暗号化の前に EDR の削除や無効化を試みることが多く、脆弱なドライバーを読み込ませる手口（BYOVD）も使われる。"
     }
   },
   {
@@ -264,15 +264,15 @@
   },
   {
     "id": "vpn-appliance",
-    "kana": "ぶいぴーえぬそうち",
-    "term": { "en": "VPN appliance", "ja": "VPN 装置" },
+    "kana": "ぶいぴーえぬきき",
+    "term": { "en": "VPN appliance", "ja": "VPN 機器" },
     "short": {
       "en": "The device or virtual machine at the network edge that accepts VPN connections.",
       "ja": "ネットワークの境目に置き、VPN 接続を受け付ける機器や仮想マシン。"
     },
     "long": {
       "en": "Usually a firewall or gateway product such as FortiGate, Ivanti Connect Secure, Palo Alto Networks GlobalProtect, Cisco ASA or SonicWall. It runs vendor firmware the owner cannot inspect, and it often does not keep logs long enough to investigate an intrusion.",
-      "ja": "FortiGate、Ivanti Connect Secure、Palo Alto Networks の GlobalProtect、Cisco ASA、SonicWall などのファイアウォールやゲートウェイ製品が多い。中身は利用者が検査できないメーカーのファームウェアで、侵入を調べられるだけの期間ログを残していないことが多い。"
+      "ja": "FortiGate、Ivanti Connect Secure、Palo Alto Networks の GlobalProtect、Cisco ASA、SonicWall などのファイアウォールやゲートウェイ製品が多い。中身は利用者が検査できないベンダーのファームウェアで、侵入を調べられるだけの期間ログを残していないことが多い。"
     }
   },
   {
@@ -285,7 +285,7 @@
     },
     "long": {
       "en": "Credentials taken through a flaw keep working after the flaw is patched. Lists of VPN credentials taken through CVE-2018-13379 were posted publicly, and the Handa Hospital report found the hospital's VPN credentials in one. After a compromise, reset every credential the appliance stored or handled.",
-      "ja": "脆弱性を突いて盗まれた認証情報は、パッチを当てた後も使える。CVE-2018-13379 で盗まれた VPN 認証情報の一覧は公開されており、半田病院の報告書は、同院の VPN 認証情報がその中にあったとしている。侵害後は、装置が保存した、または処理したすべての認証情報を再設定する。"
+      "ja": "脆弱性を突いて盗まれた認証情報は、パッチを当てた後も使える。CVE-2018-13379 で盗まれた VPN 認証情報の一覧は公開されており、半田病院の報告書は、同院の VPN 認証情報がその中にあったとしている。侵害後は、機器が保存した、または処理したすべての認証情報を再設定する。"
     }
   },
   {
@@ -294,11 +294,11 @@
     "term": { "en": "Integrity checker", "ja": "整合性チェックツール" },
     "short": {
       "en": "A vendor tool that checks whether an appliance's system files have been altered.",
-      "ja": "装置のシステムファイルが改ざんされていないかを調べる、メーカー提供のツール。"
+      "ja": "機器のシステムファイルが改ざんされていないかを調べる、ベンダー提供のツール。"
     },
     "long": {
       "en": "It compares files against known hashes, so an attacker who controls the appliance can make it pass. CISA reported cases where Ivanti's Integrity Checker Tool failed to detect compromise (AA24-060B); run it alongside independent monitoring.",
-      "ja": "既知のハッシュ値と照合するだけなので、装置を握った攻撃者は検査を通過させることができる。CISA は、Ivanti の Integrity Checker Tool が侵害を検知できなかった事例を報告している（AA24-060B）。独立した監視と組み合わせて使う。"
+      "ja": "既知のハッシュ値と照合するだけなので、機器を握った攻撃者は検査を通過させられる。CISA は、Ivanti の Integrity Checker Tool が侵害を検知できなかった事例を報告している（AA24-060B）。独立した監視と組み合わせて使う。"
     }
   },
   {
@@ -307,11 +307,11 @@
     "term": { "en": "End of life (EOL)", "ja": "サポート終了（EOL）" },
     "short": {
       "en": "The point after which a vendor stops releasing fixes for a product.",
-      "ja": "メーカーが製品の修正プログラムの提供をやめる時点。"
+      "ja": "ベンダーが製品の修正プログラムの提供をやめる時点。"
     },
     "long": {
       "en": "An end-of-life appliance keeps working, but its next flaw will never be fixed. CISA, the FBI and the UK NCSC published a joint fact sheet in 2026 urging organizations to replace end-of-support edge devices.",
-      "ja": "サポートが終了した装置は動き続けるが、次に見つかる脆弱性は修正されない。米 CISA、FBI、英 NCSC は2026年、サポートが終了したエッジ機器の置き換えを求める共同文書を公表した。"
+      "ja": "サポートが終了した機器は動き続けるが、次に見つかる脆弱性は修正されない。米 CISA、FBI、英 NCSC は2026年、サポートが終了したエッジ機器の置き換えを求める共同文書を公表した。"
     }
   },
   {
@@ -337,7 +337,7 @@
     },
     "long": {
       "en": "Advisories publish IoCs so defenders can search their own systems for them. Finding none does not prove a device is clean: attackers change their tools, and appliance logs are often missing or wiped.",
-      "ja": "注意喚起やアドバイザリは、利用者が自組織を調べられるよう IoC を公開する。見つからなくても安全とは限らない。攻撃者は道具を変え、装置のログは欠けていたり消されていたりすることが多い。"
+      "ja": "注意喚起やアドバイザリは、利用者が自組織を調べられるよう IoC を公開する。見つからなくても安全とは限らない。攻撃者は道具を変え、機器のログは欠けていたり消されていたりすることが多い。"
     }
   },
   {
@@ -373,11 +373,11 @@
     "term": { "en": "Web shell", "ja": "Web シェル" },
     "short": {
       "en": "A small script planted on a web server that lets an attacker run commands through ordinary web requests.",
-      "ja": "Web サーバーに仕込まれ、通常の Web 通信を通じて攻撃者がコマンドを実行できるようにする小さなスクリプト。"
+      "ja": "Web サーバに仕込まれ、通常の Web 通信を通じて攻撃者がコマンドを実行できるようにする小さなスクリプト。"
     },
     "long": {
       "en": "On a VPN appliance it sits inside the portal's web application and can survive patching. CISA found web shells on Ivanti systems that the vendor's integrity checker had reported as clean.",
-      "ja": "VPN 装置ではポータルの Web アプリケーション内に置かれ、パッチを当てた後も残ることがある。CISA は、メーカーの整合性チェックツールが問題なしと判定した Ivanti の装置で Web シェルを見つけている。"
+      "ja": "VPN 機器ではポータルの Web アプリケーション内に置かれ、パッチを当てた後も残ることがある。CISA は、ベンダーの整合性チェックツールが問題なしと判定した Ivanti の機器で Web シェルを見つけている。"
     }
   }
 ]

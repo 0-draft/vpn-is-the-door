@@ -36,7 +36,7 @@ CVE-2018-13379 let anyone read the FortiOS SSL-VPN session file, with user names
 
 ### 2. Sessions stolen before the patch
 
-CitrixBleed (CVE-2023-4966) leaked memory that could hold a valid session cookie issued after MFA. Mandiant: "An attacker with access to a valid cookie can establish an authenticated session to the NetScaler appliance without knowledge of the username, password, or access to a multi-factor authentication token or device." Upgrading does not end those sessions. NetScaler's own notice tells customers to upgrade and adds: "In addition, we also recommend killing all active and persistent sessions". LockBit 3.0 affiliates used the bug ([AA23-325A](https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-325a)).
+CitrixBleed (CVE-2023-4966) leaked memory that could hold a valid session cookie issued after multi-factor authentication (MFA). Mandiant: "An attacker with access to a valid cookie can establish an authenticated session to the NetScaler appliance without knowledge of the username, password, or access to a multi-factor authentication token or device." Upgrading does not end those sessions. NetScaler's own notice tells customers to upgrade and adds: "In addition, we also recommend killing all active and persistent sessions". LockBit 3.0 affiliates used the bug ([AA23-325A](https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-325a)).
 
 ### 3. Persistence that survives upgrades
 

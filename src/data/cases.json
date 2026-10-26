@@ -17,7 +17,7 @@
     "opening": "vpn",
     "product": {
       "en": "Fortinet FortiGate (VPN appliance for remote maintenance)",
-      "ja": "Fortinet FortiGate（リモート保守用 VPN 装置）"
+      "ja": "Fortinet FortiGate（リモート保守用 VPN 機器）"
     },
     "cve": ["CVE-2018-13379"],
     "vectorWording": {
@@ -27,11 +27,11 @@
     "vectorSource": "case-handa-main",
     "cause": {
       "en": "A VPN appliance installed for vendors' remote maintenance was left unpatched, and its login details had already been published on the internet.",
-      "ja": "業者のリモート保守のために置いた VPN 装置が修正されないまま使われ、そのログイン情報はすでにインターネット上に公開されていた。"
+      "ja": "業者のリモート保守のために置いた VPN 機器が修正されないまま使われ、そのログイン情報はすでにインターネット上に公開されていた。"
     },
     "summary": {
       "en": "Before dawn on October 31, 2021, printers across the hospital began printing a statement that its data had been stolen and encrypted, and the electronic medical records stopped working. The hospital stopped accepting emergency and new patients. Normal care resumed on January 4, 2022. The expert panel concluded that the attacker most likely came in through the VPN appliance that vendors used for remote maintenance.",
-      "ja": "2021年10月31日未明、院内の複数のプリンタが「データを窃取し暗号化した」という文書を一斉に印刷し始め、電子カルテが使えなくなった。病院は救急と新規患者の受け入れを止めた。通常診療の再開は2022年1月4日である。有識者会議は、業者がリモート保守に使う VPN 装置から侵入された可能性が高いと結論した。"
+      "ja": "2021年10月31日未明、院内の複数のプリンタが「データを窃取し暗号化した」という文書を一斉に印刷し始め、電子カルテが使えなくなった。病院は救急と新規患者の受け入れを止めた。通常診療の再開は2022年1月4日である。有識者会議は、業者がリモート保守に使う VPN 機器から侵入された可能性が高いと結論した。"
     },
     "after": {
       "en": "Remote Desktop activity was already recorded at 23:57 on October 30, before anyone noticed. Active Directory allowed five-character passwords with no lockout, the built-in Administrator password was the same on every PC, and antivirus had been turned off so the medical-record system would run smoothly. 40 terminals were affected. Backup data from 2018 onward was deleted; offline backups up to 2018 survived.",
@@ -49,7 +49,7 @@
       {
         "status": "stated",
         "en": "CVE-2018-13379 had not been fixed on the VPN appliance.",
-        "ja": "VPN 装置の CVE-2018-13379 が修正されていなかった。",
+        "ja": "VPN 機器の CVE-2018-13379 が修正されていなかった。",
         "source": "case-handa-tech"
       },
       {
@@ -67,7 +67,7 @@
       {
         "status": "presumed",
         "en": "Entry through the VPN appliance. Logs and evidence did not survive, so this is the panel's reasoned conclusion, reached after weighing phishing, exposed RDP and insiders.",
-        "ja": "侵入口は VPN 装置。ログと証跡が残っていないため、標的型メールや RDP の公開、内部犯行などと比べたうえでの推論である。",
+        "ja": "有識者会議は侵入口を VPN 機器とした。ログと証跡が残っていないため、標的型メールや RDP の公開、内部犯行などと比べたうえでの推論である。",
         "source": "case-handa-tech"
       },
       {
@@ -79,14 +79,14 @@
     ],
     "conclusion": {
       "en": "The panel concluded that the attacker most likely entered through the vulnerability in the hospital's VPN appliance, used its leaked administrator credentials, and spread inside a network where passwords were shared and protections had been turned off. It also found that vendors had not told the hospital about the VPN vulnerability.",
-      "ja": "有識者会議は、病院の VPN 装置の脆弱性と流出した管理者の認証情報を使って侵入され、パスワードが共通で防御機能が止められた院内ネットワークで被害が広がった可能性が高いと結論した。また、VPN の脆弱性について事業者から病院への情報提供がなかったことを指摘している。"
+      "ja": "有識者会議は、病院の VPN 機器の脆弱性と流出した管理者の認証情報を使って侵入され、パスワードが共通で防御機能が止められた院内ネットワークで被害が広がった可能性が高いと結論した。また、VPN の脆弱性について事業者から病院への情報提供がなかったことを指摘している。"
     },
     "recommendations": {
       "by": { "en": "Expert panel", "ja": "有識者会議" },
       "items": [
         {
           "en": "Manage vulnerabilities on network devices, including the VPN appliance.",
-          "ja": "VPN 装置を含むネットワーク機器の脆弱性を管理する。"
+          "ja": "VPN 機器を含むネットワーク機器の脆弱性を管理する。"
         },
         {
           "en": "Restrict which source IP addresses may connect to the maintenance VPN and the management interface.",
@@ -198,37 +198,37 @@
     "disclosed": "2022-10-31",
     "opening": "vpn",
     "openingNote": {
-      "en": "The VPN device belonged to the hospital's catering contractor. The attacker then crossed into the hospital over an always-on RDP connection.",
+      "en": "The VPN appliance belonged to the hospital's catering contractor. The attacker then crossed into the hospital over an always-on RDP connection.",
       "ja": "VPN 機器は病院の給食委託事業者側のもの。侵入者はそこから常時接続の RDP で病院に入った。"
     },
     "product": { "en": "Fortinet FortiGate at the catering contractor", "ja": "給食事業者側の Fortinet FortiGate" },
     "cve": ["CVE-2018-13379"],
     "vectorWording": {
       "en": "The committee: the attacker entered the catering system \"using a vulnerability in the VPN device that the system builder had installed for remote maintenance (entry with the leaked and published ID and password is also possible),\" then reached the hospital's catering server over RDP.",
-      "ja": "調査委員会は、給食システムに「情報基盤構築事業者がリモート保守のために設置したVPN機器の脆弱性を用いて侵入（漏洩され公開されていたID・パスワード情報を用いて侵入された可能性もある）」とし、その後 RDP で病院の給食サーバーに侵入したと推定している。"
+      "ja": "調査委員会は、給食システムに「情報基盤構築事業者がリモート保守のために設置したVPN機器の脆弱性を用いて侵入（漏洩され公開されていたID・パスワード情報を用いて侵入された可能性もある）」とし、その後 RDP で病院の給食サーバに侵入したと推定している。"
     },
     "vectorSource": "case-ogmc-summary",
     "cause": {
-      "en": "A catering contractor's unpatched VPN device let the attacker in, and an always-on remote-desktop link carried them from the contractor into the hospital.",
+      "en": "A catering contractor's unpatched VPN appliance let the attacker in, and an always-on remote-desktop link carried them from the contractor into the hospital.",
       "ja": "給食委託事業者の修正されていない VPN 機器から侵入され、常時接続のリモートデスクトップを通って病院の中に入られた。"
     },
     "summary": {
-      "en": "At 07:45 on Monday, October 31, 2022, help-desk staff found the electronic medical records down and a ransom message on screen. The hospital switched to paper records and stopped emergency admissions. Core systems came back after 43 days and all clinical systems after 73. The investigation committee traced the entry to a VPN device at the hospital's catering contractor.",
+      "en": "At 07:45 on Monday, October 31, 2022, help-desk staff found the electronic medical records down and a ransom message on screen. The hospital switched to paper records and stopped emergency admissions. Core systems came back after 43 days and all clinical systems after 73. The investigation committee traced the entry to a VPN appliance at the hospital's catering contractor.",
       "ja": "2022年10月31日（月）7時45分、出勤したヘルプデスク職員が電子カルテの障害と身代金要求のメッセージを確認した。病院は紙カルテに切り替え、救急の受け入れを止めた。基幹システムの再稼働まで43日、全体の復旧まで73日かかった。調査委員会は、侵入口を給食委託事業者側の VPN 機器と推定した。"
     },
     "after": {
       "en": "At the contractor, weak shared administrator passwords fell to a dictionary attack. On the hospital's catering server the attacker took the administrator password with a credential-dumping tool and uninstalled antivirus. The same ID and password worked on the other servers, so the attack spread to the medical-record and core systems, and most servers were encrypted. The committee judged a data leak extremely unlikely.",
-      "ja": "給食事業者側では、共通で弱い管理者パスワードが辞書攻撃で破られた。病院の給食サーバーでは認証情報窃取ツールで管理者パスワードを取られ、ウイルス対策ソフトをアンインストールされた。他のサーバーも ID・パスワードが共通だったため、電子カルテを含む基幹システムに広がり、サーバーの大部分が暗号化された。調査委員会は、個人情報漏洩の可能性は極めて低いとしている。"
+      "ja": "給食事業者側では、共通で弱い管理者パスワードが辞書攻撃で破られた。病院の給食サーバでは認証情報窃取ツールで管理者パスワードを取られ、ウイルス対策ソフトをアンインストールされた。他のサーバも ID・パスワードが共通だったため、電子カルテを含む基幹システムに広がり、サーバの大部分が暗号化された。調査委員会は、個人情報漏洩の可能性は極めて低いとしている。"
     },
     "impact": {
       "en": "Core systems, including the medical records, restarted on day 43 (December 12, 2022); all clinical systems were back on day 73 (January 11, 2023). About 2,200 terminals showed traces of unauthorized access, and every server and terminal was reinstalled. New inpatients in November 2022 were 33.3% of the year before. The committee estimates investigation and recovery at several hundred million yen or more, and lost revenue at over a billion yen.",
-      "ja": "電子カルテを含む基幹システムの再稼働は43日目（2022年12月12日）、全体の診療システムの復旧は73日目（2023年1月11日）だった。院内約2,200台の端末に不正アクセスの痕跡があり、すべてのサーバーと端末をクリーンインストールした。2022年11月の新入院患者数は前年同月比33.3%。調査・復旧費用は数億円以上、逸失利益は十数億円以上と見込まれている。"
+      "ja": "電子カルテを含む基幹システムの再稼働は43日目（2022年12月12日）、全体の診療システムの復旧は73日目（2023年1月11日）だった。院内約2,200台の端末に不正アクセスの痕跡があり、すべてのサーバと端末をクリーンインストールした。2022年11月の新入院患者数は前年同月比33.3%。調査・復旧費用は数億円以上、逸失利益は十数億円以上と見込まれている。"
     },
     "impactShort": { "en": "Core systems 43 days, full recovery 73 days", "ja": "基幹システム43日、全面復旧73日" },
     "analysis": [
       {
         "status": "stated",
-        "en": "The contractor's VPN device had CVE-2018-13379, which allowed theft of the file holding the administrator ID and password.",
+        "en": "The contractor's VPN appliance had CVE-2018-13379, which allowed theft of the file holding the administrator ID and password.",
         "ja": "給食事業者の VPN 機器には CVE-2018-13379 があり、管理者の ID とパスワードを保存したファイルを窃取できた。",
         "source": "case-ogmc-report"
       },
@@ -247,18 +247,18 @@
       {
         "status": "stated",
         "en": "Windows passwords were the same on every server and terminal, and no account lockout was set.",
-        "ja": "Windows のパスワードはサーバー・端末ですべて共通で、アカウントロックアウトの設定もなかった。",
+        "ja": "Windows のパスワードはサーバ・端末ですべて共通で、アカウントロックアウトの設定もなかった。",
         "source": "case-ogmc-summary"
       },
       {
         "status": "unknown",
-        "en": "How long the attacker was inside. The VPN device's syslog was lost when its firmware was updated without a backup on the evening of October 31.",
+        "en": "How long the attacker was inside. The VPN appliance's syslog was lost when its firmware was updated without a backup on the evening of October 31.",
         "ja": "侵入者が潜んでいた期間。10月31日夕方にバックアップを取らずにファームウェアを更新したため、VPN 機器の Syslog が失われた。",
         "source": "case-ogmc-report"
       }
     ],
     "conclusion": {
-      "en": "The committee concluded that the attacker entered the catering contractor's network through its VPN device, by the vulnerability or with the published credentials, crossed into the hospital over RDP, and spread because passwords were shared and accounts never locked. It wrote that the damage might have been avoided had the VPN device and the RDP connection been managed properly.",
+      "en": "The committee concluded that the attacker entered the catering contractor's network through its VPN appliance, by the vulnerability or with the published credentials, crossed into the hospital over RDP, and spread because passwords were shared and accounts never locked. It wrote that the damage might have been avoided had the VPN appliance and the RDP connection been managed properly.",
       "ja": "調査委員会は、給食事業者の VPN 機器から脆弱性または公開された認証情報で侵入され、RDP で病院に入り、パスワードの共通化とロックアウトの未設定によって広がったと結論した。「VPN機器の管理やRDP接続の運用などが適切になされていれば被害を免れた可能性がある」としている。"
     },
     "recommendations": {
@@ -278,11 +278,11 @@
         },
         {
           "en": "Make every Windows password unique per server and terminal, and turn on account lockout.",
-          "ja": "Windows のパスワードをサーバー・端末ごとに個別化し、アカウントロックアウトを有効にする。"
+          "ja": "Windows のパスワードをサーバ・端末ごとに個別化し、アカウントロックアウトを有効にする。"
         },
         {
           "en": "Run users as standard accounts without administrator rights, and install antivirus on the medical-record servers.",
-          "ja": "利用者は管理者権限のない標準ユーザーにし、電子カルテサーバーにもウイルス対策ソフトを入れる。"
+          "ja": "利用者は管理者権限のない標準ユーザーにし、電子カルテサーバにもウイルス対策ソフトを入れる。"
         },
         {
           "en": "List every device connected to the clinical network as an information asset and assess its risk.",
@@ -296,7 +296,7 @@
         "date": "2022-10-31 04:07",
         "actor": { "en": "Intruder", "ja": "侵入者" },
         "event_en": "Heavy RDP traffic from a server on the contractor side to the hospital's catering server, until 04:10.",
-        "event_ja": "給食事業者側のサーバーから病院の給食サーバーへ大量の RDP 通信（4時10分まで）。",
+        "event_ja": "給食事業者側のサーバから病院の給食サーバへ大量の RDP 通信（4時10分まで）。",
         "source": "case-ogmc-summary"
       },
       {
@@ -345,7 +345,7 @@
         "date": "2022-10-31 18:00",
         "approx": true,
         "actor": { "en": "Contractor's system builder", "ja": "給食側の構築事業者" },
-        "event_en": "Firmware of the VPN device updated without a backup; its logs are lost.",
+        "event_en": "Firmware of the VPN appliance updated without a backup; its logs are lost.",
         "event_ja": "VPN 機器のファームウェアをバックアップなしで更新し、ログが消失。",
         "source": "case-ogmc-report"
       },
@@ -391,11 +391,11 @@
     "opening": "network-device-unspecified",
     "openingLabel": { "en": "Remote connection device", "ja": "リモート接続機器" },
     "openingQualifier": {
-      "en": "The MLIT committee reads it as the maintenance VPN device, without concluding definitively",
+      "en": "The MLIT committee reads it as the maintenance VPN appliance, without concluding definitively",
       "ja": "国交省の委員会は保守用 VPN 機器と「見ることが適切」とするが、断定はしていない"
     },
     "openingNote": {
-      "en": "The association said only \"remote connection device\", and the drawing keeps to that. The MLIT committee regards the maintenance VPN device as the route but could not conclude definitively because the logs were encrypted; that is the committee's reading, not the association's finding.",
+      "en": "The association said only \"remote connection device\", and the drawing keeps to that. The MLIT committee regards the maintenance VPN appliance as the route but could not conclude definitively because the logs were encrypted; that is the committee's reading, not the association's finding.",
       "ja": "協会の表現は「リモート接続機器」だけで、図もそれに従う。国土交通省の委員会は保守用 VPN 機器を経路と見ているが、ログが暗号化されたため断定はしていない。これは委員会の見方であり、協会の認定ではない。"
     },
     "product": null,
@@ -410,16 +410,16 @@
       "ja": "脆弱性が確認されたリモート接続機器から不正なアクセスを受けたと考えられている。"
     },
     "summary": {
-      "en": "At about 06:30 on July 4, 2023, the terminal system that runs all container terminals at the Port of Nagoya stopped. An hour later the system printer printed a ransom note. Every server in the data center had been encrypted. Terminals resumed work at 18:15 on July 6. The association reported a vulnerable remote connection device as the likely route. A government committee later wrote that it is \"appropriate\" to regard the maintenance VPN device as the route, while stating it could not conclude definitively.",
-      "ja": "2023年7月4日6時30分ごろ、名古屋港の全コンテナターミナルを動かす NUTS が停止した。1時間後、システム専用のプリンターから脅迫文が印刷された。データセンター内の全サーバーが暗号化されていた。作業再開は7月6日18時15分である。協会は脆弱性のあるリモート接続機器を経路として報告した。国土交通省の委員会は、保守用 VPN 機器からの侵入と「見ることが適切」としたが、断定はできないとしている。"
+      "en": "At about 06:30 on July 4, 2023, the terminal system that runs all container terminals at the Port of Nagoya stopped. An hour later the system printer printed a ransom note. Every server in the data center had been encrypted. Terminals resumed work at 18:15 on July 6. The association reported a vulnerable remote connection device as the likely route. A government committee later wrote that it is \"appropriate\" to regard the maintenance VPN appliance as the route, while stating it could not conclude definitively.",
+      "ja": "2023年7月4日6時30分ごろ、名古屋港の全コンテナターミナルを動かす NUTS が停止した。1時間後、システム専用のプリンタから脅迫文が印刷された。データセンター内の全サーバが暗号化されていた。作業再開は7月6日18時15分である。協会は脆弱性のあるリモート接続機器を経路として報告した。国土交通省の委員会は、保守用 VPN 機器からの侵入と「見ることが適切」としたが、断定はできないとしている。"
     },
     "after": {
       "en": "The physical server base and all virtual servers in the data center were encrypted. Malware was also detected in the backup data, which pushed recovery back by a day. The ransom note named no amount and the association did not contact the attacker. No sign of data leaking outside was found.",
-      "ja": "データセンター内の物理サーバー基盤と全仮想サーバーが暗号化された。バックアップデータからもウイルスが検知され、復旧は1日遅れた。脅迫文に身代金額の記載はなく、協会は攻撃者に連絡していない。外部への情報漏洩の形跡は確認されていない。"
+      "ja": "データセンター内の物理サーバ基盤と全仮想サーバが暗号化された。バックアップデータからもウイルスが検知され、復旧は1日遅れた。脅迫文に身代金額の記載はなく、協会は攻撃者に連絡していない。外部への情報漏洩の形跡は確認されていない。"
     },
     "impact": {
       "en": "All terminals at Japan's largest port stopped from about 06:30 on July 4 until 18:15 on July 6, and container gate-in and gate-out stopped for about three days.",
-      "ja": "日本最大の港の全ターミナルが7月4日6時30分ごろから7月6日18時15分まで止まり、コンテナの搬入・搬出は約3日間止まった。"
+      "ja": "日本最大の港の全ターミナルが7月4日6時30分ごろから7月6日18時15分まで止まり、コンテナの搬入・搬出は約3日間できなかった。"
     },
     "impactShort": { "en": "All terminals stopped for about 2.5 days", "ja": "全ターミナルが約2.5日停止" },
     "analysis": [
@@ -431,7 +431,7 @@
       },
       {
         "status": "stated",
-        "en": "The VPN device's logs were not being collected.",
+        "en": "The VPN appliance's logs were not being collected.",
         "ja": "VPN 機器のログは取得対象になっていなかった。",
         "source": "case-mlit-nuts"
       },
@@ -449,8 +449,8 @@
       }
     ],
     "conclusion": {
-      "en": "The association reported that the access came through a vulnerable remote connection device and that every NUTS server was encrypted. The MLIT committee wrote that it is \"appropriate\" to regard the maintenance VPN device as the route, without concluding definitively, and listed the missing IP restriction and the uncollected VPN logs as problems.",
-      "ja": "協会は、脆弱性のあるリモート接続機器から不正アクセスを受け、NUTS の全サーバーが暗号化されたと報告した。国土交通省の委員会は、断定はしないものの保守用 VPN 機器からの侵入と「見ることが適切」とし、接続元 IP 制限の欠如と VPN 機器のログ未取得を課題に挙げた。"
+      "en": "The association reported that the access came through a vulnerable remote connection device and that every NUTS server was encrypted. The MLIT committee wrote that it is \"appropriate\" to regard the maintenance VPN appliance as the route, without concluding definitively, and listed the missing IP restriction and the uncollected VPN logs as problems.",
+      "ja": "協会は、脆弱性のあるリモート接続機器から不正アクセスを受け、NUTS の全サーバが暗号化されたと報告した。国土交通省の委員会は、断定はしないものの保守用 VPN 機器からの侵入と「見ることが適切」とし、接続元 IP 制限の欠如と VPN 機器のログ未取得を課題に挙げた。"
     },
     "recommendations": {
       "by": { "en": "MLIT committee", "ja": "国土交通省 委員会" },
@@ -500,7 +500,7 @@
         "approx": true,
         "actor": { "en": "Intruder", "ja": "侵入者" },
         "event_en": "Ransom note prints on the system printer.",
-        "event_ja": "システム専用のプリンターから脅迫文が印刷される。",
+        "event_ja": "システム専用のプリンタから脅迫文が印刷される。",
         "source": "case-nuts-association"
       },
       {
@@ -516,7 +516,7 @@
         "approx": true,
         "actor": { "en": "Association", "ja": "協会" },
         "event_en": "Finds the physical server base and all virtual servers encrypted.",
-        "event_ja": "物理サーバー基盤と全仮想サーバーの暗号化が判明。",
+        "event_ja": "物理サーバ基盤と全仮想サーバの暗号化が判明。",
         "source": "case-nuts-association"
       },
       {
@@ -582,25 +582,25 @@
     "product": { "en": "Cisco ASA 5506-X (SSL-VPN for maintenance)", "ja": "Cisco ASA 5506-X（保守用 SSL-VPN）" },
     "cve": [],
     "vectorWording": {
-      "en": "The committee: the maintenance VPN device had no source-IP restriction, so \"anyone on the internet could attack it.\" It lists three possible causes: a dictionary attack on the SSL-VPN, credentials bought from an initial access broker, or exploitation of an SSL-VPN vulnerability.",
+      "en": "The committee: the maintenance VPN appliance had no source-IP restriction, so \"anyone on the internet could attack it.\" It lists three possible causes: a dictionary attack on the SSL-VPN, credentials bought from an initial access broker, or exploitation of an SSL-VPN vulnerability.",
       "ja": "調査委員会は「保守用 VPN 装置への接続元 IP アドレス制限がなく、インターネット上から誰でも攻撃が可能であった」とし、原因として SSL-VPN への辞書攻撃、初期アクセスブローカーからの認証情報の購入、SSL-VPN の脆弱性の悪用の3つを挙げている。"
     },
     "vectorSource": "case-opmc-report",
     "cause": {
       "en": "A maintenance SSL-VPN appliance with a guessable password, no updates since 2018 and no source-IP limit was the way in.",
-      "ja": "推測しやすいパスワードのまま、2018年から更新されず、接続元の制限もない保守用 SSL-VPN 装置が侵入口になった。"
+      "ja": "推測しやすいパスワードのまま、2018年から更新されず、接続元の制限もない保守用 SSL-VPN 機器が侵入口になった。"
     },
     "summary": {
       "en": "At about 16:00 on Sunday, May 19, 2024, the hospital's electronic medical records stopped working. The next morning the vendor found ransomware. Forensics later showed that the intruder had been inside since 02:41 on May 13. Personal data of up to 40,000 people was leaked. The investigation committee placed the entry at the maintenance SSL-VPN appliance in the data center.",
-      "ja": "2024年5月19日（日）16時ごろ、病院の電子カルテが使えなくなった。翌朝、ベンダーがランサムウェアを確認した。後のフォレンジック調査で、侵入者は5月13日2時41分から院内にいたことが分かった。最大4万人分の個人情報が漏洩した。調査委員会は、データセンターの保守用 SSL-VPN 装置を侵入口とした。"
+      "ja": "2024年5月19日（日）16時ごろ、病院の電子カルテが使えなくなった。翌朝、ベンダーがランサムウェアを確認した。後のフォレンジック調査で、侵入者は5月13日2時41分から院内にいたことが分かった。最大4万人分の個人情報が漏洩した。調査委員会は、データセンターの保守用 SSL-VPN 機器を侵入口とした。"
     },
     "after": {
       "en": "For about six days the intruder scanned the network, searched for and destroyed backups, took user and computer information from Active Directory, stopped and deleted antivirus, and copied Office documents from shared folders. Encryption ran from 13:10 to 17:34 on May 19: 23 virtual servers, the shared storage, 3 virtualization hosts, 6 other physical servers and 244 terminals. All data on the shared storage was lost. The contracted offline backup had not actually been taken.",
-      "ja": "約6日間、侵入者はネットワークをスキャンし、バックアップを探して破壊し、Active Directory から利用者とコンピューターの情報を窃取し、ウイルス対策ソフトを停止・削除し、共有フォルダーの Office 文書を持ち出した。暗号化は5月19日13時10分から17時34分に行われ、仮想サーバー23台、共有ストレージ、仮想基盤の物理サーバー3台、その他の物理サーバー6台、端末244台が被害を受けた。共有ストレージのデータは全喪失した。契約していたオフラインバックアップは実際には取られていなかった。"
+      "ja": "約6日間、侵入者はネットワークをスキャンし、バックアップを探して破壊し、Active Directory から利用者とコンピュータの情報を窃取し、ウイルス対策ソフトを停止・削除し、共有フォルダの Office 文書を持ち出した。暗号化は5月19日13時10分から17時34分に行われ、仮想サーバ23台、共有ストレージ、仮想基盤の物理サーバ3台、その他の物理サーバ6台、端末244台が被害を受けた。共有ストレージのデータは全喪失した。契約していたオフラインバックアップは実際には取られていなかった。"
     },
     "impact": {
       "en": "Medical records went down at the hospital and its clinic. Staff used paper charts and care did not stop. Okayama Prefectural Police confirmed a leak of personal data, estimated at up to 40,000 people, including names, addresses, dates of birth and diagnoses. Full recovery took about three months, using a data-warehouse server that had escaped encryption.",
-      "ja": "病院と診療所で電子カルテが停止した。紙カルテで診療を続け、診療は止めなかった。岡山県警が情報の窃取と漏洩を確認し、推定で氏名、住所、生年月日、病名を含む最大4万人分の個人情報が漏洩した。復旧には約3か月かかり、暗号化を免れた DWH サーバーからデータを戻した。"
+      "ja": "病院と診療所で電子カルテが停止した。紙カルテで診療を続け、診療は止めなかった。岡山県警が情報の窃取と漏洩を確認し、推定で氏名、住所、生年月日、病名を含む最大4万人分の個人情報が漏洩した。復旧には約3か月かかり、暗号化を免れた DWH サーバからデータを戻した。"
     },
     "impactShort": {
       "en": "Up to 40,000 people's data leaked; about 3 months to recover",
@@ -615,14 +615,14 @@
       },
       {
         "status": "stated",
-        "en": "No source-IP restriction was set on the maintenance VPN device.",
-        "ja": "保守用 VPN 装置に接続元 IP アドレスの制限がなかった。",
+        "en": "No source-IP restriction was set on the maintenance VPN appliance.",
+        "ja": "保守用 VPN 機器に接続元 IP アドレスの制限がなかった。",
         "source": "case-opmc-report"
       },
       {
         "status": "stated",
         "en": "First entry is confirmed at 02:41 on May 13, 2024, from server forensics.",
-        "ja": "最初の侵入はサーバーのフォレンジック調査により2024年5月13日2時41分と確認された。",
+        "ja": "最初の侵入はサーバのフォレンジック調査により2024年5月13日2時41分と確認された。",
         "source": "case-opmc-report"
       },
       {
@@ -633,14 +633,14 @@
       },
       {
         "status": "unknown",
-        "en": "The VPN device's own record. Its syslog was kept only in a small in-memory buffer and had been overwritten.",
-        "ja": "VPN 装置側の記録。Syslog は装置内の小さなメモリにしか保存されず、上書きされていた。",
+        "en": "The VPN appliance's own record. Its syslog was kept only in a small in-memory buffer and had been overwritten.",
+        "ja": "VPN 機器側の記録。Syslog は機器内の小さなメモリにしか保存されず、上書きされていた。",
         "source": "case-opmc-report"
       }
     ],
     "conclusion": {
       "en": "The committee concluded that the intruder came in through the maintenance SSL-VPN appliance, then used the same administrator credentials everywhere to spread, steal data and encrypt. It wrote that most of the weaknesses could easily have been prevented by following the health ministry's guideline.",
-      "ja": "調査委員会は、保守用 SSL-VPN 装置から侵入され、どこでも共通の管理者の認証情報によって拡散、情報窃取、暗号化に至ったと結論した。「多くは、厚労省ガイドラインの遵守で容易に防げたものである」としている。"
+      "ja": "調査委員会は、保守用 SSL-VPN 機器から侵入され、どこでも共通の管理者の認証情報によって拡散、情報窃取、暗号化に至ったと結論した。「多くは、厚労省ガイドラインの遵守で容易に防げたものである」としている。"
     },
     "recommendations": {
       "by": { "en": "Investigation committee (measures implemented)", "ja": "調査委員会（実施済みの対策）" },
@@ -662,8 +662,8 @@
           "ja": "電子カルテシステムを標準ユーザーで運用できるよう改修する。"
         },
         {
-          "en": "Renew the firewall in front of vendors' own VPN devices and restrict their source IPs.",
-          "ja": "ベンダー独自の VPN 装置について、ファイアウォールを刷新し接続元 IP アドレスを制限する。"
+          "en": "Renew the firewall in front of vendors' own VPN appliances and restrict their source IPs.",
+          "ja": "ベンダー独自の VPN 機器について、ファイアウォールを刷新し接続元 IP アドレスを制限する。"
         },
         {
           "en": "Lock an account after five consecutive failed logins.",
@@ -677,28 +677,28 @@
         "date": "2024-05-13 02:41",
         "actor": { "en": "Intruder", "ja": "侵入者" },
         "event_en": "First confirmed entry. Daily network scans, theft of Active Directory data and shared-folder data, and a search for backups follow until May 18.",
-        "event_ja": "最初の侵入。18日まで連日、ネットワークスキャン、AD 構成情報と共有フォルダーのデータの窃取、バックアップの探索。",
+        "event_ja": "最初の侵入。18日まで連日、ネットワークスキャン、AD 構成情報と共有フォルダのデータの窃取、バックアップの探索。",
         "source": "case-opmc-report"
       },
       {
         "date": "2024-05-14 22:56",
         "actor": { "en": "Intruder", "ja": "侵入者" },
         "event_en": "Remote logon to an Active Directory server; a network scanner is installed.",
-        "event_ja": "AD サーバーにリモートログオンし、ネットワークスキャナーを設置。",
+        "event_ja": "AD サーバにリモートログオンし、ネットワークスキャナーを設置。",
         "source": "case-opmc-report"
       },
       {
         "date": "2024-05-16",
         "actor": { "en": "Intruder", "ja": "侵入者" },
         "event_en": "From May 16 to 18, credentials taken from the Active Directory server and backup data deleted.",
-        "event_ja": "16日から18日にかけて、AD サーバーの認証情報の窃取とバックアップデータの削除。",
+        "event_ja": "16日から18日にかけて、AD サーバの認証情報の窃取とバックアップデータの削除。",
         "source": "case-opmc-report"
       },
       {
         "date": "2024-05-19 13:10",
         "actor": { "en": "Intruder", "ja": "侵入者" },
         "event_en": "Encryption of servers and terminals begins; it ends at 17:34.",
-        "event_ja": "各サーバー・端末の暗号化を開始（17時34分まで）。",
+        "event_ja": "各サーバ・端末の暗号化を開始（17時34分まで）。",
         "source": "case-opmc-report"
       },
       {
@@ -776,11 +776,11 @@
     },
     "summary": {
       "en": "From about 18:00 on September 12, 2024, Kantsu's systems went down one after another, starting with attendance. Staff found the servers encrypted and a ransom note. The company disconnected the servers that night, and the next night decided to discard the whole environment and rebuild. Client shipments stopped or were delayed for weeks.",
-      "ja": "2024年9月12日18時ごろから、勤怠システムを皮切りに関通のシステムが次々に止まった。担当者はサーバーの暗号化とランサムノートを確認した。会社はその夜サーバーを物理的に切り離し、翌13日の夜には環境をすべて捨てて作り直すと決めた。荷主の出荷は数週間にわたって停止や遅延が続いた。"
+      "ja": "2024年9月12日18時ごろから、勤怠システムを皮切りに関通のシステムが次々に止まった。担当者はサーバの暗号化とランサムノートを確認した。会社はその夜サーバを物理的に切り離し、翌13日の夜には環境をすべて捨てて作り直すと決めた。荷主の出荷は数週間にわたって停止や遅延が続いた。"
     },
     "after": {
       "en": "The attacker entered several servers and encrypted them. The company built a new environment separate from the damaged one, added continuous monitoring, and had an outside security firm check it before resuming work. About 450 PCs and the servers were replaced.",
-      "ja": "侵入者は複数のサーバーに入り、暗号化した。会社は被害を受けた環境とは別に新しい環境を作り、常時監視の仕組みを入れ、外部のセキュリティ専門業者の確認を経てから業務を再開した。PC 約450台とサーバーを入れ替えた。"
+      "ja": "侵入者は複数のサーバに入り、暗号化した。会社は被害を受けた環境とは別に新しい環境を作り、常時監視の仕組みを入れ、外部のセキュリティ専門業者の確認を経てから業務を再開した。PC 約450台とサーバを入れ替えた。"
     },
     "impact": {
       "en": "Shipments for client brands stopped or were delayed. According to the staff interview, the inventory system felt largely restored about a month and a half later.",
@@ -794,7 +794,7 @@
       {
         "status": "stated",
         "en": "The intrusion came from the connection point with external networks into several servers.",
-        "ja": "外部ネットワークとの接続口から複数のサーバーに侵入された。",
+        "ja": "外部ネットワークとの接続口から複数のサーバに侵入された。",
         "source": "case-kantsu-3rd"
       },
       {
@@ -806,13 +806,13 @@
       {
         "status": "unknown",
         "en": "Whether the VPN was passed with credentials or through a vulnerability. Two interviews say different things.",
-        "ja": "VPN を認証情報で通られたのか、脆弱性を突かれたのか。2つのインタビューで説明が異なる。",
+        "ja": "VPN を正規の認証情報で通過されたのか、脆弱性を突かれたのか。2つのインタビューで説明が異なる。",
         "source": "case-kantsu-softbank"
       }
     ],
     "conclusion": {
       "en": "The company states that the intrusion came through its connection point with external networks and that several servers were encrypted. Its staff identify that point as the VPN. No investigation report has been published.",
-      "ja": "会社は、外部ネットワークとの接続口から侵入され、複数のサーバーが暗号化されたと発表している。担当者はその接続口を VPN としている。調査報告書は公表されていない。"
+      "ja": "会社は、外部ネットワークとの接続口から侵入され、複数のサーバが暗号化されたと発表している。担当者はその接続口を VPN としている。調査報告書は公表されていない。"
     },
     "recommendations": {
       "by": { "en": "Company", "ja": "会社" },
@@ -838,14 +838,14 @@
         "approx": true,
         "actor": { "en": "Company", "ja": "会社" },
         "event_en": "Systems fail, starting with attendance; servers found encrypted and a ransom note found.",
-        "event_ja": "勤怠システムから順に障害。サーバーの暗号化とランサムノートを確認。",
+        "event_ja": "勤怠システムから順に障害。サーバの暗号化とランサムノートを確認。",
         "source": "case-kantsu-softbank"
       },
       {
         "date": "2024-09-12",
         "actor": { "en": "Company", "ja": "会社" },
         "event_en": "That night, servers physically disconnected from the network.",
-        "event_ja": "同日夜、サーバーをネットワークから物理的に切り離す。",
+        "event_ja": "同日夜、サーバをネットワークから物理的に切り離す。",
         "source": "case-kantsu-softbank"
       },
       {
@@ -900,7 +900,7 @@
     "cve": [],
     "vectorWording": {
       "en": "The company: the ID and password of an administrator account issued to an outsourcing contractor, one to which multi-factor authentication had \"exceptionally\" not been applied, leaked by some means and were misused for initial entry from outside the company. A vulnerability the VPN appliance vendor published in late September 2025 showed no trace of exploitation.",
-      "ja": "会社は「例外的に多要素認証を適用していなかった業務委託先に対して付与していた管理者アカウントの ID とパスワードが何らかの方法で漏洩し不正利用された」とし、社外から初期侵入されたと説明している。VPN 機器ベンダが2025年9月末ごろに公表した脆弱性については、悪用の痕跡は確認されなかったとしている。"
+      "ja": "会社は「例外的に多要素認証を適用していなかった業務委託先に対して付与していた管理者アカウントの ID とパスワードが何らかの方法で漏洩し不正利用された」とし、社外から初期侵入されたと説明している。VPN 機器ベンダーが2025年9月末ごろに公表した脆弱性については、悪用の痕跡は確認されなかったとしている。"
     },
     "vectorSource": "case-askul-13th",
     "cause": {
@@ -913,7 +913,7 @@
     },
     "after": {
       "en": "From June to early October the intruder tried to gain administrator rights. From July onward EDR and other security software was disabled, the intruder moved through the logistics and internal systems, and ransomware was staged. On October 19 the ransomware launched, encrypting servers and deleting backup files. On October 22 a cloud service account was also compromised and data taken. The attacker published data on October 30, November 10 and December 2.",
-      "ja": "6月から10月上旬にかけて、侵入者は管理者権限の取得を試みた。7月以降、EDR などのセキュリティソフトが無効化され、物流と社内のシステムに侵入範囲が広がり、ランサムウェアが配置された。10月19日にランサムウェアが実行され、サーバーが暗号化され、バックアップファイルも削除された。10月22日には外部クラウドサービスのアカウントも不正アクセスを受け、情報が窃取された。攻撃者は10月30日、11月10日、12月2日に情報を公開した。"
+      "ja": "6月から10月上旬にかけて、侵入者は管理者権限の取得を試みた。7月以降、EDR などのセキュリティソフトが無効化され、物流と社内のシステムに侵入範囲が広がり、ランサムウェアが配置された。10月19日にランサムウェアが実行され、サーバが暗号化され、バックアップファイルも削除された。10月22日には外部クラウドサービスのアカウントも不正アクセスを受け、情報が窃取された。攻撃者は10月30日、11月10日、12月2日に情報を公開した。"
     },
     "impact": {
       "en": "Orders and shipping for ASKUL, Soloel Arena and LOHACO stopped from October 19; the ASKUL and Soloel Arena websites resumed taking orders on December 3. About 740,000 records leaked, covering business customers, consumers, business partners and staff. The company had no contact with the attacker.",
@@ -933,7 +933,7 @@
       {
         "status": "stated",
         "en": "The VPN vendor's late-September 2025 vulnerability showed no trace of exploitation.",
-        "ja": "VPN 機器ベンダが2025年9月末に公表した脆弱性の悪用の痕跡はなかった。",
+        "ja": "VPN 機器ベンダーが2025年9月末に公表した脆弱性の悪用の痕跡はなかった。",
         "source": "case-askul-13th"
       },
       {
@@ -952,7 +952,7 @@
       "items": [
         {
           "en": "Reset the passwords of all administrator and other key accounts, and apply multi-factor authentication to the main systems.",
-          "ja": "全管理者アカウントを含む主要アカウントのパスワードをリセットし、主要システムに多要素認証を適用する。"
+          "ja": "全管理者アカウントを含む主要アカウントのパスワードを再設定し、主要システムに多要素認証を適用する。"
         },
         {
           "en": "Apply multi-factor authentication to all remote access, including contractors'.",
@@ -960,7 +960,7 @@
         },
         {
           "en": "Run EDR on all servers with round-the-clock monitoring.",
-          "ja": "全サーバーに EDR を導入し、24時間365日監視する。"
+          "ja": "全サーバに EDR を導入し、24時間365日監視する。"
         },
         { "en": "Keep backups that ransomware cannot reach.", "ja": "ランサムウェアの届かないバックアップを持つ。" }
       ],
@@ -1041,8 +1041,8 @@
     "opening": "network-device-unspecified",
     "openingLabel": { "en": "Network equipment", "ja": "ネットワーク機器" },
     "openingNote": {
-      "en": "Asahi says \"network equipment at a Group site\" and has not disclosed the type. Its prevention plan abolishes remote-access VPN devices; that is a remedy, not a statement of the entry device.",
-      "ja": "アサヒの表現は「グループ内の拠点にあるネットワーク機器」で、種類は公表していない。再発防止策にリモートアクセス VPN 装置の全面廃止があるが、これは対策であって侵入機器の特定ではない。"
+      "en": "Asahi says \"network equipment at a Group site\" and has not disclosed the type. Its prevention plan abolishes remote-access VPN appliances; that is a remedy, not a statement of the entry device.",
+      "ja": "アサヒの表現は「グループ内の拠点にあるネットワーク機器」で、種類は公表していない。再発防止策にリモートアクセス VPN 機器の全面廃止があるが、これは対策であって侵入機器の特定ではない。"
     },
     "product": null,
     "cve": [],
@@ -1093,8 +1093,8 @@
       "by": { "en": "Company", "ja": "会社" },
       "items": [
         {
-          "en": "Abolish remote-access VPN devices entirely, to prevent re-entry from network equipment.",
-          "ja": "ネットワーク機器からの再侵入を防ぐため、リモートアクセス VPN 装置を全面的に廃止する。"
+          "en": "Abolish remote-access VPN appliances entirely, to prevent re-entry from network equipment.",
+          "ja": "ネットワーク機器からの再侵入を防ぐため、リモートアクセス VPN 機器を全面的に廃止する。"
         },
         {
           "en": "Redesign communication paths and network control, and tighten connection limits.",
@@ -1102,7 +1102,7 @@
         },
         {
           "en": "Review security monitoring to detect attacks more accurately.",
-          "ja": "セキュリティー監視の仕組みを見直し、攻撃検知の精度を上げる。"
+          "ja": "セキュリティ監視の仕組みを見直し、攻撃検知の精度を上げる。"
         },
         {
           "en": "Redesign the backup strategy and business-continuity plan.",
@@ -1146,8 +1146,8 @@
       {
         "date": "2026-02-18",
         "actor": { "en": "Company", "ja": "会社" },
-        "event_en": "Prevention measures published, including abolishing remote-access VPN devices.",
-        "event_ja": "リモートアクセス VPN 装置の全面廃止を含む再発防止策を公表。",
+        "event_en": "Prevention measures published, including abolishing remote-access VPN appliances.",
+        "event_ja": "リモートアクセス VPN 機器の全面廃止を含む再発防止策を公表。",
         "source": "case-asahi-2026-02-18"
       }
     ],
@@ -1187,11 +1187,11 @@
     },
     "summary": {
       "en": "On February 3, 2026, Anabuki Kosan's monitoring detected a ransomware attack and encryption. The company cut the affected equipment off from the internal network and the internet. Customer, job-candidate and staff data later appeared on a leak site. Outside investigators traced the entry to a vulnerability in the company's communications equipment.",
-      "ja": "2026年2月3日、穴吹興産のシステム監視がランサムウェアによる異常と暗号化を検知した。会社は対象機器を社内ネットワークとインターネットから遮断した。その後、顧客、採用候補者、社員の情報がリークサイトに掲載された。外部専門機関は、侵入口を当社通信機器の脆弱性と特定した。"
+      "ja": "2026年2月3日、穴吹興産のシステム監視がランサムウェアによる異常と暗号化を検知した。会社は対象機器を社内ネットワークとインターネットから遮断した。その後、顧客、採用候補者、社員の情報がリークサイトに掲載された。外部専門機関は、侵入口を会社の通信機器の脆弱性と特定した。"
     },
     "after": {
       "en": "Mainly outside business hours, the intruder tried to log in to several servers with Remote Desktop and similar tools, took administrator rights, spread across the whole network and deployed ransomware to several servers. Personal and internal data was confirmed on a dark-web leak site.",
-      "ja": "侵入後、主に業務時間外にリモートデスクトップなどで複数のサーバーへのログインを試み、管理者権限を奪い、ネットワーク全体に範囲を広げ、複数のサーバーにランサムウェアを展開して暗号化した。ダークウェブのリークサイトで個人情報と社内情報の一部が確認された。"
+      "ja": "侵入後、主に業務時間外にリモートデスクトップなどで複数のサーバへのログインを試み、管理者権限を奪い、ネットワーク全体に範囲を広げ、複数のサーバにランサムウェアを展開して暗号化した。ダークウェブのリークサイトで個人情報と社内情報の一部が確認された。"
     },
     "impact": {
       "en": "Personal data of some real-estate customers, mid-career job candidates and current and former staff may have leaked. Much of the company's own data is encrypted, so the scope and count are still unclear.",
@@ -1202,7 +1202,7 @@
       {
         "status": "stated",
         "en": "Entry was by exploiting a vulnerability in the company's communications equipment.",
-        "ja": "当社通信機器の脆弱性を悪用した攻撃で侵入された。",
+        "ja": "会社の通信機器の脆弱性を悪用した攻撃で侵入された。",
         "source": "case-anabuki-4th"
       },
       {
@@ -1214,7 +1214,7 @@
     ],
     "conclusion": {
       "en": "The company states that the intrusion exploited a vulnerability in its communications equipment, and that the intruder then took administrator rights and encrypted several servers.",
-      "ja": "会社は、通信機器の脆弱性を悪用して侵入され、その後管理者権限を奪われて複数のサーバーが暗号化されたとしている。"
+      "ja": "会社は、通信機器の脆弱性を悪用して侵入され、その後管理者権限を奪われて複数のサーバが暗号化されたとしている。"
     },
     "recommendations": {
       "by": { "en": "Company", "ja": "会社" },
@@ -1283,11 +1283,11 @@
     },
     "summary": {
       "en": "Early on April 2, 2026, YCC Information System found files on its file server encrypted and a ransom note. Encryption had begun at about 06:50. The file server held data entrusted by client organizations, so access to it cannot be ruled out. Investigators presume entry with a network device's administrator credentials.",
-      "ja": "2026年4月2日早朝、YCC情報システムはファイルサーバーのファイルの暗号化と脅迫文を確認した。暗号化は6時50分ごろに始まっていた。ファイルサーバーには取引先から預かった情報があり、閲覧された可能性は否定できない。調査では、ネットワーク機器の管理者の認証情報で侵入されたと推定されている。"
+      "ja": "2026年4月2日早朝、YCC情報システムはファイルサーバのファイルの暗号化と脅迫文を確認した。暗号化は6時50分ごろに始まっていた。ファイルサーバには取引先から預かった情報があり、閲覧された可能性は否定できない。調査では、ネットワーク機器の管理者の認証情報で侵入されたと推定されている。"
     },
     "after": {
       "en": "Files on the file server were encrypted and could not be opened. Mail, other systems and business PCs ran in a separate environment and showed no effect. Access to client data on the server cannot be ruled out, but no clear trace of data being sent outside was found.",
-      "ja": "ファイルサーバーのファイルが暗号化され、開けなくなった。メールなどのシステムと業務用 PC は別環境で、影響は確認されていない。サーバー上の取引先の情報が閲覧された可能性は否定できないが、外部に送信された明確な痕跡は確認されていない。"
+      "ja": "ファイルサーバのファイルが暗号化され、開けなくなった。メールなどのシステムと業務用 PC は別環境で、影響は確認されていない。サーバ上の取引先の情報が閲覧された可能性は否定できないが、外部に送信された明確な痕跡は確認されていない。"
     },
     "impact": {
       "en": "Client organizations, including municipalities, were told their entrusted data may have been accessed. No leak has been confirmed as of the fifth report.",
@@ -1295,7 +1295,7 @@
     },
     "impactShort": {
       "en": "File server encrypted; client data possibly accessed",
-      "ja": "ファイルサーバー暗号化。取引先の情報が閲覧された可能性"
+      "ja": "ファイルサーバ暗号化。取引先の情報が閲覧された可能性"
     },
     "analysis": [
       {
@@ -1313,7 +1313,7 @@
     ],
     "conclusion": {
       "en": "The company, based on outside investigators, presumes that the attacker used a network device's administrator credentials to enter and then encrypted the file server.",
-      "ja": "会社は外部専門機関の調査に基づき、ネットワーク機器の管理者の認証情報で侵入され、ファイルサーバーが暗号化されたと推定している。"
+      "ja": "会社は外部専門機関の調査に基づき、ネットワーク機器の管理者の認証情報で侵入され、ファイルサーバが暗号化されたと推定している。"
     },
     "recommendations": {
       "by": { "en": "Company", "ja": "会社" },
@@ -1345,7 +1345,7 @@
         "approx": true,
         "actor": { "en": "Company", "ja": "会社" },
         "event_en": "Encrypted files and a ransom note found on the file server.",
-        "event_ja": "ファイルサーバーでファイルの暗号化と脅迫文を確認。",
+        "event_ja": "ファイルサーバでファイルの暗号化と脅迫文を確認。",
         "source": "case-ycc-5th"
       },
       {
@@ -1394,19 +1394,19 @@
     },
     "summary": {
       "en": "At 07:50 on April 22, 2026, Seidensha Electronics found unauthorized access by malware and cut its whole network. Most servers and several PCs had been encrypted. The intruder had come in through the VPN two weeks earlier, on April 8. Quoting, orders, production and shipping resumed on a temporary system from May 18.",
-      "ja": "2026年4月22日7時50分、精電舎電子工業はマルウェアによる不正アクセスを確認し、全社ネットワークを遮断した。サーバーのほとんどと PC 複数台が暗号化されていた。侵入者は2週間前の4月8日に VPN から入っていた。仮システムで見積、受発注、生産、出荷を再開したのは5月18日である。"
+      "ja": "2026年4月22日7時50分、精電舎電子工業はマルウェアによる不正アクセスを確認し、全社ネットワークを遮断した。サーバのほとんどと PC 複数台が暗号化されていた。侵入者は2週間前の4月8日に VPN から入っていた。仮システムで見積、受発注、生産、出荷を再開したのは5月18日である。"
     },
     "after": {
       "en": "The intruder logged in to the Active Directory server, where employees' credentials were presumably taken, then logged in to several servers and PCs and encrypted them. Data on the Active Directory server is judged to have been transferred outside.",
-      "ja": "侵入者は Active Directory サーバーにログインし、そこで社員の認証情報が取得されたと見られる。その後、複数のサーバーと PC にログインして暗号化した。Active Directory サーバー上のデータは外部へ転送されたと判断されている。"
+      "ja": "侵入者は Active Directory サーバにログインし、そこで社員の認証情報が取得されたと見られる。その後、複数のサーバと PC にログインして暗号化した。Active Directory サーバ上のデータは外部へ転送されたと判断されている。"
     },
     "impact": {
-      "en": "Most servers and several PCs were encrypted. The existing internal network has been cut off since April 22, including the VPN device the attack came through. Business resumed on a temporary system from May 18.",
-      "ja": "サーバーのほとんどと PC 複数台が暗号化された。既存の社内ネットワークは4月22日以降すべて遮断し、攻撃の起点となった VPN 装置も遮断している。5月18日から仮システムで業務を再開した。"
+      "en": "Most servers and several PCs were encrypted. The existing internal network has been cut off since April 22, including the VPN appliance the attack came through. Business resumed on a temporary system from May 18.",
+      "ja": "サーバのほとんどと PC 複数台が暗号化された。既存の社内ネットワークは4月22日以降すべて遮断し、攻撃の起点となった VPN 機器も遮断している。5月18日から仮システムで業務を再開した。"
     },
     "impactShort": {
       "en": "Most servers encrypted; directory data taken",
-      "ja": "サーバーの大半が暗号化。AD のデータが流出"
+      "ja": "サーバの大半が暗号化。AD のデータが流出"
     },
     "analysis": [
       {
@@ -1418,26 +1418,26 @@
       {
         "status": "presumed",
         "en": "Employees' credentials were taken on the Active Directory server.",
-        "ja": "Active Directory サーバーで社員の認証情報が取得された。",
+        "ja": "Active Directory サーバで社員の認証情報が取得された。",
         "source": "case-sedeco-2026-07-21"
       },
       {
         "status": "unknown",
         "en": "Whether the VPN was passed with credentials or through a vulnerability.",
-        "ja": "VPN を認証情報で通られたのか、脆弱性を突かれたのか。",
+        "ja": "VPN を正規の認証情報で通過されたのか、脆弱性を突かれたのか。",
         "source": "case-sedeco-2026-07-21"
       }
     ],
     "conclusion": {
       "en": "The company states that a third party entered from the VPN on April 8, took credentials on the Active Directory server, and encrypted most servers on April 22.",
-      "ja": "会社は、第三者が4月8日に VPN から侵入し、Active Directory サーバーで認証情報を得て、4月22日にサーバーの大半を暗号化したとしている。"
+      "ja": "会社は、第三者が4月8日に VPN から侵入し、Active Directory サーバで認証情報を得て、4月22日にサーバの大半を暗号化したとしている。"
     },
     "recommendations": {
       "by": { "en": "Company (measures taken)", "ja": "会社（実施した対応）" },
       "items": [
         {
-          "en": "Cut off the existing internal network and the VPN device the attack came through.",
-          "ja": "既存の社内ネットワークと、攻撃起点の VPN 装置を遮断する。"
+          "en": "Cut off the existing internal network and the VPN appliance the attack came through.",
+          "ja": "既存の社内ネットワークと、攻撃起点の VPN 機器を遮断する。"
         },
         {
           "en": "Install EDR on PCs found uninfected and start round-the-clock outside monitoring (SOC).",
@@ -1462,7 +1462,7 @@
         "date": "2026-04-22",
         "actor": { "en": "Intruder", "ja": "侵入者" },
         "event_en": "Logs in to several servers and PCs and encrypts them.",
-        "event_ja": "複数の機器（サーバー、PC）にログインし、暗号化。",
+        "event_ja": "複数の機器（サーバ、PC）にログインし、暗号化。",
         "source": "case-sedeco-2026-07-21"
       },
       {
@@ -1534,7 +1534,7 @@
     },
     "after": {
       "en": "External specialists confirmed a ransomware attack and found traces of unauthorized access on some servers. Sales, transaction and personal data may have leaked.",
-      "ja": "外部専門家がランサムウェア攻撃を確認し、一部のサーバーに不正アクセスの痕跡を見つけた。営業、取引、個人に関する情報が漏洩した可能性がある。"
+      "ja": "外部専門家がランサムウェア攻撃を確認し、一部のサーバに不正アクセスの痕跡を見つけた。営業、取引、個人に関する情報が漏洩した可能性がある。"
     },
     "impact": {
       "en": "Client municipalities and gas utilities announced that data held at Ryomo may have been exposed.",
@@ -1614,13 +1614,13 @@
     "opening": "vpn",
     "openingNote": {
       "en": "Reports that the password had appeared in a leaked-password batch come from a security firm via the press, not from Colonial, and are left out here.",
-      "ja": "パスワードが流出パスワード集に含まれていたという話はセキュリティ企業から報道経由で出たもので、コロニアル自身の説明ではないため、ここでは扱わない。"
+      "ja": "パスワードが流出パスワード集に含まれていたという情報はセキュリティ企業から報道経由で出たもので、コロニアル自身の説明ではないため、ここでは扱わない。"
     },
     "product": null,
     "cve": [],
     "vectorWording": {
       "en": "CEO Joseph Blount, in written Senate testimony: \"we believe the attacker exploited a legacy virtual private network (VPN) profile that was not intended to be in use.\" At the hearing he confirmed the account did not require multi-factor authentication.",
-      "ja": "ジョセフ・ブラントCEO は上院への書面証言で、攻撃者は「使われる予定のなかった古い VPN（仮想プライベートネットワーク）のプロファイル」を悪用したと考えていると述べた。公聴会では、そのアカウントに多要素認証がなかったことを認めている。"
+      "ja": "ジョセフ・ブラント CEO は上院への書面証言で、攻撃者は「使われる予定のなかった古い VPN（仮想プライベートネットワーク）のプロファイル」を悪用したと考えていると述べた。公聴会では、そのアカウントに多要素認証がなかったことを認めている。"
     },
     "vectorSource": "case-colonial-testimony",
     "cause": {
@@ -1656,7 +1656,7 @@
       {
         "status": "unknown",
         "en": "How the attacker got the credentials. The company said it was still trying to determine this.",
-        "ja": "攻撃者がどうやって認証情報を得たか。会社はまだ調べている最中だとした。",
+        "ja": "攻撃者がどうやって認証情報を得たか。会社はまだ調査中だとした。",
         "source": "case-colonial-testimony"
       }
     ],
@@ -1725,7 +1725,7 @@
     },
     "vectorSource": "case-cisa-aa23-325a",
     "cause": {
-      "en": "A flaw in the NetScaler remote-access gateway let the attackers take over valid sessions, so the password and multi-factor check were never asked again.",
+      "en": "A flaw in the NetScaler remote-access gateway let the attackers take over valid sessions, so neither the password nor multi-factor authentication was checked again.",
       "ja": "リモートアクセス用ゲートウェイ NetScaler の欠陥で正規のセッションを乗っ取られ、パスワードも多要素認証も問われなかった。"
     },
     "summary": {
@@ -1751,7 +1751,7 @@
       {
         "status": "stated",
         "en": "The flaw lets attackers bypass passwords and multi-factor authentication by hijacking legitimate sessions.",
-        "ja": "この欠陥は、正規のセッションの乗っ取りでパスワードと多要素認証を回避させる。",
+        "ja": "この欠陥では、正規のセッションを乗っ取ることでパスワードと多要素認証を回避できる。",
         "source": "case-cisa-aa23-325a"
       }
     ],
@@ -1854,7 +1854,7 @@
     "analysis": [
       {
         "status": "stated",
-        "en": "A webshell was installed on the Ivanti device between January 23 and 26, 2024.",
+        "en": "A webshell was installed on the Ivanti appliance between January 23 and 26, 2024.",
         "ja": "2024年1月23日から26日に、Ivanti 機器へ Web シェルが設置された。",
         "source": "case-cisa-csat"
       },
@@ -1900,7 +1900,7 @@
       {
         "date": "2024-01-23",
         "actor": { "en": "Intruder", "ja": "侵入者" },
-        "event_en": "From January 23 to 26, a webshell is installed on CISA's Ivanti device.",
+        "event_en": "From January 23 to 26, a webshell is installed on CISA's Ivanti appliance.",
         "event_ja": "1月23日から26日にかけて、CISA の Ivanti 機器に Web シェルを設置。",
         "source": "case-cisa-csat"
       },
@@ -1938,7 +1938,7 @@
     },
     "vectorSource": "case-mitre-conclusion",
     "cause": {
-      "en": "Two unpatched-at-the-time flaws in the Ivanti VPN appliance let the attacker past multi-factor authentication.",
+      "en": "Two flaws in the Ivanti VPN appliance, unpatched at the time, let the attacker past multi-factor authentication.",
       "ja": "当時まだ修正のなかった Ivanti の VPN 機器の2つの欠陥で、多要素認証を素通りされた。"
     },
     "summary": {
