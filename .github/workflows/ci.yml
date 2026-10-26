@@ -180,7 +180,16 @@ jobs:
           name: dist
           path: dist
       # Serves dist with scripts/serve.ts and runs the runner's Google Chrome; 3 runs per page, median.
+      # Pinned so scores don't move when the runner image updates its Chrome.
+      # Bump deliberately (re-run pnpm perf locally with the same build first).
+      - id: chrome
+        uses: browser-actions/setup-chrome@48ad923757ca74d66703209fe939badbdf80f2f4 # v2.2.0
+        with:
+          chrome-version: 155.0.8059.84
+          install-dependencies: true
       - run: pnpm perf
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
       - if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:

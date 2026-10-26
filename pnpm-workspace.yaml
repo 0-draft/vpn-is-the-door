@@ -8,3 +8,8 @@ overrides:
   "fflate@>=0.7.0 <0.7.5": 0.7.5
   # subset-font (font subsetting, build only) allows harfbuzzjs ^1.6.1; hold to a release older than two weeks
   "subset-font>harfbuzzjs": 1.6.3
+
+# A release must be 2 days old before it can enter the lockfile (minutes): most
+# hijacked npm releases are pulled within hours. Dependabot adds a 7-day cooldown on
+# top. Raise this once the lockfile has aged; pnpm checks every entry, not only new ones.
+minimumReleaseAge: 2880
