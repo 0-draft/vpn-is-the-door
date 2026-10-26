@@ -67,7 +67,7 @@ pnpm perf                # Lighthouse（モバイル、3回の中央値）で予
 
 ## CI とデプロイ
 
-`.github/workflows/ci.yml` は Biome、markdownlint、`astro check`、カバレッジ付きの Vitest、データ検査、`pnpm audit`、プルリクエストでの依存関係レビュー、ビルド、明暗両テーマ・デスクトップとモバイルでの Playwright + axe、`#フラグメント` まで確かめるオフラインのリンク検査、5ページの Lighthouse（performance 0.9 以上、accessibility 1、CLS 0.05 以下、ページごとの転送量の上限）、ワークフローの actionlint + zizmor を実行する。日本語フォントはビルド時にサイトで使っている文字だけに絞り、言語と太さごとに1ファイルにしている。絞った結果に無い字形をページが必要とした場合はビルドが失敗する。CodeQL は push のたびと毎週実行する。Dependabot は毎週月曜に npm と Actions の更新を提案する（7日間のクールダウン付き）。`kev-drift.yml` は毎週月曜に建具表と KEV の最新版を照合し、掲載済みの行が変わったときや調べるべき新しいリモートアクセス製品の登録があったときに issue を1件立てて更新する。行を自動で追加することはしない。Actions はすべてコミット SHA で固定している。
+`.github/workflows/ci.yml` は Biome、markdownlint、`astro check`、カバレッジ付きの Vitest、データ検査、`pnpm audit`、プルリクエストでの依存関係レビュー、ビルド、明暗両テーマ・デスクトップとモバイルでの Playwright + axe、`#フラグメント` まで確かめるオフラインのリンク検査、5ページの Lighthouse（performance 0.9 以上、accessibility 1、CLS 0.05 以下、ページごとの転送量の上限）、ワークフローの actionlint + zizmor を実行する。日本語フォントはビルド時にサイトで使っている文字だけに絞り、言語と太さごとに1ファイルにしている。絞った結果に無い字形をページが必要とした場合はビルドが失敗する。CodeQL は push のたびと毎週実行する。Dependabot は毎週月曜に npm と Actions の更新を提案する（7日間のクールダウン付き）。`kev-drift.yml` は毎週月曜に建具表と KEV の最新版を照合し、掲載済みの行が変わったときや調べるべき新しいリモートアクセス製品の登録があったときに issue を1件立てて更新する。行を自動で追加することはしない。Actions はすべてコミット SHA で固定している。pnpm は公開から2日未満のパッケージを受け付けない（`pnpm-workspace.yaml` の `minimumReleaseAge`）。Lighthouse のジョブは版を固定した Chrome for Testing で動かす。
 
 `main` への push は、すべての検査に通ったときだけ GitHub Pages に公開される。
 

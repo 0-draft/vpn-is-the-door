@@ -2,7 +2,7 @@
 // default config) against the built site, served by scripts/serve.ts under
 // /vpn-is-the-door/. Each page runs RUNS times; every assertion uses the median.
 // Usage: pnpm build && node scripts/lighthouse.ts [path ...]   (CI: the `lighthouse` job)
-// Chrome comes from chrome-launcher's lookup (the runner's Google Chrome) or CHROME_PATH.
+// Chrome comes from CHROME_PATH (CI pins Chrome for Testing in ci.yml) or chrome-launcher's lookup.
 import { spawn } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
