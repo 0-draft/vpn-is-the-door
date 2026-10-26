@@ -25,7 +25,7 @@ The chapters follow the order of an incident:
 | 0 | Summary | The statistic drawn on the building, one square per case, and the three decisions that belong to leadership. |
 | 1 | Where they came in | What the National Police Agency counted, each opening in turn, 2021–2025. |
 | 2 | After the door opens | A scroll-driven plan of the route from the door to encryption, the timing, and one hospital's report mapped onto it. |
-| 3 | The doors | The products, the door detail drawing, and a schedule of 30+ KEV-listed vulnerabilities you can filter. |
+| 3 | The doors | The products, the door detail drawing, and a filterable schedule of 31 KEV-listed vulnerabilities. |
 | 4 | Cases | Incidents where the organization itself said how the attacker got in, each as a short report with a sequence-of-events table. |
 | 5 | For engineers | What is reachable before login, why a patch does not close the door, what evidence survives a reboot. |
 | 6 | What to do | Actions by owner, and a sandbox where each control cuts the route only at the point where it works. |
@@ -66,7 +66,7 @@ pnpm validate:data       # sources, references, EN/JA text checks
 
 ## CI and deployment
 
-`.github/workflows/ci.yml` runs Biome, markdownlint, `astro check`, Vitest with coverage, the data validator, `pnpm audit`, dependency review on pull requests, the build, Playwright with axe in light and dark themes on desktop and mobile, an offline internal-link check, and actionlint + zizmor on the workflows. CodeQL runs on every push and weekly. Dependabot proposes npm and Actions updates every Monday with a seven-day cooldown. All actions are pinned by commit SHA.
+`.github/workflows/ci.yml` runs Biome, markdownlint, `astro check`, Vitest with coverage, the data validator, `pnpm audit`, dependency review on pull requests, the build, Playwright with axe in light and dark themes on desktop and mobile, an offline link check that also verifies `#fragments`, and actionlint + zizmor on the workflows. CodeQL runs on every push and weekly. Dependabot proposes npm and Actions updates every Monday with a seven-day cooldown. `kev-drift.yml` compares the door schedule with the live KEV catalog every Monday and keeps one issue open when a listed row changed or new remote-access entries need research; rows are never added automatically. All actions are pinned by commit SHA.
 
 A push to `main` deploys to GitHub Pages only after every check passes.
 
