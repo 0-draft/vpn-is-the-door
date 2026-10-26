@@ -23,18 +23,25 @@ const tokens = focus === "remote" ? "vpn rdp" : focus;
   .op-plan .tally {
     transition: opacity 160ms var(--ease);
   }
-  .op-plan:not([data-focus~="vpn"]) .tally-vpn,
-  .op-plan:not([data-focus~="rdp"]) .tally-rdp,
-  .op-plan:not([data-focus~="mail"]) .tally-mail,
-  .op-plan:not([data-focus~="other"]) .tally-other {
-    opacity: 0.28;
+  /* fade the squares only; the labels stay readable in the caption grey */
+  .op-plan:not([data-focus~="vpn"]) .tally-vpn .unit,
+  .op-plan:not([data-focus~="rdp"]) .tally-rdp .unit,
+  .op-plan:not([data-focus~="mail"]) .tally-mail .unit,
+  .op-plan:not([data-focus~="other"]) .tally-other .unit {
+    opacity: 0.3;
+  }
+  .op-plan:not([data-focus~="vpn"]) .tally-vpn text,
+  .op-plan:not([data-focus~="rdp"]) .tally-rdp text,
+  .op-plan:not([data-focus~="mail"]) .tally-mail text,
+  .op-plan:not([data-focus~="other"]) .tally-other text {
+    fill: var(--ink-3);
   }
   /* a greyed VPN stack loses its red: red marks the opening under discussion only */
   .op-plan:not([data-focus~="vpn"]) .tally-vpn .unit.hot {
     fill: var(--ink-2);
   }
   .op-plan:not([data-focus~="vpn"]) .tally-vpn .hot-text {
-    fill: var(--ink);
+    fill: var(--ink-3);
     font-weight: 400;
   }
   .op-plan[data-focus~="rdp"] .window[data-opening="rdp"] .glass,

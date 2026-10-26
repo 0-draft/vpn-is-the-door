@@ -93,9 +93,10 @@ function overlay(l: Layout): Ov {
           [s.s1[0] - 24, c.y + 4],
           [s.s1[0] - 24, c.y + c.h - 4],
         ],
+        // in the gap between the key safe and station 3, clear of both outlines
         keys: [
-          [s.s3[0] - 19, s.s3[1] - 18],
-          [s.s3[0] - 19, s.s3[1] + 18],
+          [s.s3[0] - 16.5, s.s3[1] - 18],
+          [s.s3[0] - 16.5, s.s3[1] + 18],
         ],
         backups: [
           [s.s4[0] + 26, s.s4[1] - 18],
@@ -115,9 +116,10 @@ function overlay(l: Layout): Ov {
         [c.x + 2, s.s1[1] - 24],
         [c.x + c.w - 2, s.s1[1] - 24],
       ],
+      // across the top of the key safe; a vertical bar here ran through its label
       keys: [
-        [s.s3[0] - 14, s.s3[1] + 13],
-        [s.s3[0] - 14, s.s3[1] + 59],
+        [s.s3[0] - 66, s.s3[1] + 19],
+        [s.s3[0] - 24, s.s3[1] + 19],
       ],
       backups: [
         [s.s4[0] - 18, s.s4[1] - 5],
@@ -132,6 +134,14 @@ function overlay(l: Layout): Ov {
   };
 }
 const stationIds = ["door", "keys", "backups"] as const;
+// start a leg 13 units along its first run so it does not cross the station mark it leaves
+function clearOf(pts: Pt[]): Pt[] {
+  const [a, b, ...rest] = pts;
+  if (!a || !b) return pts;
+  const d = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
+  const k = Math.min(13, d) / d;
+  return [[a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k], b, ...rest];
+}
 ---
 
 <div class="sandbox" data-sandbox data-lang={lang} data-cut="" data-grey="">
@@ -196,6 +206,8 @@ const stationIds = ["door", "keys", "backups"] as const;
                 </marker>
               </defs>
               <path class="route sb-stub" d={polyline(o.stub)} marker-end={`url(#sb-arrow-${l.name})`} />
+              {/* the grey backup leg retraces the keys leg; repaint the keys leg red on top */}
+              <path class="route sb-keys" d={polyline(clearOf(l.route.toKeys))} />
               <path class="route sb-exfil" d={polyline(o.exfil)} marker-end={`url(#sb-arrow-${l.name})`} />
               {stationIds.map((st) => (
                 <line
@@ -415,6 +427,7 @@ const stationIds = ["door", "keys", "backups"] as const;
   /* overlay pieces appear only for the state that needs them */
   .sb-ov .sb-bar,
   .sb-ov .sb-stub,
+  .sb-ov .sb-keys,
   .sb-ov .sb-exfil {
     opacity: 0;
     transition: opacity 160ms var(--ease);
@@ -433,7 +446,8 @@ const stationIds = ["door", "keys", "backups"] as const;
   .sandbox[data-cut~="keys"] .sb-bar-keys,
   .sandbox[data-cut~="backups"] .sb-bar-backups,
   .sandbox[data-cut~="door"] .sb-stub,
-  .sandbox[data-limited] .sb-exfil {
+  .sandbox[data-limited] .sb-exfil,
+  .sandbox[data-grey~="toBackup"]:not([data-grey~="toKeys"]) .sb-keys {
     opacity: 1;
   }
 

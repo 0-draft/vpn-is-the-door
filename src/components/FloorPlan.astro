@@ -81,19 +81,45 @@ function fixtureLabel(l: Layout, id: (typeof fixtureIds)[number]) {
 const stationIds = ["s1", "s2", "s3", "s4"] as const;
 const openingIds = ["vpn", "rdp", "mail", "other"] as const;
 
+// Text sizes per layout: the tall plan renders at ~0.8x on a phone, so its
+// route-mode labels stay at the full label size to land at >= 13px.
+const routeSize = (l: Layout) => (l.name === "tall" ? l.labelSize : l.labelSize - 1);
+
 function notes(l: Layout) {
   const rec = l.rooms.find((r) => r.id === "reception")!;
   const b = l.rooms.find((r) => r.id === "backup")!;
-  const w = l.name === "wide" ? 176 : 122;
   const cx = rec.rect.x + rec.rect.w / 2;
-  const cy = l.name === "wide" ? rec.rect.y + 106 : rec.rect.y + 118;
+  if (l.name === "wide") {
+    const cy = rec.rect.y + 106;
+    return {
+      bypass: {
+        rect: { x: cx - 88, y: cy - 16, w: 176, h: 26 },
+        size: l.labelSize - 3,
+        lines: [{ x: cx, y: cy + 3, text: PLAN_NOTE.bypass[lang] }],
+      },
+      wiped: { x: b.rect.x + b.rect.w / 2, y: b.rect.y + b.rect.h - 14, s: PLAN_NOTE.wiped[lang] },
+    };
+  }
+  // tall: two lines, below the swing of the reception and main-entrance doors
+  const two = lang === "ja" ? ["受付を", "通らない"] : ["skips", "reception"];
+  const y0 = rec.rect.y + 132;
   return {
-    bypass: {
-      rect: { x: cx - w / 2, y: cy - 16, w },
-      text: { x: cx, y: cy + 3, s: l.name === "tall" && lang === "en" ? "skips reception" : PLAN_NOTE.bypass[lang] },
-    },
-    wiped: { x: b.rect.x + b.rect.w / 2, y: b.rect.y + b.rect.h - 14, s: PLAN_NOTE.wiped[lang] },
+    bypass: { rect: { x: cx - 56, y: y0, w: 112, h: 48 }, size: 18, lines: lines([cx, y0 + 20], two, 18) },
+    wiped: { x: b.rect.x + b.rect.w / 2 + 18, y: b.rect.y + b.rect.h - 8, s: PLAN_NOTE.wiped[lang] },
   };
+}
+
+// Segments that end at a station stop at the circle's edge, so the arrowhead
+// touches the station instead of hiding under it.
+const stationR = (l: Layout) => (l.name === "tall" ? 15 : 13);
+function segPoints(l: Layout, seg: (typeof segOrder)[number]): Pt[] {
+  const pts = l.route[seg];
+  if (seg === "out") return pts;
+  const end = pts.at(-1)!;
+  const prev = pts.at(-2)!;
+  const len = Math.hypot(end[0] - prev[0], end[1] - prev[1]);
+  const k = (stationR(l) + 1) / len;
+  return [...pts.slice(0, -1), [end[0] - (end[0] - prev[0]) * k, end[1] - (end[1] - prev[1]) * k]];
 }
 
 const ids = (l: Layout) => ({
@@ -135,7 +161,7 @@ const ids = (l: Layout) => ({
             {mode === "route" &&
               segOrder.map((seg) => (
                 <mask id={id.mask(seg)} maskUnits="userSpaceOnUse" x={vx} y={vy} width={vw} height={vh}>
-                  <path d={polyline(l.route[seg])} class={`reveal reveal-${seg}`} pathLength="1" />
+                  <path d={polyline(segPoints(l, seg))} class={`reveal reveal-${seg}`} pathLength="1" />
                 </mask>
               ))}
           </defs>
@@ -196,7 +222,7 @@ const ids = (l: Layout) => ({
           {l.rooms
             .filter((r) => r.id !== "corridor" || l.name === "wide")
             .map((r) => (
-              <text class={`room-name${r.id === "corridor" ? " muted" : ""}`} x={r.label[0]} y={r.label[1]} text-anchor="middle" font-size={l.labelSize}>
+              <text class={`room-name room-name-${r.id}${r.id === "corridor" ? " muted" : ""}`} x={r.label[0]} y={r.label[1]} text-anchor="middle" font-size={l.labelSize}>
                 {(l.name === "tall" ? ROOM_LABEL_TALL[r.id]?.[lang] : undefined) ?? ROOM_LABEL[r.id][lang]}
               </text>
             ))}
@@ -237,8 +263,8 @@ const ids = (l: Layout) => ({
                 const ol = l.openingLabels[op];
                 return (
                   <g class={`opening-label opening-${op}`}>
-                    {lines(ol.at, OPENING_LABEL[op][lang], l.labelSize - 1).map((ln, i) => (
-                      <text class={i === 0 ? "" : "muted"} x={ln.x} y={ln.y} text-anchor={ol.anchor} font-size={l.labelSize - 1}>
+                    {lines(ol.at, OPENING_LABEL[op][lang], routeSize(l)).map((ln, i) => (
+                      <text class={i === 0 ? "" : "muted"} x={ln.x} y={ln.y} text-anchor={ol.anchor} font-size={routeSize(l)}>
                         {ln.text}
                       </text>
                     ))}
@@ -247,31 +273,38 @@ const ids = (l: Layout) => ({
               })}
 
               <g class="bypass-note caution-tag">
-                <rect x={nt.bypass.rect.x} y={nt.bypass.rect.y} width={nt.bypass.rect.w} height="26" />
-                <text x={nt.bypass.text.x} y={nt.bypass.text.y} text-anchor="middle" font-size={l.labelSize - 3}>
-                  {nt.bypass.text.s}
-                </text>
+                <rect x={nt.bypass.rect.x} y={nt.bypass.rect.y} width={nt.bypass.rect.w} height={nt.bypass.rect.h} />
+                {nt.bypass.lines.map((ln) => (
+                  <text x={ln.x} y={ln.y} text-anchor="middle" style={`font-size:${nt.bypass.size}px`}>
+                    {ln.text}
+                  </text>
+                ))}
               </g>
 
               {segOrder.map((seg) => (
                 <path
                   class={`route route-${seg}${seg === "out" ? " route-exfil" : ""}`}
-                  d={polyline(l.route[seg])}
+                  d={polyline(segPoints(l, seg))}
                   mask={`url(#${id.mask(seg)})`}
                   marker-end={`url(#${id.arrow})`}
                 />
               ))}
 
               <g class="wiped-note">
-                <text class="hot-text" x={nt.wiped.x} y={nt.wiped.y} text-anchor="middle" font-size={l.labelSize - 1}>
+                <text class="hot-text" x={nt.wiped.x} y={nt.wiped.y} text-anchor="middle" font-size={routeSize(l)}>
                   {nt.wiped.s}
                 </text>
               </g>
 
               {stationIds.map((sid) => (
                 <g class={`station station-${sid}`} data-station={sid}>
-                  <circle cx={l.stations[sid][0]} cy={l.stations[sid][1]} r="13" />
-                  <text x={l.stations[sid][0]} y={l.stations[sid][1] + 5} text-anchor="middle">
+                  <circle cx={l.stations[sid][0]} cy={l.stations[sid][1]} r={stationR(l)} />
+                  <text
+                    x={l.stations[sid][0]}
+                    y={l.stations[sid][1] + (l.name === "tall" ? 6 : 5)}
+                    text-anchor="middle"
+                    style={l.name === "tall" ? "font-size:18px" : undefined}
+                  >
                     {stationNum[sid]}
                   </text>
                 </g>
@@ -390,7 +423,7 @@ const ids = (l: Layout) => ({
   .plan .reveal {
     fill: none;
     stroke: #fff;
-    stroke-width: 14;
+    stroke-width: 34;
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
     transition: stroke-dashoffset 600ms var(--ease);
@@ -446,6 +479,17 @@ const ids = (l: Layout) => ({
     opacity: 1;
   }
   .plan[data-show~="encrypt"] .floor:not([data-room="corridor"]) {
+    fill: var(--intruder-tint);
+  }
+  /* labels stay legible over the hatch: a halo in the tint colour */
+  .plan[data-show~="encrypt"] :is(.room-name, .fixture-label),
+  .plan[data-show~="wiped"] :is(.room-name-backup, .wiped-note text) {
+    stroke: var(--intruder-tint);
+    stroke-width: 5px;
+    stroke-linejoin: round;
+    paint-order: stroke;
+  }
+  .plan[data-show~="wiped"] .floor[data-room="backup"] {
     fill: var(--intruder-tint);
   }
   .plan .opening-label text {

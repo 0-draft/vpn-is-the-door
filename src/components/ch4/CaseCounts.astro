@@ -81,8 +81,12 @@ const notRansom = CASES.filter((c) => c.kind === "not-ransomware").length;
 
 <style>
   .cc {
-    min-inline-size: 30rem;
     max-inline-size: 44rem;
+  }
+  /* global th wraps anywhere; that split "Japan" into "Japa/n" */
+  .cc th.num {
+    overflow-wrap: normal;
+    inline-size: 1%;
   }
   .cc th[scope="row"] {
     font-weight: 400;

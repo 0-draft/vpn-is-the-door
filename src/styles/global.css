@@ -257,6 +257,14 @@ td.num,
 th.num {
   text-align: end;
 }
+td.num {
+  white-space: nowrap;
+}
+/* a number in the first column is a row label (a date, a step): read it from the left */
+td.num:first-child,
+th.num:first-child {
+  text-align: start;
+}
 
 hr {
   border: 0;
@@ -325,6 +333,10 @@ mark {
   overflow-x: auto;
   max-inline-size: 100%;
   margin-block: 1.5rem 2rem;
+}
+/* Inside a scroller, whole words set the column width; the table scrolls instead of splitting "Remediatio/n". */
+.table-scroll :is(td, th) {
+  overflow-wrap: break-word;
 }
 
 /* Scale tag: S=1:500 / 1:100 / 1:5 marks how deep a section goes. */

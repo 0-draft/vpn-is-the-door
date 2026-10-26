@@ -226,4 +226,13 @@ const sums = Object.fromEntries(ACTIONS.map((a) => [a, summary(lang, a)]));
   .evs-lbl {
     transition: fill 140ms var(--ease);
   }
+  /* the 420-unit drawing shrinks to ~0.85 on a phone; size up so labels stay >= 14px */
+  @media (max-width: 30rem) {
+    .evs-svg text {
+      font-size: 17px;
+    }
+    .evs-svg .evs-tag text {
+      font-size: 16.5px;
+    }
+  }
 </style>

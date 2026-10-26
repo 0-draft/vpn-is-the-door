@@ -142,7 +142,7 @@ export const wide: Layout = {
     { opening: "other", origin: [790, 536], grow: "s", along: "e", label: [790, 582], anchor: "middle" },
   ],
   fixtures: [
-    { id: "keys", room: "it", rect: { x: 484, y: 112, w: 50, h: 56 } },
+    { id: "keys", room: "it", rect: { x: 492, y: 112, w: 46, h: 56 } },
     { id: "fileserver", room: "server", rect: { x: 680, y: 100, w: 150, h: 46 } },
     { id: "nas", room: "backup", rect: { x: 800, y: 236, w: 44, h: 46 } },
     { id: "pcs", room: "office", rect: { x: 240, y: 190, w: 190, h: 40 } },
@@ -183,7 +183,7 @@ export const wide: Layout = {
 
 export const tall: Layout = {
   name: "tall",
-  viewBox: [0, 0, 490, 830],
+  viewBox: [16, 0, 490, 830],
   outer: { x: 40, y: 100, w: 320, h: 580 },
   innerWalls: [
     [
@@ -219,10 +219,10 @@ export const tall: Layout = {
     { id: "office", rect: { x: 40, y: 100, w: 140, h: 230 }, label: [110, 150] },
     { id: "it", rect: { x: 40, y: 330, w: 140, h: 170 }, label: [110, 360] },
     { id: "server", rect: { x: 40, y: 500, w: 140, h: 90 }, label: [92, 552] },
-    { id: "backup", rect: { x: 40, y: 590, w: 140, h: 90 }, label: [98, 614] },
+    { id: "backup", rect: { x: 40, y: 590, w: 140, h: 90 }, label: [110, 610] },
     { id: "corridor", rect: { x: 180, y: 100, w: 56, h: 580 }, label: [208, 160] },
     { id: "meeting", rect: { x: 236, y: 100, w: 124, h: 160 }, label: [298, 190] },
-    { id: "reception", rect: { x: 236, y: 260, w: 124, h: 210 }, label: [298, 420] },
+    { id: "reception", rect: { x: 236, y: 260, w: 124, h: 210 }, label: [298, 462] },
     { id: "store", rect: { x: 236, y: 470, w: 124, h: 210 }, label: [298, 520] },
   ],
   doors: [
@@ -245,12 +245,12 @@ export const tall: Layout = {
     { opening: "other", origin: [376, 588], grow: "e", along: "s", label: [392, 576], anchor: "start" },
   ],
   fixtures: [
-    { id: "keys", room: "it", rect: { x: 52, y: 432, w: 40, h: 40 } },
+    { id: "keys", room: "it", rect: { x: 50, y: 440, w: 30, h: 30 } },
     { id: "fileserver", room: "server", rect: { x: 128, y: 558, w: 42, h: 24 } },
-    { id: "nas", room: "backup", rect: { x: 50, y: 646, w: 36, h: 26 } },
+    { id: "nas", room: "backup", rect: { x: 50, y: 640, w: 34, h: 30 } },
     { id: "pcs", room: "office", rect: { x: 56, y: 200, w: 108, h: 36 } },
   ],
-  stations: { s1: [208, 680], s2: [208, 350], s3: [110, 415], s4: [110, 635] },
+  stations: { s1: [208, 680], s2: [208, 350], s3: [110, 415], s4: [130, 636] },
   route: {
     in: [
       [208, 790],
@@ -265,12 +265,12 @@ export const tall: Layout = {
     toBackup: [
       [110, 415],
       [208, 415],
-      [208, 635],
-      [110, 635],
+      [208, 636],
+      [130, 636],
     ],
     out: [
-      [110, 645],
-      [222, 645],
+      [130, 648],
+      [222, 648],
       [222, 690],
       [222, 790],
     ],
@@ -380,4 +380,25 @@ export function walls(l: Layout): [Pt, Pt][] {
     ],
   ];
   return [...o, ...l.innerWalls];
+}
+
+// Phone scrolly: the tall plan is drawn at full width and panned so the part
+// each step talks about sits in the sticky window (viewBox y-range per step).
+export const STEP_FOCUS_TALL: Record<number, [number, number]> = {
+  0: [0, 400],
+  1: [0, 400],
+  2: [600, 740],
+  3: [330, 800],
+  4: [300, 600],
+  5: [400, 700],
+  6: [600, 800],
+  7: [130, 760],
+};
+
+// Pixel offset that centres the focus range in a window of winPx, clamped to the drawing.
+export function panOffset(focus: [number, number], vb: [number, number], svgPx: number, winPx: number): number {
+  const max = Math.max(0, svgPx - winPx);
+  const k = svgPx / vb[1];
+  const centre = ((focus[0] + focus[1]) / 2 - vb[0]) * k;
+  return Math.round(Math.min(max, Math.max(0, centre - winPx / 2)));
 }
