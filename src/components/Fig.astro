@@ -67,6 +67,17 @@ const hasData = Astro.slots.has("data");
       margin-inline: -0.5rem;
       max-inline-size: none;
     }
+    /* the floor plan itself (not the text around it) runs to the screen edge,
+       so its labels stay >= 14px at 360px; the sandbox moves plan + overlay together */
+    .fig-body :global(.plan),
+    .fig-body :global(.sb-stage) {
+      margin-inline: -0.25rem;
+      inline-size: calc(100% + 0.5rem);
+    }
+    .fig-body :global(.sb-stage .plan) {
+      margin-inline: 0;
+      inline-size: 100%;
+    }
   }
   /* inline flow: the figure number stays at the start of the first line however long the caption */
   figcaption {

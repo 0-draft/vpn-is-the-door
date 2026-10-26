@@ -181,11 +181,11 @@ export const wide: Layout = {
   labelSize: 18,
 };
 
-// Phones: the building is 330 wide in a 490 viewBox, so a 19-unit label lands
-// at >= 14.8px on a 390px screen (the figure runs edge to edge there).
+// Phones: the building is 330 wide in a 486 viewBox, so a 19-unit label lands
+// at >= 14px on a 360px screen (the figure runs edge to edge there).
 export const tall: Layout = {
   name: "tall",
-  viewBox: [30, 0, 490, 830],
+  viewBox: [28, 0, 486, 830],
   outer: { x: 40, y: 100, w: 330, h: 580 },
   innerWalls: [
     [
