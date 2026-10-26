@@ -35,9 +35,11 @@ interface Props {
   show?: string;
   doors?: "open" | "closed";
   label: string;
+  // inside a figure whose text already narrates every state (the scrolly)
+  decorative?: boolean;
 }
 
-const { lang, mode, uid, show = "", doors = "open", label } = Astro.props;
+const { lang, mode, uid, show = "", doors = "open", label, decorative = false } = Astro.props;
 const year = latest();
 const counts = year.counts;
 const fixtureIds = ["keys", "fileserver", "nas", "pcs"] as const;
@@ -143,8 +145,9 @@ const ids = (l: Layout) => ({
           viewBox={`${vx} ${vy} ${vw} ${vh}`}
           width={vw}
           height={vh}
-          role="img"
-          aria-label={label}
+          role={decorative ? undefined : "img"}
+          aria-label={decorative ? undefined : label}
+          aria-hidden={decorative ? "true" : undefined}
           data-layout={l.name}
         >
           <defs>

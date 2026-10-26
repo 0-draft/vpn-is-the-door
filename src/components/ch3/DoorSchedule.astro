@@ -364,13 +364,27 @@ const total = VULNS.filter((v) => matches(v, all)).length;
       });
     }
 
+    const clearFilters = () => {
+      product = "all";
+      for (const x of productBtns) x.setAttribute("aria-pressed", String(x.dataset.product === "all"));
+      if (pre) pre.checked = false;
+      if (patch) patch.checked = false;
+      apply();
+    };
+
+    // A link to a row the filters hide (from Figs. 3-8 / 3-12) clears the filters first.
     const fromHash = () => {
       const cve = cveFromHash(location.hash);
-      if (!cve) return false;
+      const row = rows.find((r) => r.dataset.cve === cve);
+      if (!cve || !row) return false;
+      if (row.hidden) clearFilters();
       select(cve, false);
-      rows.find((r) => r.dataset.cve === cve)?.scrollIntoView({ block: "center" });
+      apply();
+      row.scrollIntoView({ block: "center" });
       return true;
     };
+    // Browsers restore checkbox state on reload / back; make the table agree with it.
+    apply();
     if (!fromHash()) select(root.dataset.initial ?? "", false);
     addEventListener("hashchange", fromHash);
     root.classList.add("is-live");

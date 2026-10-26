@@ -32,7 +32,7 @@ const home = localePath(lang, "/", base);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={desc} />
-    <link rel="canonical" href={canonical} />
+    {alternate ? <link rel="canonical" href={canonical} /> : <meta name="robots" content="noindex" />}
     {
       alternate && (
         <>
@@ -71,13 +71,13 @@ const home = localePath(lang, "/", base);
         <a class="mark" href={home}>
           <span class="mark-title">{siteTitle}</span>
         </a>
-        <p class="report mono" aria-label={`${t(lang, "site.report")} ${SITE.report}`}>
+        <p class="report mono">
           <span>{SITE.report}</span>
           <span>{t(lang, "site.rev")} {SITE.revision}</span>
           <time datetime={SITE.updated}>{SITE.updated}</time>
         </p>
         <div class="controls">
-          <button type="button" class="ctl" data-theme-toggle aria-live="polite">
+          <button type="button" class="ctl" data-theme-toggle>
             <span class="ctl-k">{t(lang, "nav.theme")}</span>
             <span data-theme-label data-auto={t(lang, "nav.themeAuto")} data-light={t(lang, "nav.themeLight")} data-dark={t(lang, "nav.themeDark")}
               >{t(lang, "nav.themeAuto")}</span
@@ -174,7 +174,6 @@ const home = localePath(lang, "/", base);
           try {
             localStorage.setItem("motion", motion.checked ? "off" : "on");
           } catch {}
-          root.dispatchEvent(new CustomEvent("motionchange"));
         });
       }
     </script>
