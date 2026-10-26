@@ -8,7 +8,6 @@ order: 2
 ---
 
 import Fig from "../../../components/Fig.astro";
-import Scale from "../../../components/Scale.astro";
 import SectionCut from "../../../components/SectionCut.astro";
 import SourceLine from "../../../components/SourceLine.astro";
 import Summary from "../../../components/Summary.astro";
@@ -22,7 +21,7 @@ import KevFlow from "../../../components/ch5/KevFlow.astro";
 
 <SectionCut lang="ja" />
 
-## <Scale s="1:5" /> 侵入者のアクセスがパッチ後も残る5つの経路
+## 侵入者のアクセスがパッチ後も残る5つの経路
 
 図5-5の各段は、勧告や調査報告書に記録された失敗の型である。黒い縦線がパッチ、赤線が侵入者のアクセスを表す。赤線はパッチより前に始まり、パッチの後も続く。
 
@@ -50,7 +49,7 @@ Ivanti は、機器のファイルが改ざんされていないかを調べる 
 
 Mandiant は CVE-2025-0282 のゼロデイ悪用が2024年12月中旬に始まったと報告した。Ivanti の公表は2025年1月8日である。JPCERT/CC は「本脆弱性公開前の2024年12月下旬から本脆弱性が悪用された被害を国内で複数確認しています。」と注意喚起した（JPCERT-AT-2025-0001）。CitrixBleed は2023年8月下旬から悪用され、10月10日に公表された。こうして侵害された機器では、パッチは侵入者より後に届く。CISA の [BOD 26-04](https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk) は、3日以内の対応を求める区分に「carry out a forensic triage of the asset to assess whether the system is compromised.」という要求を組み合わせた。
 
-## <Scale s="1:5" /> 自社の機器が KEV に載ったときの作業順序
+## 自社の機器が KEV に載ったときの作業順序
 
 図5-6は作業を順に並べたものである。後の作業はどれも機器の状態を変えるので、保全を最初に置く。2つの分岐は、自機種向けの修正版がない場合と、調査で侵害を否定できない場合を扱う。
 
@@ -66,7 +65,7 @@ Mandiant は CVE-2025-0282 のゼロデイ悪用が2024年12月中旬に始ま�
 6. 疑わしければ作り直す。初期化または再インストールし、1行ずつ確認した設定を戻す。Fortinet は「Treat all configuration as potentially compromised」と書いている。Ivanti では初期化も安全の証明にならなかった（上の4）ので、作り直した後に認証情報をもう一度変える。
 7. 報告する。ベンダー、JPCERT/CC、警察に加え、業種や扱う情報によって求められる規制当局に届け出る。
 
-## <Scale s="1:5" /> 機器が扱った認証情報のすべて
+## 機器が扱った認証情報のすべて
 
 機器が持つ、または目にする秘密は、管理者パスワードだけではない。CISA は Ivanti の利用者に、機器に保存された利用者とサービスアカウントの認証情報は「likely compromised」と想定するよう求めた。Mandiant は、機器のキャッシュに「VPN sessions, session cookies, API keys, certificates, and credential material」が含まれうると報告している。
 

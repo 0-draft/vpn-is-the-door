@@ -2,7 +2,6 @@ import { LATEST } from "../data/revisions";
 import type { Lang } from "../lib/paths";
 
 export const SITE = {
-  report: "VITD-2026",
   revision: LATEST.rev,
   updated: LATEST.date,
   repo: "https://github.com/0-draft/vpn-is-the-door",
@@ -13,8 +12,6 @@ export const dict = {
     "site.title": "The door was the VPN",
     "site.desc":
       "Why VPN appliances are the most common way ransomware gets into Japanese organizations, drawn as a break-in report: the statistics, what happens after entry, the products, real cases and what to do.",
-    "site.report": "Report",
-    "site.rev": "Rev.",
     "nav.skip": "Skip to content",
     "nav.chapters": "Chapters",
     "nav.home": "Summary",
@@ -36,8 +33,7 @@ export const dict = {
     data: "Data",
     composite: "Composite scenario, fictional company",
     nts: "NTS (not to scale)",
-    "cut.label": "Engineers from here: section A–A",
-    "cut.note": "Executives can stop here. Everything above is the whole argument.",
+    "cut.label": "Technical detail",
     "foot.method":
       "Every number on this site links to its source. Minato Precision is a fictional company used to explain; the cases in chapter 4 are real and cited.",
     "foot.noaffil":
@@ -69,8 +65,6 @@ export const dict = {
     "site.title": "扉はVPNだった",
     "site.desc":
       "ランサムウェアが日本の組織に入り込む経路で最も多いのは VPN 機器。その理由を侵入事案の調査報告書の形で図解する。統計、侵入後に起きること、製品と脆弱性、実際の事例、対策まで。",
-    "site.report": "報告書",
-    "site.rev": "改訂",
     "nav.skip": "本文へ移動",
     "nav.chapters": "章",
     "nav.home": "要旨",
@@ -92,8 +86,7 @@ export const dict = {
     data: "データ",
     composite: "複合事例（実在しない会社）",
     nts: "縮尺なし",
-    "cut.label": "ここから技術者向け: 断面 A–A",
-    "cut.note": "経営層はここまで読めば足りる。論点はすべてここまでに出ている。",
+    "cut.label": "技術者向けの詳細",
     "foot.method":
       "このサイトの数字にはすべて出典を付けている。港精密は説明用の架空の会社。第4章の事例は実在し、出典がある。",
     "foot.noaffil": "独立した解説サイト。いかなるベンダー、警察庁とも関係はない。製品の推奨もしない。",

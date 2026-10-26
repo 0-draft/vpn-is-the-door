@@ -8,7 +8,6 @@ order: 2
 ---
 
 import Fig from "../../../components/Fig.astro";
-import Scale from "../../../components/Scale.astro";
 import SectionCut from "../../../components/SectionCut.astro";
 import SourceLine from "../../../components/SourceLine.astro";
 import Summary from "../../../components/Summary.astro";
@@ -22,7 +21,7 @@ import KevFlow from "../../../components/ch5/KevFlow.astro";
 
 <SectionCut lang="en" />
 
-## <Scale s="1:5" /> The intruder's access outlives the patch in five ways
+## The intruder's access outlives the patch in five ways
 
 Each lane in Fig. 5-5 is one failure mode that advisories and incident reports have documented. The patch is the black line. The red line is the intruder's access, which starts before it and carries on after.
 
@@ -50,7 +49,7 @@ Ivanti ships an Integrity Checker Tool (ICT) to tell whether the appliance's fil
 
 "Mandiant has identified zero-day exploitation of CVE-2025-0282 in the wild beginning mid-December 2024." Ivanti disclosed it on 2025-01-08. JPCERT/CC confirmed several Japanese victims from late December 2024, before disclosure (JPCERT-AT-2025-0001). CitrixBleed was exploited from late August 2023 and disclosed on 2023-10-10. For devices hit this way, the patch arrives after the intruder. CISA's [BOD 26-04](https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk) now pairs its three-day remediation tier with an order to "carry out a forensic triage of the asset to assess whether the system is compromised."
 
-## <Scale s="1:5" /> A KEV entry for your appliance: the order of work
+## A KEV entry for your appliance: the order of work
 
 Fig. 5-6 puts the steps in order. Preservation comes first because every later step changes the box. The two branches handle the cases where no fixed firmware exists for your model and where the hunt cannot rule out compromise.
 
@@ -66,7 +65,7 @@ Fig. 5-6 puts the steps in order. Preservation comes first because every later s
 6. Rebuild if in doubt. Factory reset or reinstall, then restore a configuration you have reviewed line by line. Fortinet: "Treat all configuration as potentially compromised". On Ivanti even a factory reset was not proof (step 4 above), so rotate credentials again afterwards.
 7. Report. Tell the vendor, JPCERT/CC and the police, plus any regulator your sector or the data involved requires.
 
-## <Scale s="1:5" /> Every credential the box touched
+## Every credential the box touched
 
 The appliance holds or sees more secrets than its own admin password. CISA tells Ivanti customers to "assume that user and service account credentials stored within the affected Ivanti VPN appliances are likely compromised." Mandiant found the appliance's cache could contain "VPN sessions, session cookies, API keys, certificates, and credential material".
 

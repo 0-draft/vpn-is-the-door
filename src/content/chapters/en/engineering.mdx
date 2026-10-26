@@ -7,7 +7,6 @@ order: 0
 ---
 
 import Fig from "../../../components/Fig.astro";
-import Scale from "../../../components/Scale.astro";
 import SectionCut from "../../../components/SectionCut.astro";
 import SourceLine from "../../../components/SourceLine.astro";
 import Summary from "../../../components/Summary.astro";
@@ -20,7 +19,7 @@ import DoorMap from "../../../components/ch5/DoorMap.astro";
 
 <SectionCut lang="en" />
 
-## <Scale s="1:5" /> Each page covers one part of the door
+## Each page covers one part of the door
 
 [Chapter 3](../the-doors/) drew the VPN appliance as a door and named its parts. At this scale the metaphor gives way to the components. The intercom on the outer face is the web portal that answers before login. The keys hanging inside are the session cookies and tokens the appliance issues after login. The frame and hinges are the operating system, its daemons and its files. The camera above the door is the appliance's own logging. Fig. 5-1 keys each part to the page that covers it. The lock itself, authentication including multi-factor authentication (MFA), is the subject of chapters 3 and 6.
 
@@ -32,7 +31,7 @@ import DoorMap from "../../../components/ch5/DoorMap.astro";
 - [Patching is not closing](patching-is-not-closing/): five ways an intruder's access survives the patch, and the order of work when a KEV entry names your appliance.
 - [Evidence before the reboot](evidence/): what the appliance logs, where it keeps it, and what a reboot, an upgrade or a factory reset erases.
 
-## <Scale s="1:5" /> Ten questions about your own appliance
+## Ten questions about your own appliance
 
 The table is a test of records. Each row gives the question, what a complete answer looks like, and the reported failure behind it. If an answer depends on one person's memory, treat it as missing.
 

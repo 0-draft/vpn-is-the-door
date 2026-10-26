@@ -2,7 +2,7 @@
 import { REVISIONS } from "../data/revisions";
 import type { Source } from "../data/source-schema";
 import { SOURCES } from "../data/sources";
-import { SITE, t } from "../i18n/ui";
+import { t } from "../i18n/ui";
 import Chapter from "../layouts/Chapter.astro";
 import type { Lang } from "../lib/paths";
 
@@ -94,7 +94,7 @@ const copy = ja
       colDate: "公表日",
       colLoc: "該当箇所",
       hRev: "改訂履歴",
-      cRev: `報告書 ${SITE.report} の改訂`,
+      cRev: "改訂履歴",
       colRev: "改訂",
       colChange: "内容",
     }
@@ -112,7 +112,7 @@ const copy = ja
       colDate: "Published",
       colLoc: "Page or sheet",
       hRev: "Revision history",
-      cRev: `Revisions of report ${SITE.report}`,
+      cRev: "Revisions",
       colRev: "Rev.",
       colChange: "Change",
     };

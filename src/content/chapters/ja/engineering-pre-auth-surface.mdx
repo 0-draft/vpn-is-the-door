@@ -8,7 +8,6 @@ order: 1
 ---
 
 import Fig from "../../../components/Fig.astro";
-import Scale from "../../../components/Scale.astro";
 import SectionCut from "../../../components/SectionCut.astro";
 import SourceLine from "../../../components/SourceLine.astro";
 import Summary from "../../../components/Summary.astro";
@@ -26,7 +25,7 @@ export const n = (c) => groups.find((g) => g.cls === c).cves.length;
 
 <SectionCut lang="ja" />
 
-## <Scale s="1:5" /> ログイン画面より手前は誰にでも応答する
+## ログイン画面より手前は誰にでも応答する
 
 図5-2で1つの接続を上から追う。機器は TLS を終端し、Web デーモンが要求を読んで処理先に振り分ける。FortiOS ではこのデーモンが `sslvpnd` で、Fortinet は CVE-2022-42475 の勧告でこのプロセスを名指ししている（[FG-IR-22-398](https://www.fortiguard.com/psirt/FG-IR-22-398)）。網掛けの範囲はすべてこの段階で動く。ログイン画面、画面が読み込む静的ファイル、VPN クライアントの配布、SAML や SSO の受け口、クライアントレスの Web 接続、そして多くの環境では管理画面である。パスワード、第2要素、SAML アサーションの確認は、この範囲を抜けた後にしか行われない。
 
@@ -36,7 +35,7 @@ export const n = (c) => groups.find((g) => g.cls === c).cves.length;
   <PreauthLifecycle lang="ja" label="SSL-VPN 機器を上から下へ。TLS の終端、全要求を解析する Web デーモン、網掛けの認証前の範囲（ログイン画面、静的ファイル、クライアント配布、SAML・SSO、クライアントレス、露出した管理画面）、認証、セッション Cookie、トンネル、社内ネットワーク。赤い破線は認証前の範囲から機器の OS に入り、認証を通らずに社内ネットワークへ届く。" />
 </Fig>
 
-## <Scale s="1:5" /> 相手が誰か分かる前にこのコードは動く
+## 相手が誰か分かる前にこのコードは動く
 
 認証前のコードは誰からの入力でも受け付けなければならない。アカウントごとの制限も、送り手の身元も当てにできない。多くの SSL-VPN 製品では、ログイン画面とログイン後のポータルを同じ Web 処理系が担う。その処理経路のどこかに欠陥があれば、インターネットから届く。
 
@@ -68,7 +67,7 @@ export const n = (c) => groups.find((g) => g.cls === c).cves.length;
 
 <SourceLine lang="ja" ids={["ch5-paloalto-3400", "ch5-cisco-webvpn", "cisa-aa24-060b"]} />
 
-## <Scale s="1:5" /> 自社のアドレスに限って外から露出を棚卸しする
+## 自社のアドレスに限って外から露出を棚卸しする
 
 まず自社が持つものから始め、次にインターネットからどう見えるかを確かめる。以下の方法はすべて、自社に属するアドレスと名前だけを対象にする。自社が管理していないアドレスを走査したり探ったりしてはならない。事業者やベンダーが自社のために運用している範囲を走査するときは、事前に書面で許可を得る。
 
@@ -86,7 +85,7 @@ export const n = (c) => groups.find((g) => g.cls === c).cves.length;
 
 <SourceLine lang="ja" ids={["osaka-report-2023", "cisa-eos-edge-2026"]} />
 
-## <Scale s="1:5" /> 応答しなくてよいものは止める
+## 応答しなくてよいものは止める
 
 図5-4は面を削った後の同じ機器である。どの変更も、網掛けの範囲の一部をインターネットから届かなくする。有効なまま残る処理に欠陥があれば直らないので、パッチは引き続き必要である。
 

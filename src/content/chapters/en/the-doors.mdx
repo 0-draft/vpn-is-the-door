@@ -12,7 +12,6 @@ import PatchClock from "../../../components/ch3/PatchClock.astro";
 import PreauthUnits from "../../../components/ch3/PreauthUnits.astro";
 import SessionLanes from "../../../components/ch3/SessionLanes.astro";
 import Fig from "../../../components/Fig.astro";
-import Scale from "../../../components/Scale.astro";
 import SectionCut from "../../../components/SectionCut.astro";
 import SourceLine from "../../../components/SourceLine.astro";
 import Summary from "../../../components/Summary.astro";
@@ -26,7 +25,7 @@ export const ST = scheduleStats();
   <p>For leadership, this means treating the VPN appliance as the most exposed system the company owns. Patch it within days, and after any serious flaw also reset its passwords, end its sessions and check it for implants.</p>
 </Summary>
 
-## <Scale s="1:100" /> The door answers strangers before the lock
+## The door answers strangers before the lock
 
 A VPN appliance is a door built for staff who work outside the office. To work as a door, it has to accept connections from the whole internet. Figure 3-1 names its parts the way this chapter uses them.
 
@@ -50,7 +49,7 @@ Mail filtering and the security checks at the main entrance work like a receptio
 
 <SourceLine lang="en" ids={["doors-ncsc-uk-observability"]} />
 
-## <Scale s="1:100" /> One flaw in the frame is enough
+## One flaw in the frame is enough
 
 The appliance is a closed box. An office server can be watched with security software and its logs collected elsewhere. On most VPN appliances neither is possible, and one bug can hand over the whole box.
 
@@ -88,7 +87,7 @@ Logs on the appliance are short, rotate quickly and can be erased by an intruder
 
 <SourceLine lang="en" ids={["sophos-aar-2025", "osaka-report-2023", "handa-report-main"]} />
 
-## <Scale s="1:100" /> Repairs wait, and old doors stay up
+## Repairs wait, and old doors stay up
 
 <Fig lang="en" n="3-3" caption="Time to fix against time to exploit, on one scale of days" sources={["dbir-2025", "cisa-kev", "doors-watchtowr-3055"]}>
   <PatchClock lang="en" />
@@ -106,7 +105,7 @@ An appliance past end of support gets no more fixes but keeps working, so it sta
 
 <SourceLine lang="en" ids={["cisa-eos-edge-2026", "osaka-report-2023"]} />
 
-## <Scale s="1:100" /> A pre-auth flaw never meets the lock
+## A pre-auth flaw never meets the lock
 
 Multi-factor authentication is part of the lock. It stops someone who arrives with a stolen password. A flaw in the intercom or the frame is used before the lock is ever consulted, so MFA has nothing to stop.
 
@@ -116,7 +115,7 @@ Multi-factor authentication is part of the lock. It stops someone who arrives wi
 
 MFA is still worth having: it closes the stolen-password route in grey. It does nothing for the red route, which is how {ST.preauth} of the {ST.total} flaws in the schedule below work.
 
-## <Scale s="1:100" /> Exploitation often starts before the advisory
+## Exploitation often starts before the advisory
 
 Each row in Figure 3-5 is one flaw. Day 0 is the day the vendor disclosed it. A bar left of day 0 means attackers were already using it before there was a warning or a patch. The grey tick is the day CISA added it to its Known Exploited Vulnerabilities (KEV) catalog.
 
@@ -129,7 +128,7 @@ Each row in Figure 3-5 is one flaw. Day 0 is the day the vendor disclosed it. A 
 
 <SectionCut lang="en" />
 
-## <Scale s="1:5" /> The door, by its real parts
+## The door, by its real parts
 
 From here the drawing uses component names. The intercom is everything the appliance serves before authentication: the login page, static files, language files, SAML endpoints. The issued keys are the session cookies and tokens it hands out after login, plus the credentials it stores.
 
@@ -154,7 +153,7 @@ From here the drawing uses component names. The intercom is everything the appli
 
 A row can pass through more than one part, so the counts add up to more than {ST.total}.
 
-## <Scale s="1:5" /> Door schedule: {ST.total} flaws in seven product lines
+## Door schedule: {ST.total} flaws in seven product lines
 
 The schedule follows the fittings schedule of a building drawing: one door mark per product line (`SD-1` to `SD-7`), one row per flaw. Every row is in CISA KEV (catalog version 2026.10.23). Select a row to see the parts it breaks on the drawing and its full record. Each row has its own link, for example [#cve-2023-4966](#cve-2023-4966).
 
@@ -164,7 +163,7 @@ The schedule follows the fittings schedule of a building drawing: one door mark 
 
 Two notes on reading it. "Ransomware: Unknown" is CISA's own value and means CISA has not linked the flaw to a ransomware campaign; it does not mean "no". "No report says otherwise" in the last column means only that none of the cited sources asks for more than the patch. It is not a promise that patching is enough. One flaw in the research, CVE-2026-8452, is left out because its score and first exploitation could not be confirmed from a primary source.
 
-## <Scale s="1:5" /> {ST.preauth} of {ST.total} need no password
+## {ST.preauth} of {ST.total} need no password
 
 <Fig lang="en" n="3-8" caption="Rows of the door schedule by product line; filled squares are reachable before login" sources={["cisa-kev", "doors-volexity-3400", "cve-2025-0282"]}>
   <PreauthUnits lang="en" />
@@ -172,7 +171,7 @@ Two notes on reading it. "Ransomware: Unknown" is CISA's own value and means CIS
 
 The two outlined squares are CVE-2024-21887 and CVE-2025-20333. Each needs a login on its own. Attackers used them behind a pre-auth flaw (CVE-2023-46805 and CVE-2025-20362), so in practice the chain needed no login either. CVE-2024-3400 is "unauthenticated remote code execution" in Volexity's words. The CVE record for CVE-2025-0282 describes "a remote unauthenticated attacker". For rows like these, password length and MFA settings do not change the outcome.
 
-## <Scale s="1:5" /> A stolen session is already past MFA
+## A stolen session is already past MFA
 
 After the lock opens, the appliance hands the user a key: a session cookie. The appliance keeps a copy in memory. CitrixBleed (CVE-2023-4966) and CitrixBleed 2 (CVE-2025-5777) are bugs at the intercom that return pieces of that memory, keys included.
 
@@ -184,7 +183,7 @@ Mandiant: with a valid cookie an attacker has a session "without knowledge of th
 
 <SourceLine lang="en" ids={["doors-mandiant-citrixbleed", "case-cisa-aa23-325a", "doors-tenable-citrixbleed2"]} />
 
-## <Scale s="1:5" /> Leaked passwords outlive the patch
+## Leaked passwords outlive the patch
 
 A flaw that reads files at the intercom often hands over the keys themselves: usernames and passwords stored on the box. Patching stops new reads. It does nothing to the passwords already copied.
 
@@ -208,7 +207,7 @@ The same pattern appears in other rows. CISA wrote in 2020 that attackers with s
 
 <SourceLine lang="en" ids={["doors-cisa-aa20-107a", "doors-sonicwall-2025", "doors-helpnet-checkpoint"]} />
 
-## <Scale s="1:5" /> Implants survive the upgrade
+## Implants survive the upgrade
 
 Some intruders leave something in the frame. An upgrade replaces the software it expects to replace. It does not always remove what an attacker added.
 
@@ -234,7 +233,7 @@ CISA's response to the Ivanti flaws shows what "more than a patch" means in prac
 
 <SourceLine lang="en" ids={["case-cisa-ed-24-01"]} />
 
-## <Scale s="1:5" /> The gap is days, and often negative
+## The gap is days, and often negative
 
 Figure 3-5 shows the gap row by row. The fastest cases after disclosure: watchTowr saw CVE-2026-3055 exploited from known attacker addresses "as of March 27th", four days after Citrix published it. For CVE-2025-22457, Ivanti shipped a fix on 2025-02-11 as an ordinary bug fix. Mandiant assesses that the attackers "likely studied the patch" and were exploiting unpatched appliances by mid-March. CISA gave federal agencies one day to deal with CitrixBleed 2.
 
@@ -257,7 +256,7 @@ Figure 3-5 shows the gap row by row. The fastest cases after disclosure: watchTo
 
 A patch window measured in weeks assumes the attackers start after the advisory. For most of these rows they started earlier, or within days.
 
-## <Scale s="1:5" /> Replacement products are edge software too
+## Replacement products are edge software too
 
 Zero-trust network access (ZTNA) products are often sold as the replacement for the VPN door. They change what a stolen login reaches: one application at a time instead of the whole network. Their gateways are still software on the internet edge, and they get the same class of bugs.
 

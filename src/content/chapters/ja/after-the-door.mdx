@@ -10,7 +10,6 @@ import Signs from "../../../components/ch2/Signs.astro";
 import Timeline from "../../../components/ch2/Timeline.astro";
 import Fig from "../../../components/Fig.astro";
 import IntruderRoute from "../../../components/IntruderRoute.astro";
-import Scale from "../../../components/Scale.astro";
 import SectionCut from "../../../components/SectionCut.astro";
 import SourceLine from "../../../components/SourceLine.astro";
 import Step from "../../../components/Step.astro";
@@ -49,7 +48,7 @@ import Summary from "../../../components/Summary.astro";
   </Step>
 </IntruderRoute>
 
-## <Scale s="1:100" /> どの手順にも、情報システム担当が見られる痕跡が残る
+## どの手順にも、情報システム担当が見られる痕跡が残る
 
 上の手順はどれも見えないわけではない。VPN 機器、Active Directory、ファイルサーバ、バックアップソフトなど、たいていの会社がすでに持っているログに記録が残る。問題は、日曜日の午前3時にそのログを誰も見ていないことである。以下、手順ごとに、記録がどう見えるかと、侵入からどれくらいで現れるかをまとめる。各手順の枠には、ログを確認する人に見えたはずのものを挙げた。例は典型的なパターンで、港精密で起きた出来事ではない。
 
@@ -134,7 +133,7 @@ Sophos によると、攻撃の開始からデータ持ち出しまでの時間�
   <SourceLine lang="ja" ids={["arcticwolf-akira-2025", "osaka-report-2023", "handa-report-main"]} />
 </Signs>
 
-## <Scale s="1:100" /> 速い例では、侵入から暗号化まで一晩に収まる
+## 速い例では、侵入から暗号化まで一晩に収まる
 
 測定された事例のうち速いものでは、VPN へのログインから暗号化までが数時間で終わる。データ持ち出しの中央値は数日である。図 2-2 は三つの出典を一本の時間軸に並べたものである。起点は出典ごとに違い、それぞれ名前の横に書いた。最初の4時間は実寸で描き、軸の切れ目より後は4時間から4日を縮めて、Sophos の遅いほうの中央値も収めている。
 
@@ -142,7 +141,7 @@ Sophos によると、攻撃の開始からデータ持ち出しまでの時間�
 
 SonicWall の VPN を狙った Akira の攻撃では、ほぼすべての侵入で VPN へのログインから4時間未満で暗号化が始まり、短い例では55分だった。半田病院では、記録に残る最初のリモートデスクトップ操作が土曜日の23時57分、身代金要求文書が開かれたのが3時04分である。平日だけの監視体制も、月に一度のパッチ適用も、この速さには追いつかない。
 
-## <Scale s="1:100" /> ある病院は、同じ経路をたどった
+## ある病院は、同じ経路をたどった
 
 上の経路は複合事例である。大阪急性期・総合医療センターは2022年10月に同じ手順を順にたどり、調査委員会が経過をページ番号付きで公表した。報告書は関係企業を記号（E社、C社）で記し、VPN 製品の名前は出していないが、脆弱性の番号は明記している。図 2-3 は、スクロールで見た手順ごとに報告書の記述を対応させたものである。
 
@@ -199,7 +198,7 @@ SonicWall の VPN を狙った Akira の攻撃では、ほぼすべての侵入�
 
 <SectionCut lang="ja" />
 
-## <Scale s="1:5" /> 経路を ATT&CK の技術に置き換え、それぞれを示すログを添える
+## 経路を ATT&CK の技術に置き換え、それぞれを示すログを添える
 
 図 2-5 は経路を [MITRE ATT&CK](https://attack.mitre.org/techniques/enterprise/) の技術に対応させ、それぞれを記録するログやテレメトリを並べたものである。イベント ID は Windows の Security ログについて Microsoft の解説ページへリンクした。Sysmon、Defender、System ログの ID はリンクなしで記した。Security ログのイベントの多くは、対応する監査ポリシーを有効にしていなければ記録されない。機器側のログも、更新の前に機器の外へ出しておかなければ役に立たない。
 

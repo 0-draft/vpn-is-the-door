@@ -53,7 +53,7 @@ export const GET: APIRoute = async ({ props }) => {
     label,
     scales,
     siteTitle: t(lang, "site.title"),
-    report: `${SITE.report} · ${t(lang, "site.rev")} ${SITE.revision}`,
+    report: `${t(lang, "foot.revised")} ${SITE.updated}`,
     vpnLabel: t(lang, "og.vpn"),
     vpnPct: `${pct(y.counts.vpn ?? 0, y.n)}%`,
     roomLabels: {

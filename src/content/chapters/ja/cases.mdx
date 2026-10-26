@@ -9,7 +9,6 @@ import CaseCounts from "../../../components/ch4/CaseCounts.astro";
 import CaseIndex from "../../../components/ch4/CaseIndex.astro";
 import CaseMultiples from "../../../components/ch4/CaseMultiples.astro";
 import Fig from "../../../components/Fig.astro";
-import Scale from "../../../components/Scale.astro";
 import SourceLine from "../../../components/SourceLine.astro";
 import Summary from "../../../components/Summary.astro";
 
@@ -22,7 +21,7 @@ import Summary from "../../../components/Summary.astro";
   <p>病院と港の4件の調査報告書では、調査の時点で機器自身のログは残っていなかった（名古屋港では最初から取得されていなかった）。4件のうち3件では、機器がインターネット上のどこからでも接続できる状態だった。経営としては、リモートアクセス用の機器ごとに担当者、パッチの期限、別の場所に残るログを決めることになる。</p>
 </Summary>
 
-## <Scale s="1:500" /> 同じ扉が何度も使われた
+## 同じ扉が何度も使われた
 
 1つのブロックが1つの組織で、配置図の縮尺で侵入者が使った開口部だけを描いている。第1章と同じく、VPN 機器は外壁の扉で表す。組織が「ネットワーク機器」「通信機器」「リモート接続機器」「接続口」としか述べていない場合は、外壁の一辺全体に印を付けて黄色の札を添えた。組織が述べた以上のことを図に描かないためである。
 
@@ -30,13 +29,13 @@ import Summary from "../../../components/Summary.astro";
   <CaseMultiples lang="ja" />
 </Fig>
 
-## <Scale s="1:500" /> 事例の一覧
+## 事例の一覧
 
 1行に1件、すべての行で同じ項目を並べた。判明日は組織が攻撃に気づいた日で、それが公表されていない場合は公表日を示す。影響は組織自身の発表に沿って書いている。
 
 <CaseIndex lang="ja" />
 
-## <Scale s="1:100" /> 事例の選び方
+## 事例の選び方
 
 載せたのは、組織自身または公的な報告書が侵入口を明らかにした事例だけである。報道、セキュリティ研究者、攻撃者の主張でしか経路が分かっていない事案は、VPN の事例としてよく挙げられるものでも外した。報告書に書かれた認証情報やパスワードは転載していない。
 

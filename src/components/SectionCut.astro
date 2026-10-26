@@ -1,5 +1,5 @@
 ---
-// Chain line with A–A arrowheads: everything below is the engineer layer (S=1:5).
+// Where a page turns to engineering detail.
 import { t } from "../i18n/ui";
 import type { Lang } from "../lib/paths";
 
@@ -11,60 +11,19 @@ const { lang } = Astro.props;
 ---
 
 <div class="cut" role="separator" aria-label={t(lang, "cut.label")}>
-  <svg class="cut-line" viewBox="0 0 1000 24" preserveAspectRatio="none" aria-hidden="true">
-    <line x1="18" y1="12" x2="982" y2="12" />
-  </svg>
-  <span class="cut-a cut-a-l" aria-hidden="true">A</span>
-  <span class="cut-a cut-a-r" aria-hidden="true">A</span>
-  <p class="cut-label"><span class="scale">S=1:5</span> {t(lang, "cut.label")}</p>
-  <p class="cut-note">{t(lang, "cut.note")}</p>
+  <p class="cut-label">{t(lang, "cut.label")}</p>
 </div>
 
 <style>
   .cut {
-    position: relative;
-    margin-block: 4rem 2rem;
-    padding-block-start: 1.75rem;
-  }
-  .cut-line {
-    position: absolute;
-    inset-inline: 0;
-    inset-block-start: 0;
-    inline-size: 100%;
-    block-size: 24px;
-  }
-  .cut-line line {
-    stroke: var(--ink);
-    stroke-width: 1.5;
-    stroke-dasharray: 18 4 3 4;
-    vector-effect: non-scaling-stroke;
-  }
-  .cut-a {
-    position: absolute;
-    inset-block-start: -0.35rem;
-    font-weight: 800;
-    font-size: 1.125rem;
-    background: var(--paper);
-    padding-inline: 0.25rem;
-    line-height: 1;
-  }
-  .cut-a-l {
-    inset-inline-start: 0;
-  }
-  .cut-a-r {
-    inset-inline-end: 0;
+    margin-block: 4rem 1.5rem;
+    border-block-start: 2px solid var(--ink);
+    padding-block-start: 0.6rem;
   }
   .cut-label {
-    font-weight: 700;
-    margin: 0.5rem 0 0.25rem;
-    display: flex;
-    gap: 0.6rem;
-    align-items: baseline;
-    flex-wrap: wrap;
-  }
-  .cut-note {
     margin: 0;
-    color: var(--ink-3);
+    font-weight: 700;
     font-size: 0.9375rem;
+    color: var(--ink-2);
   }
 </style>
