@@ -1,0 +1,229 @@
+---
+// Fig. 5-10: pick reboot, firmware upgrade or factory reset and see which evidence on
+// the appliance is left. All three states are drawn; CSS shows the chosen one, so the
+// figure works without script. Script only switches the state and keeps #evidence-<action>.
+import {
+  ACTION_LABEL,
+  ACTIONS,
+  DEFAULT_ACTION,
+  ITEMS,
+  STATE_LABEL,
+  summary,
+  ZONE_LABEL,
+  type Zone,
+} from "../../lib/ch5-evidence";
+import type { Lang } from "../../lib/paths";
+
+interface Props {
+  lang: Lang;
+  label: string;
+}
+
+const { lang, label } = Astro.props;
+const ja = lang === "ja";
+const ROW = 38;
+const zones: Zone[] = ["ram", "disk", "off"];
+let y = 40;
+const blocks = zones.map((z) => {
+  if (z === "off") y += 26;
+  const top = y;
+  const rows = ITEMS.filter((i) => i.zone === z).map((item, k) => ({ item, y: top + 34 + k * ROW }));
+  y = top + 34 + rows.length * ROW + 6;
+  return { z, top, rows };
+});
+const applianceBottom = (blocks[1]?.rows.at(-1)?.y ?? 0) + ROW;
+const h = y + 8;
+const sums = Object.fromEntries(ACTIONS.map((a) => [a, summary(lang, a)]));
+---
+
+<div class="evs" data-evs data-action={DEFAULT_ACTION} data-sums={JSON.stringify(sums)}>
+  <fieldset class="evs-ctl">
+    <legend>{ja ? "機器に対して行う作業" : "What you do to the appliance"}</legend>
+    {
+      ACTIONS.map((a) => (
+        <label>
+          <input type="radio" name="evs-action" value={a} checked={a === DEFAULT_ACTION} />
+          <span>{ACTION_LABEL[lang][a]}</span>
+        </label>
+      ))
+    }
+  </fieldset>
+
+  <svg class="dg evs-svg" viewBox={`0 0 420 ${h}`} role="img" aria-label={label}>
+    <rect class="chain" x="2" y="6" width="416" height={applianceBottom - 2}></rect>
+    <text class="muted" x="12" y="28">{ja ? "VPN 機器" : "VPN appliance"}</text>
+    {
+      blocks.map((b) => (
+        <g>
+          <text class="evs-zone" x="12" y={b.top + 22}>
+            {ZONE_LABEL[lang][b.z]}
+          </text>
+          {b.rows.map(({ item, y: ry }) => (
+            <g
+              class:list={["evs-row", { "evs-implant": item.implant, "evs-off": item.zone === "off" }]}
+              data-reboot={item.states.reboot}
+              data-upgrade={item.states.upgrade}
+              data-reset={item.states.reset}
+            >
+              <line class="evs-rule" x1="12" y1={ry} x2="408" y2={ry} />
+              <text class="evs-lbl" x="22" y={ry + 25}>
+                {item.label[lang]}
+              </text>
+              {ACTIONS.map((a) => (
+                <g class:list={["evs-tag", `s-${a}`, `st-${item.states[a]}`]}>
+                  <rect x="290" y={ry + 7} width="114" height="26" />
+                  <text x="347" y={ry + 25} text-anchor="middle">
+                    {STATE_LABEL[lang][item.states[a]]}
+                  </text>
+                </g>
+              ))}
+            </g>
+          ))}
+        </g>
+      ))
+    }
+  </svg>
+  <p class="evs-sum" aria-live="polite">{sums[DEFAULT_ACTION]}</p>
+</div>
+
+<script>
+  import { ACTIONS, type Action, actionFromHash, hashFor } from "../../lib/ch5-evidence";
+
+  for (const root of document.querySelectorAll<HTMLElement>("[data-evs]")) {
+    const sums = JSON.parse(root.dataset.sums ?? "{}") as Record<Action, string>;
+    const out = root.querySelector<HTMLElement>(".evs-sum");
+    const radios = [...root.querySelectorAll<HTMLInputElement>('input[name="evs-action"]')];
+    const set = (a: Action, push: boolean) => {
+      root.dataset.action = a;
+      for (const r of radios) r.checked = r.value === a;
+      if (out) out.textContent = sums[a] ?? "";
+      if (push) history.replaceState(null, "", hashFor(a));
+    };
+    for (const r of radios)
+      r.addEventListener("change", () => {
+        if (r.checked && (ACTIONS as readonly string[]).includes(r.value)) set(r.value as Action, true);
+      });
+    const fromHash = actionFromHash(location.hash);
+    if (fromHash) {
+      set(fromHash, false);
+      root.closest("figure")?.scrollIntoView();
+    }
+    window.addEventListener("hashchange", () => {
+      const a = actionFromHash(location.hash);
+      if (a) set(a, false);
+    });
+  }
+</script>
+
+<style>
+  .evs-ctl {
+    border: 0;
+    margin: 0 0 1rem;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+  }
+  .evs-ctl legend {
+    font-weight: 700;
+    margin-block-end: 0.5rem;
+    padding: 0;
+  }
+  .evs-ctl label {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+    cursor: pointer;
+    min-block-size: 2.75rem;
+  }
+  .evs-ctl input {
+    inline-size: 1.15rem;
+    block-size: 1.15rem;
+    accent-color: var(--instruct);
+    margin: 0;
+  }
+  .evs-svg {
+    max-inline-size: 32rem;
+  }
+  .evs-svg text {
+    font-size: 16px;
+  }
+  .evs-svg .evs-zone {
+    font-weight: 700;
+  }
+  .evs-rule {
+    stroke: var(--hair);
+    stroke-width: 1;
+  }
+  .evs-sum {
+    margin: 1rem 0 0;
+    font-weight: 700;
+    max-inline-size: 60ch;
+  }
+
+  /* only the chosen action's tag is shown */
+  .evs-tag {
+    display: none;
+  }
+  .evs[data-action="reboot"] .s-reboot,
+  .evs[data-action="upgrade"] .s-upgrade,
+  .evs[data-action="reset"] .s-reset {
+    display: inline;
+  }
+
+  .evs-tag rect {
+    fill: var(--sheet);
+    stroke: var(--ink);
+    stroke-width: 1;
+  }
+  .evs-svg .evs-tag text {
+    font-size: 15px;
+    font-weight: 700;
+    fill: var(--ink);
+  }
+  .st-lost rect {
+    fill: none;
+    stroke: var(--line);
+    stroke-dasharray: 4 3;
+  }
+  .evs-svg .st-lost text {
+    fill: var(--ink-3);
+    font-weight: 400;
+  }
+  .st-risk rect {
+    fill: var(--caution);
+    stroke: var(--caution-ink);
+  }
+  .evs-svg .st-risk text {
+    fill: var(--caution-ink);
+  }
+  .evs-off .st-kept rect {
+    fill: var(--safe-fill);
+    stroke: var(--caution-ink);
+  }
+  .evs-svg .evs-off .st-kept text {
+    fill: var(--caution-ink);
+  }
+  .st-stays rect {
+    fill: var(--intruder-fill);
+    stroke: var(--caution-ink);
+  }
+  .evs-svg .st-stays text {
+    fill: var(--caution-ink);
+  }
+  .evs-svg .evs-implant .evs-lbl {
+    fill: var(--intruder-text);
+    font-weight: 700;
+  }
+
+  /* a lost row is struck through */
+  .evs[data-action="reboot"] [data-reboot="lost"] .evs-lbl,
+  .evs[data-action="upgrade"] [data-upgrade="lost"] .evs-lbl,
+  .evs[data-action="reset"] [data-reset="lost"] .evs-lbl {
+    text-decoration: line-through;
+    fill: var(--ink-3);
+  }
+  .evs-lbl {
+    transition: fill 140ms var(--ease);
+  }
+</style>

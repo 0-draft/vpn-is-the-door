@@ -1,0 +1,151 @@
+---
+title: Evidence before the reboot
+description: Most of what an investigator needs from a VPN appliance is stored on the appliance, and a reboot, an upgrade or a factory reset erases part of it. Both hospital reports lost their VPN logs that way.
+chapter: engineering
+path: /engineering/evidence/
+parent: engineering
+order: 3
+---
+
+import Fig from "../../../components/Fig.astro";
+import Scale from "../../../components/Scale.astro";
+import SectionCut from "../../../components/SectionCut.astro";
+import SourceLine from "../../../components/SourceLine.astro";
+import Summary from "../../../components/Summary.astro";
+import EvidenceSurvival from "../../../components/ch5/EvidenceSurvival.astro";
+import LogBars from "../../../components/ch5/LogBars.astro";
+import { ACTION_LABEL, ACTIONS, ITEMS, STATE_LABEL } from "../../../lib/ch5-evidence";
+
+<Summary lang="en">
+  <p>The appliance's logs answer the first questions of any investigation: which accounts logged in, from where, and what changed on the box. Many appliances keep those logs only on local storage of limited size. In two Japanese hospital cases, the vendor upgraded the firmware after the attack without saving the logs, and the investigators could not establish how the intruder got in.</p>
+  <p>The decision it implies: before anyone reboots, upgrades or resets a suspect appliance, export its configuration and logs. Every day before that, send the logs to a system the intruder cannot reach.</p>
+</Summary>
+
+<SectionCut lang="en" />
+
+## <Scale s="1:5" /> Three kinds of log, mostly kept on the box
+
+Product names differ, but SSL-VPN appliances generally write the three kinds of record in the table. Each answers a different question after an incident.
+
+<div class="table-scroll" tabindex="0">
+
+| Log | What it records | What it answers |
+| --- | --- | --- |
+| Authentication and VPN session | User, source address, assigned tunnel address, start and end time, bytes moved | Which accounts were used, from where, during the exposure window |
+| Administration and configuration | Administrator logins, configuration changes, configuration exports, new accounts | Whether someone took the configuration or added a way back in. JPCERT/CC tells FortiGate owners to review configuration export history and look for unintended administrator accounts (JPCERT-AT-2026-0019). |
+| System and crash | Daemon crashes, reboots, upgrades, hardware events | Whether a memory-corruption exploit was tried: a failed or successful attempt can crash the daemon that handles the request |
+
+</div>
+
+Fig. 5-7 is a crash entry that Fortinet published as an indicator of compromise for CVE-2022-42475. The fields are typical of what a system log keeps.
+
+<Fig lang="en" n="5-7" caption="FortiOS crash log entry listed as an indicator of compromise for CVE-2022-42475" sources={["ch5-fg-ir-22-398"]}>
+
+```text
+Logdesc=Application crashed and msg=[...] application:sslvpnd,[...], Signal 11 received, Backtrace: [...]
+```
+
+- `Logdesc=Application crashed`: the event type, a process stopped unexpectedly.
+- `application:sslvpnd`: the process was the SSL-VPN daemon, the code that handles pre-auth requests.
+- `Signal 11`: a segmentation fault, the process touched memory it should not have. This is what a heap overflow such as CVE-2022-42475 tends to produce when an attempt goes wrong.
+
+</Fig>
+
+Where these records live is the problem. The UK NCSC wrote in 2026 that with network devices defenders "can have fewer tools available to them than the attacker", and that "manufacturers should provide supported mechanisms for gathering the evidence needed to investigate incidents". Until they do, the defender's part is to get the logs off the box.
+
+<SourceLine lang="en" ids={["ch5-jpcert-at-2026-0019", "ch5-ncsc-observability"]} />
+
+## <Scale s="1:5" /> Only 25 of 102 victims kept all their logs
+
+NPA asks ransomware victims in Japan whether their logs survived. For 2025, a quarter had all of them. Two of the named causes, deletion by the attacker and encryption, are what an intruder does to logs left within reach. A third, an expired retention period, is a setting.
+
+<Fig lang="en" n="5-8" caption="Ransomware victims in Japan, 2025: log preservation, and why logs became unusable" sources={["ch5-npa-r7-logs"]}>
+  <LogBars lang="en" label="Bar chart. Log preservation, 102 victims: all preserved 25, partly unusable 64, unusable 8, no logs collected 5. Why logs became unusable, 68 answers: deleted by the attacker 20, encrypted 20, retention period expired 18, deleted by mistake 3, other 7." />
+  <table slot="data">
+    <thead><tr><th>Item</th><th>NPA label</th><th class="num">Count</th></tr></thead>
+    <tbody>
+      <tr><td>All preserved</td><td>全て保全</td><td class="num">25</td></tr>
+      <tr><td>Partly unusable</td><td>一部利用不可</td><td class="num">64</td></tr>
+      <tr><td>Unusable</td><td>利用不可</td><td class="num">8</td></tr>
+      <tr><td>No logs collected</td><td>ログ取得無</td><td class="num">5</td></tr>
+      <tr><td>Cause: deleted by the attacker</td><td>犯人による削除</td><td class="num">20</td></tr>
+      <tr><td>Cause: encrypted</td><td>暗号化</td><td class="num">20</td></tr>
+      <tr><td>Cause: retention period expired</td><td>保存期間経過</td><td class="num">18</td></tr>
+      <tr><td>Cause: deleted by mistake</td><td>誤削除</td><td class="num">3</td></tr>
+      <tr><td>Cause: other</td><td>その他</td><td class="num">7</td></tr>
+    </tbody>
+  </table>
+</Fig>
+
+These are all ransomware victims who answered, not only those entered through a VPN, and the logs include servers and PCs as well as appliances.
+
+## <Scale s="1:5" /> The hospitals lost the VPN logs to the fix
+
+Both reports say the same thing in different words. Fig. 5-9 quotes them in the original Japanese with this site's translation.
+
+<Fig lang="en" n="5-9" caption="Two investigation reports on the loss of the VPN logs" sources={["osaka-report-2023", "handa-report-main"]}>
+
+<blockquote lang="ja"><p>なお、C 社が 10 月 31 日の夕方にファイアウォール Z のファームウェアを、<mark>バックアップを取らずにバージョンアップしたため VPN 機器の Syslog が消失した</mark>。そのため、10 月 31 日の攻撃が単独で行われたか否かを断定することはできなかった。</p></blockquote>
+
+Osaka General Medical Center report, p.46. Translation: "Company C upgraded the firmware of firewall Z on the evening of October 31 without taking a backup, so the VPN device's syslog was lost. It was therefore not possible to determine whether the October 31 attack was a single event."
+
+<blockquote lang="ja"><p>本侵入経路を証明するために VPN 装置等のログの分析を試みたが、<mark>インシデント発生後に A 社によってファームウェアの更新などの作業を、ログ保存などを鑑みずに実施されていた</mark>ため調査を実施することができなかった。</p></blockquote>
+
+Handa Hospital report, main volume, printed p.16. Translation: "We tried to analyze the logs of the VPN device and other equipment to prove this route of entry, but could not, because after the incident Company A had updated the firmware and done other work without regard to preserving the logs."
+
+</Fig>
+
+The Osaka report also shows what a kept log is worth. The hospital's firewall logs reached back to April 2022 and showed RDP traffic and failed logons going back months before the October attack (p.39).
+
+## <Scale s="1:5" /> A reboot, an upgrade and a reset each erase something
+
+Choose an action in Fig. 5-10. Anything in memory is gone after any of them. Files on the appliance usually survive a reboot; an upgrade may replace or reformat the partition that holds them, which is what happened at both hospitals. A factory reset removes logs and configuration. Files the intruder planted are the exception: the advisories on the [patching page](../patching-is-not-closing/) describe implants that survived reboots, upgrades and, on Ivanti, a factory reset. Only copies already off the box are safe from all three.
+
+<Fig lang="en" n="5-10" caption="What remains of the evidence after a reboot, a firmware upgrade or a factory reset. General pattern; check your vendor's documentation for your model" sources={["osaka-report-2023", "handa-report-main", "ch5-coathanger", "ch5-cisa-ed-25-03", "ch5-cisa-aa24-060b"]}>
+  <EvidenceSurvival lang="en" label="Appliance evidence by location: memory, flash or disk, and off the box, with the state of each item after the selected action." />
+  <table slot="data">
+    <thead><tr><th>Evidence</th>{ACTIONS.map((a) => <th>{ACTION_LABEL.en[a]}</th>)}</tr></thead>
+    <tbody>
+      {ITEMS.map((i) => (
+        <tr><td>{i.label.en}</td>{ACTIONS.map((a) => <td>{STATE_LABEL.en[i.states[a]]}</td>)}</tr>
+      ))}
+    </tbody>
+  </table>
+</Fig>
+
+## <Scale s="1:5" /> Before the reboot, take copies
+
+Do these in order on a suspect appliance, before any patch, reboot or reset. If your incident-response provider is on the way, ask them before you touch the box at all.
+
+<div class="table-scroll" tabindex="0">
+
+| Step | What | Why |
+| --- | --- | --- |
+| 1 | Write down the time, the appliance's clock and its offset from a reliable time source, and who has logged in to it since the alert | Every later timeline depends on lining up the appliance's timestamps with the SIEM, the domain controllers and the firewall |
+| 2 | Export the configuration as it is now | It shows added accounts and changed settings. It also holds secrets, so store it as sensitive. Fortinet: "Treat all configuration as potentially compromised", so it is evidence, not a clean source to restore from |
+| 3 | Export every local log: system and crash, VPN and authentication, administration | This is what both hospitals lost |
+| 4 | Collect the vendor's supported diagnostic or forensic package, and memory if your provider can | The NCSC specification for device makers lists "Volatile data collection" (memory, process state, network tables, crash dumps) as a capability devices should offer. Many do not yet |
+| 5 | Hash the copies and store them off the box, read-only | So the copies can be trusted later and survive whatever happens to the appliance |
+| 6 | Only then patch, reboot or reset | The [flowchart](../patching-is-not-closing/#fig-5-6) continues from here |
+
+</div>
+
+<SourceLine lang="en" ids={["ch5-fortinet-symlink", "ch5-ncsc-forensics-spec", "ch5-ncsc-observability"]} />
+
+## <Scale s="1:5" /> Keep logs where the intruder cannot reach them
+
+The copies taken during an incident only cover what the appliance still holds. Logs sent off the box every day cover the rest, including the weeks before anyone knew there was a vulnerability.
+
+<div class="table-scroll" tabindex="0">
+
+| Setting | Target | Basis |
+| --- | --- | --- |
+| Destination | A SIEM or syslog collector off the appliance, receiving in near real time | CCCS: "Enable centralized (off-device) logging and configure log levels to be as detailed as possible". The NCSC specification recommends "appropriate remote logging solutions where feasible." |
+| Detail | Authentication, session, administration, configuration and crash events, at the most detailed level the appliance supports | Same CCCS line |
+| Retention | Longer than a zero-day stays undisclosed, measured in months | CitrixBleed was exploited from late August 2023 and disclosed on 2023-10-10. CVE-2025-0282 was exploited from mid-December 2024 and disclosed on 2025-01-08. NPA counted 18 answers where logs were lost because the retention period had passed |
+| Time | NTP on the appliance, the collector and every server, with the same sources | NCSC: "All systems should run the network time protocol (NTP) from reputable and redundant sources." |
+| Alerts | Successful administrator logins, configuration changes, hardware changes | CCCS: "Alert on successful administrative log-ons, configuration changes and hardware changes" |
+
+</div>
+
+<SourceLine lang="en" ids={["ch5-cccs-itsm80101", "ch5-ncsc-forensics-spec", "ch5-mandiant-citrixbleed", "ch5-mandiant-0282", "ch5-npa-r7-logs"]} />

@@ -1,0 +1,105 @@
+---
+// Fig. 5-6: flowchart for "a KEV entry names my VPN appliance". One column so it
+// reads on a phone; the two branches run in a narrow side column and rejoin.
+import { EDGE_LABEL, LINE, layout, NODES, W } from "../../lib/ch5-flow";
+import type { Lang } from "../../lib/paths";
+
+interface Props {
+  lang: Lang;
+  label: string;
+}
+
+const { lang, label } = Astro.props;
+const { boxes, height, edges } = layout(lang);
+const ah = "kevflow-ah";
+const nodes = NODES.map((n) => ({ n, b: boxes.get(n.id)! }));
+---
+
+<svg class="dg kevflow" viewBox={`0 0 ${W} ${height}`} role="img" aria-label={label}>
+  <defs>
+    <marker id={ah} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" class="kf-ah"></path>
+    </marker>
+  </defs>
+  {
+    edges.map((e) => (
+      <g>
+        <polyline class="kf-edge" points={e.points.map((p) => p.join(",")).join(" ")} marker-end={`url(#${ah})`} />
+        {e.label && (
+          <text class="kf-yn" x={e.lx} y={e.ly}>
+            {EDGE_LABEL[lang][e.label]}
+          </text>
+        )}
+      </g>
+    ))
+  }
+  {
+    nodes.map(({ n, b }) => {
+      const lines = n.lines[lang];
+      const top = b.cy - ((lines.length - 1) * LINE) / 2 + 6;
+      return (
+        <g class:list={["kf-node", `kf-${n.kind}`]}>
+          {n.kind === "decision" ? (
+            <polygon points={`${b.cx},${b.y} ${b.x + b.w},${b.cy} ${b.cx},${b.y + b.h} ${b.x},${b.cy}`} />
+          ) : n.kind === "terminal" ? (
+            <rect x={b.x} y={b.y} width={b.w} height={b.h} rx={b.h / 2} />
+          ) : (
+            <rect x={b.x} y={b.y} width={b.w} height={b.h} />
+          )}
+          {n.step && n.col === "spine" && (
+            <text class="kf-step" x={b.x + 10} y={b.y + 20}>
+              {n.step}
+            </text>
+          )}
+          {lines.map((l, i) => (
+            <text x={b.cx + (n.step && n.col === "spine" ? 6 : 0)} y={top + i * LINE} text-anchor="middle">
+              {i === 0 && n.step && n.col === "side" ? <tspan class="kf-step">{n.step} </tspan> : null}
+              {l}
+            </text>
+          ))}
+        </g>
+      );
+    })
+  }
+</svg>
+
+<style>
+  .kevflow {
+    max-inline-size: 30rem;
+    margin-inline: auto;
+  }
+  .kevflow text {
+    font-size: 16px;
+  }
+  .kf-node rect,
+  .kf-node polygon {
+    fill: var(--sheet);
+    stroke: var(--ink);
+    stroke-width: 1.5;
+  }
+  .kf-decision polygon {
+    stroke-width: 2;
+  }
+  .kf-terminal rect {
+    stroke-width: 2;
+  }
+  .kf-edge {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 2;
+  }
+  .kf-ah {
+    fill: var(--ink);
+  }
+  .kevflow .kf-step {
+    font-family: var(--font-en);
+    font-weight: 700;
+    fill: var(--instruct);
+  }
+  .kevflow .kf-yn {
+    font-family: var(--font);
+    font-weight: 700;
+    font-size: 15px;
+    fill: var(--ink-2);
+  }
+</style>

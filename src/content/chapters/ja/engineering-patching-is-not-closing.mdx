@@ -1,0 +1,89 @@
+---
+title: パッチで扉は閉まらない
+description: パッチは欠陥を取り除く。適用前に侵入者が手に入れたパスワード、セッション、ファイルは取り戻せない。更新そのものを生き延びる不正なプログラムもある。
+chapter: engineering
+path: /engineering/patching-is-not-closing/
+parent: engineering
+order: 2
+---
+
+import Fig from "../../../components/Fig.astro";
+import Scale from "../../../components/Scale.astro";
+import SectionCut from "../../../components/SectionCut.astro";
+import SourceLine from "../../../components/SourceLine.astro";
+import Summary from "../../../components/Summary.astro";
+import FailureLanes from "../../../components/ch5/FailureLanes.astro";
+import KevFlow from "../../../components/ch5/KevFlow.astro";
+
+<Summary lang="ja">
+  <p>ベンダーの修正を当てれば、その後に来る攻撃者に対して欠陥は閉じる。修正前に入った侵入者は、手に入れたものを持ったままである。パスワード、生きているセッション、機器に置いたファイルがそれにあたる。警察庁の2025年の調査では、71件のうち31件が、侵入口の機器にパッチをすべて当てていたと答えた。</p>
+  <p>ここから導かれる判断: 自社の機器が KEV に載ったら、侵害の可能性がある事案として扱う。パッチは7つの作業の2番目にすぎない。認証情報、セッション、機器の内側の確認はその後に続く。</p>
+</Summary>
+
+<SectionCut lang="ja" />
+
+## <Scale s="1:5" /> 侵入者のアクセスがパッチ後も残る5つの経路
+
+図5-5の各段は、勧告や調査報告書に記録された失敗の型である。黒い縦線がパッチ、赤線が侵入者のアクセスを表す。赤線はパッチより前に始まり、パッチの後も続く。
+
+<Fig lang="ja" n="5-5" caption="侵入者のアクセスがパッチ後も残る5つの経路" sources={["npa-r8h1-data", "ch5-fortinet-87000", "jpcert-ir-2024q2", "ch5-mandiant-citrixbleed", "ch5-fortinet-symlink", "ch5-coathanger", "ch5-cisa-ed-25-03", "ch5-cisa-aa24-060b", "ch5-mandiant-0282", "ch5-jpcert-at-2025-0001"]} nts>
+  <FailureLanes lang="ja" label="5つの段。いずれも赤線がパッチの前に始まり、後まで続く。認証情報の窃取、セッションの窃取、更新を生き延びる常駐、だまされる整合性チェック、公表前の侵害。" />
+</Fig>
+
+### 1. パッチ前に盗まれた認証情報
+
+CVE-2018-13379 では、ログインせずに FortiOS SSL-VPN のセッションファイルを読み出せた。そこにはユーザー名とパスワードが入っていた。2021年9月、Fortinet は「a malicious actor has recently disclosed SSL-VPN access information to 87,000 FortiGate SSL-VPN devices」と公表し、「While they may have since been patched, if the passwords were not reset, they remain vulnerable.」と警告した。半田病院のグローバル IP アドレス、ID、パスワードもこの流出データに含まれていた（技術編 p.10）。JPCERT/CC は2024年にも CVE-2023-27997 と CVE-2024-21762 で同じ型を確認し、修正適用済みの製品に、適用前に盗まれた認証情報で侵入された事例があったと報告している。警察庁の調査も同じ方向を示す。2025年に回答した71件のうち31件で、侵入口の機器にはパッチがすべて当たっていた。
+
+### 2. パッチ前に盗まれたセッション
+
+CitrixBleed（CVE-2023-4966）では、多要素認証の後に発行された有効なセッション Cookie を含みうるメモリが漏れた。Mandiant によれば、有効な Cookie を持つ攻撃者は「without knowledge of the username, password, or access to a multi-factor authentication token or device」でセッションを確立できる。更新してもそのセッションは終わらない。NetScaler 自身の告知は、更新を求めたうえで「In addition, we also recommend killing all active and persistent sessions」と続けている。LockBit 3.0 の実行者もこの欠陥を使った（[AA23-325A](https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-325a)）。
+
+### 3. 更新を生き延びる常駐
+
+2025年4月、Fortinet は、以前の欠陥で侵害された機器の SSL-VPN のファイル領域に攻撃者がシンボリックリンクを残していたと公表した。このリンクを通じて設定を含むファイルシステムを読み取れた。その状態は「even if the customer device was updated with FortiOS versions that addressed the original vulnerabilities」でも残りえた。オランダの MIVD と AIVD は FortiGate 向けの不正プログラム COATHANGER について「It survives reboots and firmware upgrades.」と書いた。CISA の [ED 25-03](https://www.cisa.gov/news-events/directives/ed-25-03-identify-and-mitigate-potential-compromise-cisco-devices) は、Cisco ASA の攻撃者が ROM を書き換えて「persist through reboot and system upgrade」したと述べ、後に、求めた更新を当てても「does not necessarily remove an existing threat actor from the compromised device」と追記した。Ivanti Connect Secure では、更新を止めながら「giving the appearance of a successful upgrade」不正プログラムを Mandiant が見つけている。
+
+### 4. だまされる整合性チェック
+
+Ivanti は、機器のファイルが改ざんされていないかを調べる Integrity Checker Tool（ICT）を提供している。CISA は [AA24-060B](https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-060b) で「Ivanti's internal and previous external ICT failed to detect compromise.」と報告した。Mandiant は設計上の限界として「The ICT does not scan for malware or other Indicators of Compromise.」と付け加えている。疑わしい機器の上で動く検査が異常なしと答えても、それは判断材料の1つにすぎない。
+
+### 5. 公表前の侵害
+
+Mandiant は CVE-2025-0282 のゼロデイ悪用が2024年12月中旬に始まったと報告した。Ivanti の公表は2025年1月8日である。JPCERT/CC は「本脆弱性公開前の2024年12月下旬から本脆弱性が悪用された被害を国内で複数確認しています。」と注意喚起した（JPCERT-AT-2025-0001）。CitrixBleed は2023年8月下旬から悪用され、10月10日に公表された。こうして侵害された機器では、パッチは侵入者より後に届く。CISA の [BOD 26-04](https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk) は、3日以内の対応を求める区分に「carry out a forensic triage of the asset to assess whether the system is compromised.」という要求を組み合わせた。
+
+## <Scale s="1:5" /> 自社の機器が KEV に載ったときの作業順序
+
+図5-6は作業を順に並べたものである。後の作業はどれも機器の状態を変えるので、保全を最初に置く。2つの分岐は、自機種向けの修正版がない場合と、調査で侵害を否定できない場合を扱う。
+
+<Fig lang="ja" n="5-6" caption="流れ図: 自社の VPN 機器が KEV に載った" sources={["ch5-cisa-aa24-060b", "ch5-fortinet-symlink", "ch5-netscaler-4966", "jpcert-ir-2024q2", "ch5-cisa-bod-26-04"]}>
+  <KevFlow lang="ja" label="流れ図。開始: KEV に自社の機器が載った。1 保全: 設定、ログ、可能ならメモリ。判断: 自機種の修正版はあるか。はい: 2 ベンダーの正規イメージから更新。いいえ: 回避策か切断、更改を計画。どちらも 3 認証情報をすべて再設定、4 全セッションとトークンを失効、5 機器の内側を調べる、へ進む。判断: 侵害の兆候がある、または判断できないか。はい: 6 初期化または再構築、確認済みの設定を戻し、認証情報を再度リセット。その後といいえの場合: 7 ベンダー、JPCERT/CC、警察に報告。" />
+</Fig>
+
+1. 保全する。設定と本体内のログをすべて書き出し、インシデント対応の事業者が対応できるならメモリも取得する。後の作業でそれぞれ何が消えるかは[証拠のページ](../evidence/)にまとめた。
+2. パッチを当てる。機器内に残るファイルではなく、ベンダーから取得したイメージで更新する。自機種に修正版がなければ、ベンダーの回避策を適用するかポータルを止め、更改の日程を決める。
+3. 機器が扱った認証情報をすべて再設定する。対象は下の表のとおり。CISA は「Reset all credentials that may have been exposed during the compromise」と求めている。
+4. セッションを失効させる。有効なセッション、持続セッション、発行済みのトークンを無効にし、盗まれた Cookie を使えなくする。
+5. 機器の内側を調べる。作った覚えのない管理者や VPN のアカウント、VPN のアドレス範囲からドメインコントローラやサーバへのログオン、機器の内側アドレスからの RDP や SMB の接続を探す。CISA は Ivanti の件で、侵害が疑われるなら攻撃者が機器の管理者権限をすべて握っていると想定するよう求めた（「assume that threat actors hold full administrative access」）。
+6. 疑わしければ作り直す。初期化または再インストールし、1行ずつ確認した設定を戻す。Fortinet は「Treat all configuration as potentially compromised」と書いている。Ivanti では初期化も安全の証明にならなかった（上の4）ので、作り直した後に認証情報をもう一度変える。
+7. 報告する。ベンダー、JPCERT/CC、警察に加え、業種や扱う情報によって求められる規制当局に届け出る。
+
+## <Scale s="1:5" /> 機器が扱った認証情報のすべて
+
+機器が持つ、または目にする秘密は、管理者パスワードだけではない。CISA は Ivanti の利用者に、機器に保存された利用者とサービスアカウントの認証情報は「likely compromised」と想定するよう求めた。Mandiant は、機器のキャッシュに「VPN sessions, session cookies, API keys, certificates, and credential material」が含まれうると報告している。
+
+<div class="table-scroll" tabindex="0">
+
+| 認証情報 | 置き場所 | すること |
+| --- | --- | --- |
+| ローカルの管理者アカウント | 機器の設定 | パスワードを変え、作った覚えのないアカウントは削除する（JPCERT-AT-2026-0019 は FortiGate について意図しない管理者アカウントの有無を調べるよう求めている） |
+| ローカルの VPN 利用者アカウント | 機器の設定 | すべて再設定する。旧機種からパスワードを引き継がない |
+| LDAP・Active Directory 連携用のアカウント | 機器の設定（利用者の照会に使う） | ディレクトリ側と機器側の両方で変更し、同じアカウントを使う他の機器も確認する |
+| RADIUS の共有鍵 | 機器と RADIUS サーバ | 両側で変える |
+| SAML の署名鍵と IdP との信頼関係 | 機器の設定、IdP のメタデータ | 鍵ペアを作り直し、IdP 側を更新する |
+| TLS サーバ証明書と秘密鍵 | 機器 | 証明書を再発行し、古い証明書は失効させる |
+| ログインした利用者のディレクトリパスワード | ログイン時にポータルを通過する | 露出期間中にログインした全員に変更を求める。Ivanti では不正プログラムがログイン時に記録していた |
+| API トークン、SNMP コミュニティ、IPsec の事前共有鍵 | 機器の設定 | 変更し、使っていないものは消す |
+| 有効なセッションと持続 Cookie | 機器のメモリとセッション保存領域 | すべて失効させる（4） |
+
+</div>
+
+<SourceLine lang="ja" ids={["ch5-cisa-aa24-060b", "ch5-mandiant-0282", "ch5-jpcert-at-2026-0019", "ch5-sonicwall-2025", "ch5-netscaler-4966"]} />

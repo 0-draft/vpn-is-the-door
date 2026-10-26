@@ -1,0 +1,94 @@
+---
+// Fig. 5-5: five ways an intruder's access outlives the patch. One lane each; the
+// patch is the vertical line; the red line is the intruder's access carrying on.
+import type { Lang } from "../../lib/paths";
+
+interface Props {
+  lang: Lang;
+  label: string;
+}
+
+const { lang, label } = Astro.props;
+const ja = lang === "ja";
+const lanes: [string, string, string][] = ja
+  ? [
+      ["1 パッチ前に認証情報を盗まれる", "パスワードを窃取", "パッチ後もログインできる"],
+      ["2 パッチ前にセッションを盗まれる", "Cookie を窃取", "セッションは有効のまま"],
+      ["3 更新を生き延びる常駐", "不正なファイルを設置", "更新後も残る"],
+      ["4 だまされる整合性チェック", "検査用ハッシュを改ざん", "検査結果は異常なし"],
+      ["5 公表前の侵害", "ゼロデイで悪用", "修正公開時には侵入済み"],
+    ]
+  : [
+      ["1 Credentials stolen before the patch", "password copied", "login still works"],
+      ["2 Sessions stolen before the patch", "session cookie copied", "session still valid"],
+      ["3 Persistence that survives upgrades", "implant planted", "survives the upgrade"],
+      ["4 An integrity check that is fooled", "checker's hashes forged", "check reports clean"],
+      ["5 Compromise before disclosure", "exploited as a zero-day", "inside before the fix"],
+    ];
+const LANE = 96;
+const TOP = 56;
+const PX = 212;
+const h = TOP + lanes.length * LANE;
+---
+
+<svg class="dg lanes" viewBox={`0 0 420 ${h}`} role="img" aria-label={label}>
+  <text class="label" x="0" y="20">{ja ? "パッチ前" : "Before the patch"}</text>
+  <text class="label" x="222" y="20">{ja ? "パッチ後" : "After the patch"}</text>
+  <line class="lanes-patch" x1={PX} y1="30" x2={PX} y2="50"></line>
+  <text class="lanes-patch-t" x={PX + 6} y="44">{ja ? "パッチ適用" : "patch applied"}</text>
+  {
+    lanes.map(([title, before, after], i) => {
+      const y = TOP + i * LANE;
+      const ty = y + 46;
+      return (
+        <g>
+          <text class="lanes-title" x="0" y={y + 22}>
+            {title}
+          </text>
+          <line class="thin" x1="0" y1={ty} x2="414" y2={ty} />
+          <rect class="lanes-ev" x="54" y={ty - 7} width="14" height="14" />
+          <path class="route" d={`M68 ${ty} H404`} />
+          <line class="lanes-patch" x1={PX} y1={ty - 16} x2={PX} y2={ty + 16} />
+          <path class="lanes-ah" d={`M404 ${ty - 6} L416 ${ty} L404 ${ty + 6} Z`} />
+          <text class="hot-text lanes-small" x="0" y={ty + 26}>
+            {before}
+          </text>
+          <text class="hot-text lanes-small" x="222" y={ty + 26}>
+            {after}
+          </text>
+        </g>
+      );
+    })
+  }
+</svg>
+
+<style>
+  .lanes {
+    max-inline-size: 32rem;
+    margin-inline: auto;
+  }
+  .lanes text {
+    font-size: 16px;
+  }
+  .lanes .lanes-title {
+    font-weight: 700;
+  }
+  .lanes .lanes-small {
+    font-size: 15px;
+    font-weight: 400;
+  }
+  .lanes-patch {
+    stroke: var(--ink);
+    stroke-width: 3;
+  }
+  .lanes .lanes-patch-t {
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .lanes-ev {
+    fill: var(--intruder);
+  }
+  .lanes-ah {
+    fill: var(--intruder);
+  }
+</style>

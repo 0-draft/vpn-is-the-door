@@ -1,0 +1,56 @@
+---
+title: 技術者向け
+description: S=1:5 で扉を分解する。ログイン前に応答する部分、パッチを当てても侵入者が残る理由、再起動で消える証拠を扱い、最後に自社の機器について答えるべき10の問いを置く。
+chapter: engineering
+path: /engineering/
+order: 0
+---
+
+import Fig from "../../../components/Fig.astro";
+import Scale from "../../../components/Scale.astro";
+import SectionCut from "../../../components/SectionCut.astro";
+import SourceLine from "../../../components/SourceLine.astro";
+import Summary from "../../../components/Summary.astro";
+import DoorMap from "../../../components/ch5/DoorMap.astro";
+
+<Summary lang="ja">
+  <p>この章では VPN 機器を部品に分けて見る。3つのページがそれぞれ扉の一部を扱う。ログイン前に応答するコード、パッチ後も残る侵入者のアクセス、再起動や更新で消えるログである。</p>
+  <p>ここから導かれる判断: 機器の運用担当者は、このページ末尾の10の問いに記録をもとに答えられる状態にしておく。誰も答えられない問いは、侵入口になるか、事故後に証拠の欠落になる。</p>
+</Summary>
+
+<SectionCut lang="ja" />
+
+## <Scale s="1:5" /> 各ページが扉の一部を受け持つ
+
+[第3章](../the-doors/)では VPN 機器を扉として描き、部位に名前を付けた。この縮尺では比喩をやめて実際の部品で呼ぶ。外側のインターホンは、ログイン前に応答する Web ポータルである。扉の内側に掛かる合鍵は、ログイン後に機器が発行するセッション Cookie とトークンにあたる。枠と蝶番は OS、デーモン、ファイル群、扉の上のカメラは機器自身のログである。図5-1は各部位と、それを扱うページの対応を示す。錠そのもの、つまり認証と多要素認証は第3章と第6章で扱う。
+
+<Fig lang="ja" n="5-1" caption="扉の詳細図（外側から）。部位ごとに担当ページを示す" nts>
+  <DoorMap lang="ja" label="扉の立面図と5つの部位。A インターホンは認証前の Web ポータル、B 錠は認証、C 扉の内側の合鍵はセッション Cookie とトークン、D 枠と蝶番は機器の OS とファイル、E カメラは機器のログ。" />
+</Fig>
+
+- [認証前に開いている面](pre-auth-surface/): SSL-VPN 機器がログイン前にさらしている部分、そこに深刻な欠陥が集まる理由、自社のアドレスで露出を棚卸しして減らす方法。
+- [パッチで扉は閉まらない](patching-is-not-closing/): パッチ後も侵入者のアクセスが残る5つの経路と、自社の機器が KEV に載ったときの作業順序。
+- [再起動の前に証拠を残す](evidence/): 機器が何をどこに記録するか、再起動、更新、初期化でそれぞれ何が消えるか。
+
+## <Scale s="1:5" /> 自社の機器について答えるべき10の問い
+
+この表は記録の点検表である。各行に、問い、十分な答えの形、その問いを置いた理由となる実例を並べた。答えが特定の担当者の記憶に頼っているなら、答えはないものとして扱う。
+
+<div class="table-scroll" tabindex="0">
+
+| # | 問い | 十分な答え | 載せた理由 |
+| --- | --- | --- | --- |
+| 1 | 機器の責任者は誰か。契約上、誰がパッチを当てるか | 氏名と、ベンダーに脆弱性情報の連絡と修正適用を義務づける契約条項 | 大阪急性期・総合医療センターの調査委員会は、病院と事業者の責任分界が不明瞭だったと結論づけた（p.14）。半田病院では、販売店から脆弱性情報が届いていなかった（技術編 p.15）。 |
+| 2 | 稼働中のファームウェアの版と、適用した日はいつか | 正確な版番号と、ベンダーの PSIRT 情報との照合結果 | 警察庁の2025年の調査では、回答した71件のうち40件で侵入口の機器に未適用のパッチがあった。 |
+| 3 | この機種と版のサポートはいつ終わるか | 終了日と、それより前の更改予算 | CISA・FBI・英国 NCSC は「Maintain an inventory of all edge devices and their respective support timelines.」と求めている。 |
+| 4 | 管理画面にインターネットから到達できるか | できない。別の管理用ネットワークからのみ到達できる | カナダ CCCS は管理インタフェースについて「should not be directly exposed to the Internet.」としている。 |
+| 5 | VPN 利用者と管理者の第2要素は何か | ID とパスワードだけのアカウントがない。管理者はフィッシング耐性のある多要素認証 | 警察庁の調査では、リモート接続の認証が ID とパスワードのみの組織が39.8%あった。Arctic Wolf はワンタイムパスワードを有効にしたアカウントへのログインも観測している。 |
+| 6 | 機器内のローカルアカウントは何か。パスワードを最後に設定したのはいつか | 日付付きの一覧。旧機種から引き継いだものがない | SonicWall は2025年の被害の多くを、移行時に「carried over during the migration and not reset」だったローカルユーザーのパスワードに結びつけた。 |
+| 7 | ログはどこに送られ、何日保存されるか | 機器の外の SIEM に送り、ゼロデイが公表されるまでの期間より長く保存する | 警察庁の2025年の集計では、ランサムウェア被害102件のうちログを全て保全できたのは25件。原因に「保存期間経過」を挙げた回答が18件あった。 |
+| 8 | 侵害の有無を最後に確認したのはいつか。何を使ったか | 日付、ツール名、機器自身の自己診断だけに頼らない確認 | CISA は「Ivanti's internal and previous external ICT failed to detect compromise.」と報告した。 |
+| 9 | この製品の直近の KEV 登録後、認証情報を再設定したか | した。日付があり、ローカルアカウント、LDAP 連携用アカウント、RADIUS の共有鍵、利用者まで含む | 8万7,000台分の情報流出について、Fortinet は「if the passwords were not reset, they remain vulnerable.」と警告した。 |
+| 10 | ネットワーク単位の VPN 接続をやめる計画はあるか | 日付入りの計画。ZTNA のゲートウェイも境界機器として扱う | CCCS は境界機器への過度の依存から離れるよう勧めている。一方で [CVE-2025-0282](https://nvd.nist.gov/vuln/detail/CVE-2025-0282) は Ivanti Neurons for ZTA のゲートウェイにも影響した。 |
+
+</div>
+
+<SourceLine lang="ja" ids={["osaka-report-2023", "handa-report-tech", "npa-r8h1-data", "ch5-eos-factsheet", "ch5-cccs-itsm80101", "npa-leaflet-r7", "arcticwolf-akira-2025", "ch5-sonicwall-2025", "ch5-npa-r7-logs", "ch5-cisa-aa24-060b", "ch5-fortinet-87000"]} />

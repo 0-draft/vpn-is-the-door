@@ -1,0 +1,81 @@
+---
+// Fig. 5-8: NPA 2025 survey of ransomware victims, log preservation and why logs
+// became unusable (統計編P137, P138). Plain bars, direct labels.
+import type { Lang } from "../../lib/paths";
+
+interface Props {
+  lang: Lang;
+  label: string;
+}
+
+const { lang, label } = Astro.props;
+const ja = lang === "ja";
+const PRESERVED = [
+  { en: "All preserved", ja: "全て保全", n: 25 },
+  { en: "Partly unusable", ja: "一部利用不可", n: 64 },
+  { en: "Unusable", ja: "利用不可", n: 8 },
+  { en: "No logs collected", ja: "ログ取得無", n: 5 },
+];
+const CAUSES = [
+  { en: "Deleted by the attacker", ja: "犯人による削除", n: 20 },
+  { en: "Encrypted", ja: "暗号化", n: 20 },
+  { en: "Retention period expired", ja: "保存期間経過", n: 18 },
+  { en: "Deleted by mistake", ja: "誤削除", n: 3 },
+  { en: "Other", ja: "その他", n: 7 },
+];
+const groups = [
+  { title: ja ? "ログの保全状況（102件）" : "Log preservation (102 victims)", rows: PRESERVED },
+  { title: ja ? "ログが使えなくなった原因（回答68件）" : "Why logs became unusable (68 answers)", rows: CAUSES },
+];
+const S = 5;
+const ROW = 42;
+let y = 0;
+const laid = groups.map((g) => {
+  const top = y;
+  y += 34 + g.rows.length * ROW + 18;
+  return { ...g, top };
+});
+const h = y;
+---
+
+<svg class="dg logbars" viewBox={`0 0 420 ${h}`} role="img" aria-label={label}>
+  {
+    laid.map((g) => (
+      <g>
+        <text class="lb-title" x="0" y={g.top + 20}>
+          {g.title}
+        </text>
+        {g.rows.map((r, i) => {
+          const ry = g.top + 34 + i * ROW;
+          return (
+            <g>
+              <text class="label" x="0" y={ry + 14}>
+                {r[lang]}
+              </text>
+              <rect class="unit" x="0" y={ry + 20} width={r.n * S} height="14" />
+              <text class="num lb-n" x={r.n * S + 6} y={ry + 33}>
+                {r.n}
+              </text>
+            </g>
+          );
+        })}
+      </g>
+    ))
+  }
+</svg>
+
+<style>
+  .logbars {
+    max-inline-size: 30rem;
+  }
+  .logbars text {
+    font-size: 16px;
+  }
+  .logbars .lb-title {
+    font-weight: 700;
+  }
+  .logbars .lb-n {
+    font-family: var(--font-en);
+    font-weight: 700;
+  }
+</style>
