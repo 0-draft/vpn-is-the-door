@@ -228,13 +228,14 @@ function clearOf(pts: Pt[]): Pt[] {
   <div class="sb-read">
     <section class="sb-notes" aria-labelledby="sb-notes-h">
       <h3 id="sb-notes-h" class="sb-h">{T.notes}</h3>
-      <ul data-sb-notes aria-live="polite">
+      <ul data-sb-notes>
         <li class="sb-note sb-note-empty">{T.notesEmpty}</li>
       </ul>
     </section>
+    <p class="visually-hidden" data-sb-live aria-live="polite"></p>
     <section class="sb-outcome" aria-labelledby="sb-out-h">
       <h3 id="sb-out-h" class="sb-h">{T.outcome}</h3>
-      <dl data-sb-outcome aria-live="polite">
+      <dl data-sb-outcome>
         {
           rows.map((r) => (
             <div class="sb-row" data-stage={r.stage} data-bad={String(r.bad)}>
@@ -274,6 +275,7 @@ function clearOf(pts: Pt[]): Pt[] {
     const plan = root.querySelector<HTMLElement>(".sb-stage > .plan[data-plan]")!;
     const notesEl = root.querySelector<HTMLElement>("[data-sb-notes]")!;
     const outEl = root.querySelector<HTMLElement>("[data-sb-outcome]")!;
+    const live = root.querySelector<HTMLElement>("[data-sb-live]");
     const link = root.querySelector<HTMLAnchorElement>("[data-sb-link]")!;
     const empty = notesEl.querySelector("li")!.cloneNode(true);
     const el = (name: string) => form.elements.namedItem(name) as HTMLInputElement;
@@ -321,12 +323,17 @@ function clearOf(pts: Pt[]): Pt[] {
             })),
       );
 
+      // Announce only the outcomes that changed, in one short line.
+      const changed: string[] = [];
       for (const r of summaryRows(o, lang)) {
         const row = outEl.querySelector<HTMLElement>(`[data-stage="${r.stage}"]`);
-        if (!row) continue;
+        const dd = row?.querySelector("dd");
+        if (!row || !dd || dd.textContent === r.value) continue;
         row.dataset.bad = String(r.bad);
-        row.querySelector("dd")!.textContent = r.value;
+        dd.textContent = r.value;
+        changed.push(`${row.querySelector("dt")?.textContent ?? ""}: ${r.value}`);
       }
+      if (live && push && changed.length) live.textContent = changed.join(lang === "ja" ? "。" : ". ");
 
       const q = toQuery(s);
       link.href = `${location.pathname}${q}#fig-6-5`;

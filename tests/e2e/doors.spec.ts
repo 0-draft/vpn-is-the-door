@@ -53,7 +53,23 @@ test.describe("door schedule", () => {
     await ex.locator('[data-filter="preauth"]').check();
     await expect(visible).toHaveCount(29);
     await ex.locator('[data-filter="patch"]').check();
+    const n = await visible.count();
+    expect(n).toBeGreaterThan(0);
     for (const r of await visible.all()) await expect(r).toHaveAttribute("data-patch", "0");
+  });
+
+  test("a link to a row the filters hide clears the filters and shows it", async ({ page }) => {
+    await page.goto("the-doors/");
+    const ex = page.locator("[data-explorer]");
+    await ex.locator('[data-filter="preauth"]').check();
+    await expect(page.locator("#cve-2024-21887")).toBeHidden();
+    await page.evaluate(() => {
+      location.hash = "#cve-2024-21887";
+    });
+    await expect(page.locator("#cve-2024-21887")).toBeVisible();
+    await expect(page.locator("#cve-2024-21887")).toHaveAttribute("data-selected", "");
+    await expect(ex.locator('[data-filter="preauth"]')).not.toBeChecked();
+    await expect(ex.locator("[data-count]")).toHaveText("Showing 31 of 31");
   });
 
   test("Japanese page shows KEV Unknown as 不明, never as no", async ({ page }) => {

@@ -59,7 +59,9 @@ describe("door schedule data", () => {
     for (const v of VULNS) {
       const g = exploitGap(v);
       if (!g || !v.exploited) continue;
-      if (v.exploited.zeroDay) expect(g.to, v.cve).toBeLessThan(0);
+      // check the raw dates, not exploitGap's clipped output
+      if (v.exploited.zeroDay)
+        expect(period(v.exploited.date).start, v.cve).toBeLessThanOrEqual(period(v.disclosed).start);
       else expect(g.to, v.cve).toBeGreaterThanOrEqual(-31);
       expect(g.from).toBeLessThanOrEqual(g.to);
     }

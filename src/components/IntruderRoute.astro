@@ -18,7 +18,7 @@ const { lang, n, caption } = Astro.props;
   <div class="scrolly-fig">
     <figure class="scrolly-sticky" id={`fig-${n}`} aria-labelledby={`fig-${n}-cap`}>
       <div class="scrolly-win">
-        <FloorPlan lang={lang} mode="route" uid={`route-${n}`} doors="closed" label={caption} />
+        <FloorPlan lang={lang} mode="route" uid={`route-${n}`} doors="closed" label={caption} decorative />
       </div>
       <figcaption id={`fig-${n}-cap`}>
         <strong>{figLabel(lang, n)}</strong>
