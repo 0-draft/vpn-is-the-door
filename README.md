@@ -47,7 +47,7 @@ Requires Node.js 24+ and pnpm 12.
 ```bash
 pnpm install
 pnpm dev                 # http://localhost:4321/vpn-is-the-door/
-pnpm build               # static site in dist/
+pnpm build               # static site in dist/, OG images in dist/og/, then the Pagefind index in dist/pagefind/
 pnpm preview             # serves dist/ under /vpn-is-the-door/ like GitHub Pages
 pnpm lint                # Biome
 pnpm check               # astro check
