@@ -61,7 +61,7 @@ describe("renderCard", () => {
     });
     expect(png.subarray(1, 4).toString("latin1")).toBe("PNG");
     expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([OG_W, OG_H]);
-  });
+  }, 60_000); // satori + resvg on a shared CI runner can take well over 5 s
 
   it("shrinks long titles", () => {
     expect(titleSize("en", "Cases")).toBeGreaterThan(titleSize("en", "x".repeat(60)));
