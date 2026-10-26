@@ -229,6 +229,7 @@ const total = VULNS.filter((v) => matches(v, all)).length;
                   </tr>
                   <tr class="ex-detail" id={`rec-${anchor(v.cve)}`} data-rec={v.cve}>
                     <td colspan="5">
+                      <div class="ex-slot" data-slot />
                       <dl class="ex-dl">
                         <dt>{S.product}</dt>
                         <dd>
@@ -308,10 +309,32 @@ const total = VULNS.filter((v) => matches(v, all)).length;
     const patch = root.querySelector<HTMLInputElement>('[data-filter="patch"]');
     const total = rows.length;
     let product = "all";
+    // Below 70em the drawing sits under the selected row (in its record) so it
+    // stays next to the row however far down the table it is; wider screens
+    // keep it in its own sticky column.
+    const wide = matchMedia("(min-width: 70em)");
+    const fig = root.querySelector<HTMLElement>(".ex-fig");
+    const drawing = root.querySelector<HTMLElement>(".ex-sticky");
+    const scroller = root.querySelector<HTMLElement>(".ex-table");
+    const place = () => {
+      if (!fig || !drawing) return;
+      const sel = recs.find((d) => !d.hidden);
+      const slot = sel?.querySelector<HTMLElement>("[data-slot]");
+      const target = wide.matches || !slot ? fig : slot;
+      if (drawing.parentElement !== target) target.append(drawing);
+      fig.hidden = target !== fig;
+    };
+    if (scroller) {
+      const fit = () => root.style.setProperty("--ex-vis", `${scroller.clientWidth}px`);
+      new ResizeObserver(fit).observe(scroller);
+      fit();
+    }
 
     const select = (cve: string, push: boolean) => {
       const row = rows.find((r) => r.dataset.cve === cve);
       if (!row || !svg) return;
+      // the record above the new row may close; keep the new row where the reader saw it
+      const before = row.getBoundingClientRect().top;
       svg.dataset.segs = row.dataset.segs ?? "";
       svg.dataset.hot = row.dataset.hot ?? "";
       if (row.dataset.skip === "1") svg.dataset.skip = "1";
@@ -323,6 +346,15 @@ const total = VULNS.filter((v) => matches(v, all)).length;
         r.querySelector(".ex-pick")?.setAttribute("aria-pressed", String(on));
       }
       for (const d of recs) d.hidden = d.dataset.rec !== cve;
+      place();
+      if (push && !wide.matches) {
+        const shift = row.getBoundingClientRect().top - before;
+        if (shift) scrollBy(0, shift);
+        // then bring the drawing under it into view, without pushing the row off the top
+        const top = row.getBoundingClientRect().top;
+        const below = drawing ? drawing.getBoundingClientRect().bottom - innerHeight + 8 : 0;
+        if (below > 0) scrollBy(0, Math.min(below, top - 8));
+      }
       if (push) history.replaceState(null, "", `#${cve.toLowerCase()}`);
     };
 
@@ -339,6 +371,7 @@ const total = VULNS.filter((v) => matches(v, all)).length;
         if (rec && !ok) rec.hidden = true;
         else if (rec && ok) rec.hidden = !r.hasAttribute("data-selected");
       }
+      place();
       for (const g of groups) g.hidden = !g.querySelector("tr.ex-row:not([hidden])");
       // the drawing must never show a row the filters just hid
       const sel = rows.find((r) => r.hasAttribute("data-selected"));
@@ -380,13 +413,14 @@ const total = VULNS.filter((v) => matches(v, all)).length;
       if (row.hidden) clearFilters();
       select(cve, false);
       apply();
-      row.scrollIntoView({ block: "center" });
+      row.scrollIntoView({ block: wide.matches ? "center" : "start" });
       return true;
     };
     // Browsers restore checkbox state on reload / back; make the table agree with it.
     apply();
     if (!fromHash()) select(root.dataset.initial ?? "", false);
     addEventListener("hashchange", fromHash);
+    wide.addEventListener("change", place);
     root.classList.add("is-live");
   }
 </script>
@@ -462,7 +496,7 @@ const total = VULNS.filter((v) => matches(v, all)).length;
   }
   @media (min-width: 70em) {
     .ex-grid {
-      grid-template-columns: 23rem minmax(0, 1fr);
+      grid-template-columns: 25rem minmax(0, 1fr);
       gap: 2rem;
       align-items: start;
     }
@@ -478,10 +512,25 @@ const total = VULNS.filter((v) => matches(v, all)).length;
       margin-block: 0;
     }
   }
+  /* phones: the figure frame already runs edge to edge; the drawing takes its full width */
   @media (max-width: 45em) {
     .ex-sticky {
-      margin-inline: calc(-1 * var(--gutter));
+      padding-inline: 0;
     }
+  }
+  /* the drawing inside the selected record: pinned to the visible part of the scrolling table */
+  .ex-slot {
+    position: sticky;
+    inset-inline-start: 0;
+    inline-size: var(--ex-vis, 100%);
+    max-inline-size: 30rem;
+    margin: -0.75rem 0 1rem calc(-1rem - 3px);
+  }
+  .ex-slot:empty {
+    display: none;
+  }
+  .ex-slot .ex-sticky {
+    border-block-start: 0;
   }
   .ex-table table {
     min-inline-size: 42rem;

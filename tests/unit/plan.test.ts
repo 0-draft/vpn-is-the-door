@@ -11,7 +11,9 @@ import {
   type Rect,
   STEP_FOCUS_TALL,
   swingPath,
+  tall,
   tallySquares,
+  VPN_LABEL_BOTTOM,
   walls,
 } from "../../src/lib/plan";
 
@@ -140,7 +142,25 @@ describe("panOffset", () => {
     expect(panOffset([900, 1000], [0, 1000], 1000, 400)).toBe(600);
     expect(panOffset([0, 1000], [0, 500], 400, 600)).toBe(0);
   });
+  it("keeps the end of a range taller than the window in view", () => {
+    expect(panOffset([100, 900], [0, 1000], 1000, 400)).toBe(500);
+  });
   it("covers every scrolly step", () => {
     for (let n = 0; n <= 7; n++) expect(STEP_FOCUS_TALL[n]).toBeDefined();
+  });
+  // sticky window heights measured on 360x640, 390x844 and 412x915 phones
+  it.each([
+    [360, 370],
+    [390, 496],
+    [412, 540],
+  ])("steps 2-7 keep the VPN door label in the window at %ipx wide", (w, win) => {
+    const [, vy, , vh] = tall.viewBox;
+    const svgPx = (w * vh) / tall.viewBox[2];
+    const k = svgPx / vh;
+    for (let n = 2; n <= 7; n++) {
+      const off = panOffset(STEP_FOCUS_TALL[n]!, [vy, vh], svgPx, win);
+      expect((VPN_LABEL_BOTTOM - vy) * k - off, `step ${n}`).toBeLessThanOrEqual(win);
+      expect((tall.stations.s1[1] - vy) * k - off, `step ${n}`).toBeGreaterThanOrEqual(0);
+    }
   });
 });

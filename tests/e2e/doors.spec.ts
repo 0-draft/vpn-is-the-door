@@ -95,3 +95,34 @@ for (const path of PAGES) {
     expect(results.violations.map((v) => v.id)).toEqual([]);
   });
 }
+
+test.describe("door schedule drawing follows the selection below 70em", () => {
+  for (const viewport of [
+    { width: 390, height: 844 },
+    { width: 820, height: 1180 },
+  ]) {
+    test(`a row far down shows the drawing next to it at ${viewport.width}px`, async ({ page }) => {
+      await page.setViewportSize(viewport);
+      await page.goto("the-doors/");
+      const ex = page.locator("[data-explorer]");
+      const row = ex.locator("tr.ex-row").last();
+      await row.locator(".ex-pick").click();
+      await expect(row).toHaveAttribute("data-selected", "");
+      const svg = ex.locator("svg.door");
+      await expect(svg).toBeInViewport({ ratio: 0.9 });
+      await expect(row).toBeInViewport();
+      // the drawing sits inside the selected record, not at the top of the explorer
+      await expect(ex.locator(`#rec-${await row.getAttribute("id")} svg.door`)).toHaveCount(1);
+    });
+  }
+
+  test("desktop keeps the drawing in its sticky column", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto("the-doors/");
+    const ex = page.locator("[data-explorer]");
+    const row = ex.locator("tr.ex-row").last();
+    await row.locator(".ex-pick").click();
+    await expect(ex.locator(".ex-fig svg.door")).toHaveCount(1);
+    await expect(ex.locator("svg.door")).toBeInViewport({ ratio: 0.9 });
+  });
+});
