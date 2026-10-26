@@ -39,8 +39,8 @@ const copy = {
   contents: ja ? "目次" : "Contents",
   read: ja ? "読む" : "Read",
   h1Note: ja
-    ? "2026年上半期は回答が36件と少なく、メールの行がない。傾向の変化とは読まないこと。"
-    : "2026 H1 has only 36 answers and no email row in NPA's table. Do not read it as a change in trend.",
+    ? "2026年上半期は半年分で、回答36件。メールの行はない。"
+    : "2026 H1 is a half-year with 36 answers and no email row.",
 };
 ---
 
@@ -58,13 +58,10 @@ const copy = {
             <li>
               2025年、侵入経路が判明したランサムウェア被害92件のうち61件（66.3%）が VPN 機器からの侵入だった。不審メールは2件。
             </li>
-            <li>VPN 機器は、社員が受付を通らずに外から入れるように外壁に付けた扉にあたる。インターネット上の誰でもこの扉の前に立てる。</li>
-            <li>扉の機器そのものの欠陥の多くは、ログインの前に突かれる。その場合、パスワードも多要素認証も確かめられないまま通過されることがある。</li>
+            <li>VPN 機器は、社員が受付を通らずに外から入るための外壁の扉にあたる。インターネット上の誰でもこの扉の前に立てる。</li>
+            <li>機器の欠陥の多くはログインの前に突かれ、パスワードも多要素認証も確かめられないことがある。</li>
             <li>
               侵入者は社内の鍵（Active Directory）を奪い、バックアップを消し、データを持ち出し、最後に暗号化する。2025年、バックアップから復元を試みた{bf.n}件のうち{bf.failed}件が元に戻せなかった。
-            </li>
-            <li>
-              経営が決めることは3つ。自社の扉をすべて把握して担当者を決める。パッチの期限を「日」で決め、パスワードの再設定まで含める。侵入者が届かないバックアップを持つ。
             </li>
           </ol>
         ) : (
@@ -73,12 +70,9 @@ const copy = {
               In 2025, 61 of the 92 Japanese ransomware victims that could say how the attacker got in named their VPN appliance (66.3%). Email accounted for two.
             </li>
             <li>A VPN appliance is a door in the outer wall that lets staff in without passing reception. Anyone on the internet can walk up to it.</li>
-            <li>Most flaws in the appliance itself can be used before anyone logs in, and then the password and multi-factor authentication (MFA) may never be checked.</li>
+            <li>Most flaws in the appliance can be used before login, so the password and multi-factor authentication (MFA) may never be checked.</li>
             <li>
               Once inside, intruders take the master keys (Active Directory), delete the backups, copy data out and encrypt last. In 2025, {bf.failed} of {bf.n} victims that tried to restore from backup could not.
-            </li>
-            <li>
-              Three decisions belong to leadership: know every door you own and who looks after it; set a patch deadline in days that includes resetting passwords; keep a backup the intruder cannot reach.
             </li>
           </ol>
         )

@@ -18,16 +18,15 @@ import { HEADLINE, pct, ROUTE_YEARS, ROUTES_2026H1 } from "../../../data/stats";
 import { C1, PATCH_2026H1, PATCH_YEARS, remote, SIZE_2026H1, SIZE_YEARS, sizeTotal } from "../../../lib/ch1";
 
 <Summary lang="en">
-  <p>The National Police Agency (NPA) surveys ransomware victims and asks how the intruder got in. In 2025, {C1.n} answers named a route. {C1.vpn} named the VPN appliance and {C1.rdp} named remote desktop. Suspicious email accounted for {C1.mail}.</p>
-  <p>The pattern holds over five years: {C1.five.vpn} of {C1.five.n} cases through VPN appliances, {C1.five.mail} through email. Both large openings exist so that people outside the company can work as if they were inside. In {C1.unpatchedPct}% of the cases where NPA asked, the device used to get in was missing security patches.</p>
-  <p>For leadership: before spending more on email, list every VPN appliance and remote desktop service that faces the internet, name the person who patches each one, and set how many days that may take.</p>
+  <p>In 2025, {C1.n} answers to the National Police Agency (NPA) survey of ransomware victims named how the intruder got in. {C1.vpn} named the VPN appliance, {C1.rdp} remote desktop and {C1.mail} suspicious email.</p>
+  <p>Over 2021–2025, {C1.five.vpn} of {C1.five.n} cases came through VPN appliances and {C1.five.mail} through email. In {C1.unpatchedPct}% of the cases where NPA asked, the device used to get in was missing security patches.</p>
 </Summary>
 
 ## 92 answers named a route
 
-Every number on this page comes from one question in NPA's survey of ransomware victims: the route the intruder used to get in (感染経路). NPA counts only the answers that named a route. Answers of "unknown" and unanswered questions are left out.
+Every number on this page comes from one question in NPA's survey of ransomware victims: the route the intruder used to get in (感染経路). NPA counts only answers that named a route; "unknown" and blank answers are left out.
 
-In 2025 NPA received {C1.reports} ransomware reports, and {C1.n} survey answers named a route. The shares on this page are shares of those {C1.n}, not of all {C1.reports}.
+In 2025 NPA received {C1.reports} ransomware reports, and {C1.n} answers named a route. The shares on this page are shares of those {C1.n}.
 
 <Fig lang="en" n="1-1" caption="2025 ransomware reports, one square per report. Dark squares: the answers that named an intrusion route" sources={["npa-r7-data"]}>
   <UnitBlocks lang="en" total={C1.reports} groups={[
@@ -44,7 +43,7 @@ In 2025 NPA received {C1.reports} ransomware reports, and {C1.n} survey answers 
   </table>
 </Fig>
 
-Each answer names one route, and the four counts add up to {C1.n}. NPA's table gives a label for each route and no further definition. This site uses the following names for them:
+Each answer names one route, and the four counts add up to {C1.n}. NPA gives labels but no definitions. This site names them as follows:
 
 <div class="table-scroll" tabindex="0">
   <table>
@@ -60,7 +59,7 @@ Each answer names one route, and the four counts add up to {C1.n}. NPA's table g
   </table>
 </div>
 
-The label names the device, not the method. A VPN answer covers a leaked password and an exploited flaw in the appliance alike. NPA's English edition lists "unpatched vulnerabilities, leaked credentials, weak passwords, and misconfigurations" as the ways attackers get through.
+The label names the device. A VPN answer covers a leaked password and an exploited flaw in the appliance alike. NPA's English edition lists "unpatched vulnerabilities, leaked credentials, weak passwords, and misconfigurations" as the ways attackers get through.
 
 <SourceLine lang="en" ids={["npa-r7-en"]} />
 
@@ -71,11 +70,11 @@ The label names the device, not the method. A VPN answer covers a leaked passwor
   <RouteTable slot="data" lang="en" focus={["vpn"]} />
 </Fig>
 
-A VPN appliance lets staff, branch offices and maintenance contractors connect to the company network from outside, as if they were at their desks. It usually sits at the internet edge, often as a function of the firewall.
+A VPN appliance lets staff, branch offices and maintenance contractors connect to the company network from outside. It sits at the internet edge, often as a function of the firewall.
 
-A person working from home has to reach its login page from any connection, so the login page answers anyone on the internet. Until someone logs in, the appliance cannot tell an employee from a stranger. A flaw in the code that runs before login can be used by anyone who finds the device.
+Its login page answers anyone on the internet, and until someone logs in it cannot tell an employee from a stranger. A flaw in the code that runs before login can be used by anyone who finds the device.
 
-On the plan it is a door in the outer wall that opens into the corridor behind reception. Whoever comes in this way never passes the reception desk. In 2025 it was the route in {C1.vpn} of {C1.n} cases ({C1.vpnPct}%). [Chapter 3](../the-doors/) covers the products and their flaws.
+On the plan it is a door in the outer wall that opens into the corridor behind reception. In 2025 it was the route in {C1.vpn} of {C1.n} cases ({C1.vpnPct}%). [Chapter 3](../the-doors/) covers the products and their flaws.
 
 ## The window: remote desktop, 19
 
@@ -84,11 +83,11 @@ On the plan it is a door in the outer wall that opens into the corridor behind r
   <RouteTable slot="data" lang="en" focus={["rdp"]} />
 </Fig>
 
-Remote desktop shows one computer's screen on another and lets the user work on it from there. In a company it is how IT staff and maintenance contractors manage servers without walking to the server room. On Windows it is the Remote Desktop Protocol (RDP).
+Remote desktop lets a user work on another computer's screen from a distance; on Windows it is the Remote Desktop Protocol (RDP). IT staff and maintenance contractors use it to manage servers.
 
-It is meant for the internal network. It becomes reachable from the internet when a router forwards the connection straight to a server, for example so that a contractor can connect without a VPN. The only thing between the internet and that server is then a login screen. NPA's 2023 report describes these cases as remote desktop services set up with weak credentials (「強度の弱い認証情報等が設定されたリモートデスクトップサービス」).
+It is meant for the internal network. It becomes reachable from the internet when a router forwards the connection straight to a server, for example so that a contractor can connect without a VPN. NPA's 2023 report describes these cases as remote desktop services set up with weak credentials (「強度の弱い認証情報等が設定されたリモートデスクトップサービス」).
 
-On the plan it is a window: visible from the street, and it opens into one room instead of the corridor. In 2025 it was the route in {C1.rdp} of {C1.n} cases ({C1.rdpPct}%). The highest year was 2024, with {ROUTE_YEARS[3]?.counts.rdp} of {ROUTE_YEARS[3]?.n}.
+On the plan it is a window that opens straight into one room. In 2025 it was the route in {C1.rdp} of {C1.n} cases ({C1.rdpPct}%). The highest year was 2024, with {ROUTE_YEARS[3]?.counts.rdp} of {ROUTE_YEARS[3]?.n}.
 
 <SourceLine lang="en" ids={["npa-r5", "npa-r6-data"]} />
 
@@ -99,7 +98,7 @@ On the plan it is a window: visible from the street, and it opens into one room 
   <RouteTable slot="data" lang="en" focus={["other"]} />
 </Fig>
 
-NPA's table does not break down 「その他」, so this site does not guess what the ten cases were. The plan draws them as a loading door, a third way through the outer wall, without claiming what it is in a real company.
+NPA's table does not break down 「その他」. The plan draws it as a loading door, a third way through the outer wall, without saying what it is.
 
 In 2025 other routes made up {C1.other} of {C1.n} cases ({C1.otherPct}%). Over five years they total {C1.five.other} of {C1.five.n}, more than email in every year.
 
@@ -110,13 +109,13 @@ In 2025 other routes made up {C1.other} of {C1.n} cases ({C1.otherPct}%). Over f
   <RouteTable slot="data" lang="en" focus={["mail"]} />
 </Fig>
 
-Email reaches every employee, and anyone on the internet can send a message to a company address. An address is public by design. For that reason mail passes through filtering before it reaches anyone, and the PCs it lands on run antivirus. On the plan, these checks are the reception desk at the main entrance.
+Anyone can send a message to a company address, so mail passes through filtering before it reaches staff, and the PCs it lands on run antivirus. On the plan, these checks are the reception desk at the main entrance.
 
 NPA's label is 「不審メールやその添付ファイル」, suspicious email or its attachments. In 2025 it was the route in {C1.mail} of {C1.n} cases ({C1.mailPct}%).
 
 ## Email was 24 of 485 cases in five years
 
-The familiar picture of a ransomware attack starts with an employee opening an attachment. Awareness training and phishing drills are built around that picture. In NPA's count, email is the smallest of the four openings in every year from 2021 to 2025.
+Email was the smallest of the four routes in every year from 2021 to 2025.
 
 <Fig lang="en" n="1-6" caption="Intrusion routes, 2021–2025 combined. One square per case" sources={["npa-r8h1-data"]}>
   <UnitBlocks lang="en" total={C1.five.n} groups={[
@@ -137,9 +136,9 @@ The familiar picture of a ransomware attack starts with an employee opening an a
   </table>
 </Fig>
 
-Added up over the five years, VPN appliances were the route in {C1.five.vpn} of {C1.five.n} cases ({C1.fiveVpnPct}%) and email in {C1.five.mail} ({C1.fiveMailPct}%). A security budget spent mainly on the inbox addresses {C1.five.mail} of the {C1.five.n}. The two remote-access openings account for {C1.five.vpn + C1.five.rdp}.
+VPN appliances and remote desktop together account for {C1.five.vpn + C1.five.rdp}.
 
-The table records the opening, not where a password came from. A password stolen with a phishing email and later used to log in to the VPN would, as far as the table shows, count as VPN.
+The table records the opening and not where a password came from. A password stolen with a phishing email and later used to log in to the VPN counts as VPN.
 
 ## VPN has been the largest opening every year since 2021
 
@@ -165,11 +164,11 @@ The table records the opening, not where a password came from. A password stolen
   </table>
 </Fig>
 
-The VPN share has moved between {pct(ROUTE_YEARS[0]?.counts.vpn ?? 0, ROUTE_YEARS[0]?.n ?? 1)}% (2021) and {C1.vpnPct}% (2025), and VPN appliances led in every year. In 2024 the share dipped while remote desktop rose to {ROUTE_YEARS[3]?.counts.rdp} cases. Their combined share still rose that year.
+The VPN share has moved between {pct(ROUTE_YEARS[0]?.counts.vpn ?? 0, ROUTE_YEARS[0]?.n ?? 1)}% (2021) and {C1.vpnPct}% (2025), the largest in every year. In 2024 the share dipped while remote desktop rose to {ROUTE_YEARS[3]?.counts.rdp} cases; their combined share still rose.
 
-The 2026 first-half figure needs care. NPA's half-year table has {ROUTES_2026H1.n} answers and no row for email. VPN appliances account for {ROUTES_2026H1.counts.vpn} of them ({pct(ROUTES_2026H1.counts.vpn ?? 0, ROUTES_2026H1.n)}%). The sample is less than half of a usual year, and half-years differ from full years even in the same year: NPA's leaflet gives 62.2% for the first half of 2025, against {C1.vpnPct}% for the whole of 2025. The 2026 bar is a half-year reading, not a decline.
+NPA's 2026 first-half table has {ROUTES_2026H1.n} answers and no row for email. VPN appliances account for {ROUTES_2026H1.counts.vpn} of them ({pct(ROUTES_2026H1.counts.vpn ?? 0, ROUTES_2026H1.n)}%). Half-years differ from full years: NPA's leaflet gives 62.2% for the first half of 2025, against {C1.vpnPct}% for the whole year.
 
-The number of reports did rise. NPA recorded {HEADLINE.reports2026h1} ransomware reports in the first half of 2026, the highest half-year since the series began.
+NPA recorded {HEADLINE.reports2026h1} ransomware reports in the first half of 2026, the highest half-year since the series began.
 
 <SourceLine lang="en" ids={["npa-leaflet-r7", "npa-r8h1-data"]} />
 
@@ -200,9 +199,9 @@ The number of reports did rise. NPA recorded {HEADLINE.reports2026h1} ransomware
   </table>
 </Fig>
 
-In 2025, {C1.sme} of the {C1.reports} reported victims ({C1.smePct}%) were small and medium-sized enterprises. {SIZE_YEARS[3]?.large} were large companies and {SIZE_YEARS[3]?.other} were associations and other bodies. The SME share was about half in 2022 and 2023 and has been above 63% since 2024.
+In 2025, {C1.sme} of the {C1.reports} reported victims ({C1.smePct}%) were small and medium-sized enterprises. The SME share was about half in 2022 and 2023 and has been above 63% since 2024.
 
-Minato Precision, the fictional company on the plans, has 280 staff, one head office and one factory. It is drawn to stand for this group. NPA does not cross the route count with company size, so this page cannot say whether SMEs come in through the VPN door more often than large companies. What the count shows is who the victims are.
+Minato Precision, the fictional company on the plans, has 280 staff, one head office and one factory, and stands for this group. NPA does not cross the route count with company size, so this page cannot say whether SMEs are entered through the VPN more often than large companies.
 
 <SourceLine lang="en" ids={["npa-r8h1-data"]} />
 
@@ -232,13 +231,13 @@ Minato Precision, the fictional company on the plans, has 280 staff, one head of
   </table>
 </Fig>
 
-NPA also asks whether the device used to get in had its security patches applied (「侵入経路とされる機器のセキュリティパッチの適用状況」). From 2022 to 2025, {C1.unpatched.yes} of {C1.unpatched.n} answers ({C1.unpatchedPct}%) said patches were missing. By year the share was {PATCH_YEARS.map((p) => `${pct(p.unpatched, p.n)}%`).join(", ")}. The question is about whichever device was the route, and NPA does not split it by route.
+NPA also asks whether the device used to get in had its security patches applied (「侵入経路とされる機器のセキュリティパッチの適用状況」). From 2022 to 2025, {C1.unpatched.yes} of {C1.unpatched.n} answers ({C1.unpatchedPct}%) said patches were missing. NPA does not split this by route.
 
-The other {C1.unpatched.n - C1.unpatched.yes} devices ({C1.patchedPct}%) were fully patched and were still the way in. JPCERT/CC describes one way this happens with SSL-VPN appliances: credentials stolen while the device was vulnerable still worked after the patch was applied. A patch deadline therefore has to include resetting the passwords used on the device.
+The other {C1.unpatched.n - C1.unpatched.yes} devices ({C1.patchedPct}%) were fully patched. JPCERT/CC reports SSL-VPN cases where credentials stolen while the device was vulnerable still worked after the patch was applied.
 
 <SourceLine lang="en" ids={["jpcert-ir-2024q2"]} />
 
-## VPN and remote desktop are both doors for remote work
+## VPN and remote desktop combined
 
 <Fig lang="en" n="1-10" caption="VPN appliances and remote desktop combined, as a share of known intrusion routes" sources={["npa-r8h1-data", "npa-r7-data"]}>
   <ShareBars lang="en" keys={["VPN", "RDP"]} rows={ROUTE_YEARS.map((r) => ({
@@ -265,11 +264,9 @@ The other {C1.unpatched.n - C1.unpatched.yes} devices ({C1.patchedPct}%) were fu
   </table>
 </Fig>
 
-In 2025 the VPN door and the remote desktop window together account for {C1.remote} of {C1.n} cases ({C1.remotePct}%). The combined share has risen every year since 2021, when it was {pct(remote(ROUTE_YEARS[0] ?? ROUTES_2026H1), ROUTE_YEARS[0]?.n ?? 1)}%. NPA's 2022 report groups the two the same way, as intrusions that used flaws in devices for remote work or weak credentials (「テレワーク等に利用される機器等のぜい弱性や強度の弱い認証情報等を利用して侵入したと考えられるもの」), 81% of that year's cases.
+In 2025 the two together account for {C1.remote} of {C1.n} cases ({C1.remotePct}%), up every year from {pct(remote(ROUTE_YEARS[0] ?? ROUTES_2026H1), ROUTE_YEARS[0]?.n ?? 1)}% in 2021. NPA's 2022 report groups them the same way, as intrusions that used flaws in devices for remote work or weak credentials (「テレワーク等に利用される機器等のぜい弱性や強度の弱い認証情報等を利用して侵入したと考えられるもの」), 81% of that year's cases.
 
-Both were set up so that someone outside could work on the inside, for staff working from home or a contractor maintaining a server. To do that job, each has to accept connections from the internet before it knows who is connecting. Each decides on entry with a login check, or with the code that runs before the login check. Neither route passes the mail filtering at the main entrance.
-
-For an IT manager, this is where the inventory starts: every device and service that accepts a login from the internet, who patches it, and whether it is still needed.
+Both exist so that people outside can work on the inside, and both accept connections from the internet before they know who is connecting.
 
 <SourceLine lang="en" ids={["npa-r4"]} />
 
@@ -277,7 +274,7 @@ For an IT manager, this is where the inventory starts: every device and service 
 
 ## Outside Japan, edge devices became a main target
 
-Verizon's Data Breach Investigations Report (DBIR) counts breaches worldwide. Its dataset and categories differ from NPA's, so its percentages cannot be set against the NPA shares. It points in the same direction.
+Verizon's Data Breach Investigations Report (DBIR) counts breaches worldwide. Its dataset and categories differ from NPA's, so the percentages cannot be compared.
 
 <Fig lang="en" n="1-11" caption="Verizon DBIR executive summaries, 2025 and 2026 editions" sources={["dbir-2025", "dbir-2026"]}>
   <div class="table-scroll" tabindex="0">
@@ -294,11 +291,11 @@ Verizon's Data Breach Investigations Report (DBIR) counts breaches worldwide. It
   </div>
 </Fig>
 
-In the 2025 edition, edge devices and VPNs were 22% of the targets of vulnerability exploitation, up from 3% the year before, a rise Verizon calls almost eight-fold. In the 2026 edition, exploitation of vulnerabilities passed credential abuse as the most common way breaches started (31%). The median time to fully resolve a vulnerability listed in CISA's [Known Exploited Vulnerabilities catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog), which lists flaws already used in attacks, was 43 days, and that covers only the 26% of those flaws that organizations fully remediated in 2025.
+In the 2025 edition, edge devices and VPNs rose from 3% to 22% of the targets of vulnerability exploitation. In the 2026 edition, exploitation passed credential abuse as the most common way breaches started (31%). Of the flaws in CISA's [Known Exploited Vulnerabilities catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog), which lists flaws already used in attacks, 26% were fully remediated in 2025.
 
-## The NPA count records the opening, not the technique
+## What the NPA tables can answer
 
-The {C1.vpn} VPN answers for 2025 mix at least two techniques that ATT&CK keeps apart: logging in with valid credentials through an external remote service ([T1133](https://attack.mitre.org/techniques/T1133/), [T1078](https://attack.mitre.org/techniques/T1078/)), and exploiting a flaw in the internet-facing appliance itself ([T1190](https://attack.mitre.org/techniques/T1190/)). The defenses differ. Multi-factor authentication (MFA) stops a reused password but is never reached by a flaw that works before login.
+The {C1.vpn} VPN answers for 2025 mix at least two techniques that ATT&CK keeps apart: logging in with valid credentials through an external remote service ([T1133](https://attack.mitre.org/techniques/T1133/), [T1078](https://attack.mitre.org/techniques/T1078/)), and exploiting a flaw in the internet-facing appliance ([T1190](https://attack.mitre.org/techniques/T1190/)). Multi-factor authentication (MFA) stops a reused password but is never reached by a flaw that works before login.
 
 <div class="table-scroll" tabindex="0">
   <table>
@@ -316,6 +313,6 @@ The {C1.vpn} VPN answers for 2025 mix at least two techniques that ATT&CK keeps 
   </table>
 </div>
 
-The patched-but-entered cases show why the split matters. JPCERT/CC's incident handling report for July to September 2024 describes SSL-VPN intrusions where CVE-2023-27997 and CVE-2024-21762 "are presumed to be among the exploited vulnerabilities", and where "the attacker used credentials they had stolen before the fix was applied". In NPA's table, such a case is one VPN answer on a patched device. JPCERT/CC advises checking for signs of intrusion before updating the firmware and, if intrusion cannot be ruled out, considering a change of the passwords of the accounts in use.
+JPCERT/CC's incident handling report for July to September 2024 describes SSL-VPN intrusions where CVE-2023-27997 and CVE-2024-21762 "are presumed to be among the exploited vulnerabilities", and where "the attacker used credentials they had stolen before the fix was applied". In NPA's table, such a case is one VPN answer on a patched device. JPCERT/CC advises checking for signs of intrusion before updating the firmware and, if intrusion cannot be ruled out, considering a change of the passwords of the accounts in use.
 
 <SourceLine lang="en" ids={["jpcert-ir-2024q2", "npa-r7-data", "npa-r8h1-data"]} />
