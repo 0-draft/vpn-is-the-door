@@ -24,7 +24,7 @@ for (const path of ALL) {
     const errors: string[] = [];
     page.on("pageerror", (e) => errors.push(e.message));
     page.on("console", (m) => {
-      if (m.type() === "error" && !m.text().includes("fonts.g")) errors.push(m.text());
+      if (m.type() === "error") errors.push(m.text());
     });
     await page.goto(path);
     await expect(page.locator("h1")).toHaveCount(1);
