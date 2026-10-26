@@ -47,7 +47,7 @@ Node.js 24 以上と pnpm 12 が必要。
 ```bash
 pnpm install
 pnpm dev                 # http://localhost:4321/vpn-is-the-door/
-pnpm build               # dist/ に静的サイトを出力
+pnpm build               # dist/ に静的サイト、dist/og/ に OG 画像、続けて dist/pagefind/ に検索索引を出力
 pnpm preview             # GitHub Pages と同じく /vpn-is-the-door/ 配下で dist/ を配信
 pnpm lint                # Biome
 pnpm check               # astro check

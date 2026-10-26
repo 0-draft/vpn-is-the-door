@@ -1,8 +1,19 @@
 ---
+// Self-hosted fonts (design §6). Fontsource splits each family by unicode-range,
+// so a page downloads only the subsets its text uses.
+import "@fontsource/biz-udpgothic/400.css";
+import "@fontsource/biz-udpgothic/700.css";
+import "@fontsource/atkinson-hyperlegible-mono/400.css";
+import "@fontsource/atkinson-hyperlegible-mono/600.css";
 import "../styles/global.css";
+import psLatinExt from "@fontsource-variable/public-sans/files/public-sans-latin-ext-wght-normal.woff2?url";
+import psLatin from "@fontsource-variable/public-sans/files/public-sans-latin-wght-normal.woff2?url";
+import { ogImagePath } from "../components/og/pages";
+import { pageKind } from "../components/search/results";
+import Search from "../components/search/Search.astro";
 import { CHAPTERS } from "../data/chapters";
 import { chapterLabel, SITE, t } from "../i18n/ui";
-import { alternatePath, type Lang, localePath } from "../lib/paths";
+import { alternatePath, type Lang, localePath, stripBase, stripLocale } from "../lib/paths";
 
 interface Props {
   lang: Lang;
@@ -23,6 +34,36 @@ const enHref = alt.lang === "en" ? alt.href : Astro.url.pathname;
 const jaHref = alt.lang === "ja" ? alt.href : Astro.url.pathname;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const home = localePath(lang, "/", base);
+const ogImage = new URL(ogImagePath(Astro.url.pathname, base), Astro.site);
+
+// @fontsource-variable names the family "Public Sans Variable"; the site's stacks
+// say "Public Sans", so declare the two subsets the pages use under that name.
+const psRange = {
+  latin:
+    "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD",
+  latinExt:
+    "U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF",
+};
+const fontFace = [
+  [psLatinExt, psRange.latinExt],
+  [psLatin, psRange.latin],
+]
+  .map(
+    ([src, range]) =>
+      `@font-face{font-family:"Public Sans";font-style:normal;font-display:swap;font-weight:100 900;src:url(${src}) format("woff2");unicode-range:${range}}`,
+  )
+  .join("");
+
+// Search index: the 404 page stays out; every other page indexes its <main>.
+const local = stripLocale(stripBase(Astro.url.pathname, base));
+const kind = pageKind(chapter, local);
+const ch = CHAPTERS.find((c) => c.id === chapter);
+// One key per element: Pagefind does not split "a:x, b:y" when a value holds a colon.
+const pfMeta = [
+  `kind:${kind}`,
+  ch && kind === "chapter" ? `label:${chapterLabel(lang, ch.num)}` : "",
+  ch && kind !== "case" ? `scale:${ch.scales.map((x) => `S=${x}`).join(" ")}` : "",
+].filter(Boolean);
 ---
 
 <!doctype html>
@@ -47,14 +88,17 @@ const home = localePath(lang, "/", base);
     <meta property="og:description" content={desc} />
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content={lang === "ja" ? "ja_JP" : "en_US"} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={fullTitle} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={fullTitle} />
     <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400..800&family=BIZ+UDPGothic:wght@400;700&family=Atkinson+Hyperlegible+Mono:wght@400;600&display=swap"
-    />
+    {lang === "en" && <link rel="preload" href={psLatin} as="font" type="font/woff2" crossorigin />}
+    <style is:inline set:html={fontFace} />
     <script is:inline>
       // Apply stored theme / motion before first paint.
       try {
@@ -77,6 +121,11 @@ const home = localePath(lang, "/", base);
           <time datetime={SITE.updated}>{SITE.updated}</time>
         </p>
         <div class="controls">
+          <button type="button" class="ctl search-open" data-search-open aria-haspopup="dialog" aria-keyshortcuts="/ Control+K Meta+K">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6.5"></circle><path d="M15 15 L21 21"></path></svg>
+            <span>{t(lang, "search.open")}</span>
+            <kbd aria-hidden="true">/</kbd>
+          </button>
           <button type="button" class="ctl" data-theme-toggle>
             <span class="ctl-k">{t(lang, "nav.theme")}</span>
             <span data-theme-label data-auto={t(lang, "nav.themeAuto")} data-light={t(lang, "nav.themeLight")} data-dark={t(lang, "nav.themeDark")}
@@ -123,9 +172,11 @@ const home = localePath(lang, "/", base);
       </nav>
     </header>
 
-    <main id="main" tabindex="-1">
+    <main id="main" tabindex="-1" data-pagefind-body={alternate ? "" : undefined}>
+      {alternate && pfMeta.map((m) => <span data-pagefind-meta={m}></span>)}
       <slot />
     </main>
+    <Search lang={lang} />
 
     <footer class="foot">
       <div class="foot-in">
@@ -248,6 +299,29 @@ const home = localePath(lang, "/", base);
     inline-size: 1rem;
     block-size: 1rem;
     margin: 0;
+  }
+  .search-open {
+    color: var(--ink);
+    border: 1px solid var(--ink-3);
+    padding: 0.2rem 0.4rem 0.2rem 0.5rem;
+  }
+  .search-open:hover {
+    border-color: var(--ink);
+    background: var(--marker);
+  }
+  .search-open svg {
+    inline-size: 1rem;
+    block-size: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.25;
+  }
+  .search-open kbd {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--ink-3);
+    border-inline-start: 1px solid var(--hair);
+    padding-inline-start: 0.4rem;
   }
   .lang {
     color: var(--instruct);
