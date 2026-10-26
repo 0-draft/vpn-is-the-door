@@ -21,7 +21,7 @@ import { C1, PATCH_2026H1, PATCH_YEARS, remote, SIZE_2026H1, SIZE_YEARS, sizeTot
 <Summary lang="en">
   <p>The National Police Agency (NPA) surveys ransomware victims and asks how the intruder got in. In 2025, {C1.n} answers named a route. {C1.vpn} named the VPN appliance and {C1.rdp} named remote desktop. Suspicious email accounted for {C1.mail}.</p>
   <p>The pattern holds over five years: {C1.five.vpn} of {C1.five.n} cases through VPN appliances, {C1.five.mail} through email. Both large openings exist so that people outside the company can work as if they were inside. In {C1.unpatchedPct}% of the cases where NPA asked, the device used to get in was missing security patches.</p>
-  <p>The decision this implies: before spending more on email, list every VPN appliance and remote desktop service that faces the internet, name the person who patches each one, and set how many days that may take.</p>
+  <p>For leadership: before spending more on email, list every VPN appliance and remote desktop service that faces the internet, name the person who patches each one, and set how many days that may take.</p>
 </Summary>
 
 ## <Scale s="1:500" /> 92 answers named a route
@@ -295,7 +295,7 @@ Verizon's Data Breach Investigations Report (DBIR) counts breaches worldwide. It
   </div>
 </Fig>
 
-In the 2025 edition, edge devices and VPNs were 22% of the targets of vulnerability exploitation, up from 3% the year before, a rise Verizon calls almost eight-fold. In the 2026 edition, exploitation of vulnerabilities passed credential abuse as the most common way breaches started (31%). The median time to fully resolve a vulnerability listed in CISA's [Known Exploited Vulnerabilities catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog), which lists flaws already used in attacks, was 43 days. Half of those flaws took longer than that to close.
+In the 2025 edition, edge devices and VPNs were 22% of the targets of vulnerability exploitation, up from 3% the year before, a rise Verizon calls almost eight-fold. In the 2026 edition, exploitation of vulnerabilities passed credential abuse as the most common way breaches started (31%). The median time to fully resolve a vulnerability listed in CISA's [Known Exploited Vulnerabilities catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog), which lists flaws already used in attacks, was 43 days, and that covers only the 26% of those flaws that organizations fully remediated in 2025.
 
 ## <Scale s="1:5" /> The NPA count records the opening, not the technique
 
@@ -317,6 +317,6 @@ The {C1.vpn} VPN answers for 2025 mix at least two techniques that ATT&CK keeps 
   </table>
 </div>
 
-The patched-but-entered cases show why the split matters. JPCERT/CC's incident handling report for July to September 2024 describes SSL-VPN intrusions where CVE-2023-27997 and CVE-2024-21762 "are presumed to be among the exploited vulnerabilities", and where "the attacker used credentials they had stolen before the fix was applied". In NPA's table, such a case is one VPN answer on a patched device. JPCERT/CC advises checking for intrusion before updating the firmware and changing the passwords of the accounts in use.
+The patched-but-entered cases show why the split matters. JPCERT/CC's incident handling report for July to September 2024 describes SSL-VPN intrusions where CVE-2023-27997 and CVE-2024-21762 "are presumed to be among the exploited vulnerabilities", and where "the attacker used credentials they had stolen before the fix was applied". In NPA's table, such a case is one VPN answer on a patched device. JPCERT/CC advises checking for signs of intrusion before updating the firmware and, if intrusion cannot be ruled out, considering a change of the passwords of the accounts in use.
 
 <SourceLine lang="en" ids={["jpcert-ir-2024q2", "npa-r7-data", "npa-r8h1-data"]} />

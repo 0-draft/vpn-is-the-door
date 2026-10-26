@@ -27,7 +27,7 @@
       "en": "Ministry of Land, Infrastructure, Transport and Tourism",
       "ja": "国土交通省"
     },
-    "title": "コンテナターミナルにおける情報セキュリティ対策等検討委員会 中間取りまとめ①",
+    "title": "コンテナターミナルにおける情報セキュリティ対策等検討委員会 中間取りまとめ① 名古屋港のコンテナターミナルにおけるシステム障害を踏まえ緊急に実施すべき対応策について（案）",
     "date": "2023",
     "url": "https://www.mlit.go.jp/kowan/content/001633384.pdf",
     "locator": "pp.1, 3–4, 7–8"
@@ -124,6 +124,17 @@
     "title": "サイバー攻撃に関するお知らせ",
     "date": "2026-07-21",
     "url": "https://www.sedeco.co.jp/news/detail/?itemid=111&dispmid=567"
+  },
+  {
+    "id": "case-ryomo-3rd",
+    "publisher": {
+      "en": "Ryomo Systems",
+      "ja": "両毛システムズ"
+    },
+    "title": "当社社内システムへの不正アクセスに関するお知らせ（第3報）",
+    "date": "2026-09",
+    "url": "https://web.archive.org/web/20261016040446/https://www.ryomo.co.jp/news/202609_02.html",
+    "locator": "Wayback Machine 2026-10-16"
   },
   {
     "id": "case-ryomo-scan",

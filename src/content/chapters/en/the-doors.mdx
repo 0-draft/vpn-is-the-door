@@ -1,6 +1,6 @@
 ---
 title: The doors
-description: Seven VPN product lines, 31 flaws attackers have used through them. Most work before anyone logs in, so passwords and MFA never come into play, and many leave something behind that a patch does not remove.
+description: Seven VPN product lines, 31 flaws attackers have used through them. Most can be reached before anyone logs in, where MFA often never comes into play, and many leave something behind that a patch does not remove.
 chapter: doors
 path: /the-doors/
 ---
@@ -21,9 +21,9 @@ import { scheduleStats } from "../../../data/doors";
 export const ST = scheduleStats();
 
 <Summary lang="en">
-  <p>The door schedule on this page lists {ST.total} flaws in the VPN appliances of seven vendors. CISA has confirmed attackers used every one of them. {ST.preauth} of the {ST.total} work before anyone logs in. For those, a strong password and multi-factor authentication (MFA) are never checked.</p>
+  <p>The door schedule on this page lists {ST.total} flaws in the VPN appliances of seven vendors. CISA has confirmed attackers used every one of them. {ST.preauth} of the {ST.total} can be reached before anyone logs in. For most of those, a strong password and multi-factor authentication (MFA) never come into play.</p>
   <p>{ST.zeroDay} were used before the vendor published a warning. For {ST.patchNotEnough}, the vendor or a government agency says the patch alone did not close the door: stolen passwords and sessions stayed valid, or the intruder's implant survived the upgrade.</p>
-  <p>The decision this implies: treat the VPN appliance as the most exposed system the company owns. Patch it within days, and after any serious flaw also reset its passwords, end its sessions and check it for implants.</p>
+  <p>For leadership, this means treating the VPN appliance as the most exposed system the company owns. Patch it within days, and after any serious flaw also reset its passwords, end its sessions and check it for implants.</p>
 </Summary>
 
 ## <Scale s="1:100" /> The door answers strangers before the lock
@@ -102,7 +102,7 @@ Updating the appliance stops remote work while it restarts, so the update is pos
 
 ### Doors past end of support
 
-An appliance past end of support gets no more fixes but keeps working, so it stays in the wall. CISA, the FBI and the UK NCSC warn that state actors use these devices "as entry points to access modern, supported environments". The appliance in the Osaka General Medical Center case was still on FortiOS 5.4.2 when it was examined.
+An appliance past end of support gets no more fixes but keeps working, so it stays in the wall. CISA, the FBI and the UK NCSC warn that state actors use these devices "as entry points to access modern, supported environments". In the Osaka General Medical Center case, the entry appliance had never been updated: before the emergency upgrade it was running FortiOS 5.4.2 (the committee's summary gives 5.4.8).
 
 <SourceLine lang="en" ids={["cisa-eos-edge-2026", "osaka-report-2023"]} />
 

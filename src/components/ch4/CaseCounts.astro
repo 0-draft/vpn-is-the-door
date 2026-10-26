@@ -17,13 +17,13 @@ const NAME: Record<Opening, string> = ja
   ? {
       vpn: "VPN 機器",
       rdp: "リモートデスクトップ",
-      "network-device-unspecified": "ネットワーク機器・通信機器・リモート接続機器",
+      "network-device-unspecified": "機器・接続口",
       other: "アカウントのみ",
     }
   : {
       vpn: "VPN appliance",
       rdp: "Remote desktop",
-      "network-device-unspecified": "Network, communications or remote connection device",
+      "network-device-unspecified": "Device or connection point",
       other: "Account only",
     };
 const rows = OPENINGS.filter((o) => all[o] > 0);
