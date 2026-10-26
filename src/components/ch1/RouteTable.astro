@@ -1,0 +1,55 @@
+---
+// Data table behind the opening plans: the 2025 count for each opening,
+// largest first, with the opening under discussion marked.
+import { latest, pct, type RouteKey } from "../../data/stats";
+import { openingsBySize } from "../../lib/ch1";
+import type { Lang } from "../../lib/paths";
+
+interface Props {
+  lang: Lang;
+  focus?: RouteKey[];
+}
+
+const { lang, focus = [] } = Astro.props;
+const ja = lang === "ja";
+const y = latest();
+const NAME: Record<RouteKey, { en: string; ja: string }> = {
+  vpn: { en: "VPN appliance (VPN door)", ja: "VPN機器（VPN の扉）" },
+  rdp: { en: "Remote desktop (window)", ja: "リモートデスクトップ（窓）" },
+  other: { en: "Other (loading door)", ja: "その他（搬入口）" },
+  mail: { en: "Suspicious email or attachments (main entrance)", ja: "不審メールやその添付ファイル（正面玄関）" },
+};
+---
+
+<table>
+  <caption class="visually-hidden">{ja ? `${y.label.ja}、侵入経路別の件数` : `${y.label.en}, cases by intrusion route`}</caption>
+  <thead>
+    <tr>
+      <th scope="col">{ja ? "侵入経路（図の開口部）" : "Route (opening on the plan)"}</th>
+      <th scope="col" class="num">{ja ? "件数" : "Cases"}</th>
+      <th scope="col" class="num">%</th>
+    </tr>
+  </thead>
+  <tbody>
+    {
+      openingsBySize(y).map((k) => {
+        const on = focus.includes(k);
+        const c = y.counts[k] ?? 0;
+        return (
+          <tr>
+            <td>
+              {on ? <strong>{NAME[k][lang]}</strong> : NAME[k][lang]}
+            </td>
+            <td class="num">{on ? <strong>{c}</strong> : c}</td>
+            <td class="num">{pct(c, y.n)}</td>
+          </tr>
+        );
+      })
+    }
+    <tr>
+      <td>{ja ? "計（侵入経路が判明したもの）" : "Total (route named)"}</td>
+      <td class="num">{y.n}</td>
+      <td class="num">100.0</td>
+    </tr>
+  </tbody>
+</table>

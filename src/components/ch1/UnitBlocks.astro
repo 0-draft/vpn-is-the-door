@@ -1,0 +1,93 @@
+---
+// One square per case, one block per group, labelled directly above each block.
+// Blocks wrap on narrow screens; each block keeps its square size (no scaling).
+import { pct } from "../../data/stats";
+import { UNIT, unitBox, unitGrid } from "../../lib/ch1";
+import type { Lang } from "../../lib/paths";
+
+export interface UnitGroup {
+  label: string;
+  count: number;
+  tone?: "hot" | "ink" | "faint";
+}
+
+interface Props {
+  lang: Lang;
+  groups: UnitGroup[];
+  total: number;
+  cols?: number;
+}
+
+const { lang, groups, total, cols = 20 } = Astro.props;
+const countText = (c: number) => (lang === "ja" ? `${c}件` : String(c));
+---
+
+<div class="ub" aria-hidden="true">
+  {
+    groups.map((g) => {
+      const box = unitBox(g.count, cols);
+      const tone = g.tone ?? "ink";
+      return (
+        <div class:list={["ub-g", `ub-${tone}`]}>
+          <p class="ub-l">
+            <span class="ub-name">{g.label}</span>
+            <span class="ub-v num">
+              <strong>{countText(g.count)}</strong> · {pct(g.count, total)}%
+            </span>
+          </p>
+          <svg class="dg ub-svg" viewBox={`-1 -1 ${box.w + 2} ${box.h + 2}`} width={box.w + 2} height={box.h + 2}>
+            {unitGrid(g.count, cols).map((s) => (
+              <rect class="ub-u" x={s.x} y={s.y} width={UNIT} height={UNIT} />
+            ))}
+          </svg>
+        </div>
+      );
+    })
+  }
+</div>
+
+<style is:global>
+  .ub {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 2rem;
+    align-items: flex-start;
+  }
+  .ub .ub-l {
+    margin: 0 0 0.4rem;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.35;
+    font-size: 1rem;
+  }
+  .ub .ub-name {
+    font-weight: 700;
+  }
+  .ub .ub-v {
+    color: var(--ink-2);
+  }
+  .ub .ub-hot .ub-name,
+  .ub .ub-hot .ub-v strong {
+    color: var(--intruder-text);
+  }
+  .ub .ub-faint .ub-name {
+    font-weight: 400;
+    color: var(--ink-2);
+  }
+  .ub svg.ub-svg {
+    inline-size: auto;
+    max-inline-size: 100%;
+    block-size: auto;
+  }
+  .ub .ub-u {
+    fill: var(--ink-2);
+  }
+  .ub .ub-hot .ub-u {
+    fill: var(--intruder);
+  }
+  .ub .ub-faint .ub-u {
+    fill: none;
+    stroke: var(--line);
+    stroke-width: 1;
+  }
+</style>
