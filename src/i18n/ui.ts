@@ -1,9 +1,10 @@
+import { LATEST } from "../data/revisions";
 import type { Lang } from "../lib/paths";
 
 export const SITE = {
   report: "VITD-2026",
-  revision: 1,
-  updated: "2026-10-25",
+  revision: LATEST.rev,
+  updated: LATEST.date,
   repo: "https://github.com/0-draft/vpn-is-the-door",
 } as const;
 

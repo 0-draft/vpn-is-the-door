@@ -1,4 +1,5 @@
 ---
+import { REVISIONS } from "../data/revisions";
 import type { Source } from "../data/source-schema";
 import { SOURCES } from "../data/sources";
 import { SITE, t } from "../i18n/ui";
@@ -21,8 +22,6 @@ const groups = [...Map.groupBy(SOURCES, (s) => s.publisher.en).values()]
     items: [...items].sort((a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id)),
   }))
   .sort((a, b) => coll.compare(a.name, b.name));
-
-const REVISIONS = [{ rev: 1, date: "2026-10-25", change: { en: "First publication", ja: "初版" } }];
 
 const method = ja
   ? [
