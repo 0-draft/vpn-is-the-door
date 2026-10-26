@@ -1,16 +1,23 @@
 ---
 title: After the door opens
-description: Encryption is the last thing an intruder does, not the first. Everything that decides the damage happens in the hours before, and all of it goes back out through the same door.
+description: Encryption is the last thing an intruder does. Everything that decides the damage happens in the hours before, and all of it goes back out through the same door.
 chapter: after
 path: /after-the-door/
 ---
 
+import AttackTable from "../../../components/ch2/AttackTable.astro";
+import Signs from "../../../components/ch2/Signs.astro";
+import Timeline from "../../../components/ch2/Timeline.astro";
+import Fig from "../../../components/Fig.astro";
 import IntruderRoute from "../../../components/IntruderRoute.astro";
+import Scale from "../../../components/Scale.astro";
+import SectionCut from "../../../components/SectionCut.astro";
+import SourceLine from "../../../components/SourceLine.astro";
 import Step from "../../../components/Step.astro";
 import Summary from "../../../components/Summary.astro";
 
 <Summary lang="en">
-  <p>Ransomware is not one event. It is a sequence that starts at the VPN door and ends, often days later, with encryption. By the time screens go dark, the intruder already holds the master keys, has deleted the backups and has copied data out.</p>
+  <p>Ransomware is a sequence of steps. It starts at the VPN door and ends, often days later, with encryption. By the time screens go dark, the intruder already holds the master keys, has deleted the backups and has copied data out.</p>
   <p>The decision this implies: plan for an intruder who is already inside. A backup they cannot reach and admin accounts they cannot reuse limit the damage even when the door fails.</p>
 </Summary>
 
@@ -20,22 +27,184 @@ import Summary from "../../../components/Summary.astro";
   </Step>
   <Step n={2} title="They used the door">
     <p>Minato Precision has a VPN appliance so staff and the maintenance contractor can work from outside. It is a door in the outer wall, open to anyone on the internet who can get past its lock.</p>
-    <p>The intruder did not break a window. They came through that door, either with a password that had leaked or through a flaw in the appliance itself.</p>
+    <p>The intruder came in through that door, with a password that had leaked or through a flaw in the appliance itself. No window was broken.</p>
   </Step>
   <Step n={3} title="Reception never saw them">
     <p>Email filtering and the security checks at the main entrance work like a reception desk. The VPN door opens into the corridor behind it. Nothing at reception sees who came in that way, and on the network they look like an employee working from home.</p>
   </Step>
   <Step n={4} title="The master keys open every door">
     <p>The intruder heads for the IT room and the key safe: Active Directory, the system that says who may open which door. With an administrator's account, every inner door on the plan opens at once.</p>
-    <p>In the hospital cases in chapter 4, the same administrator password was shared across servers and nothing locked an account after repeated failures.</p>
+    <p>In the two hospital cases further down this page, the same administrator password was shared across servers and nothing locked an account after repeated failures.</p>
   </Step>
   <Step n={5} title="The backups go first">
     <p>Before encrypting anything, the intruder deletes or encrypts the backups so the company cannot simply restore. In 2025, 79 of the 99 Japanese victims that tried to restore from backup could not, and 48 found their backups encrypted too.</p>
+    <SourceLine lang="en" ids={["npa-r7-data"]} />
   </Step>
   <Step n={6} title="The data leaves the same way">
-    <p>Files are copied out through the VPN door. This is what makes the second threat possible: pay, or the data is published. Restoring from backup does not undo a leak.</p>
+    <p>Files are copied out through the VPN door. This makes the second threat possible: pay, or the data is published. Restoring from backup does not undo a leak.</p>
   </Step>
   <Step n={7} title="Encryption is the last step">
-    <p>Only now does the intruder encrypt, usually at night or over a weekend when fewer people are watching. What happened in steps 2 to 6 decides how bad this is.</p>
+    <p>Only now does the intruder encrypt, usually at night or over a weekend when fewer people are watching. In Sophos's 2025 cases, 88.10% of ransomware was deployed outside business hours. Steps 2 to 6 decide how bad this is.</p>
+    <SourceLine lang="en" ids={["sophos-aar-2026"]} />
   </Step>
 </IntruderRoute>
+
+## <Scale s="1:100" /> Each step leaves a trace the IT team could see
+
+None of the steps above is invisible. Each one leaves a record in a log that most companies already have: the VPN appliance, Active Directory, the file server, the backup software. The trouble is that nobody reads those logs at 03:00 on a Sunday. Below, step by step, is what the record looks like in plain terms and how soon after entry it appears. The sheet for each step lists what a person checking the logs would have seen; the examples are typical patterns, not events at Minato Precision.
+
+### Step 2: a login that does not fit the person
+
+To the appliance, this is a normal login with a valid account. The only thing wrong with it is the context.
+
+<Signs lang="en" step={2} time="T+0">
+  <ul>
+    <li><span class="where">VPN log</span>A successful login at 03:00 by an account whose owner is asleep, from an address outside Japan or at a hosting provider.</li>
+    <li><span class="where">VPN log</span>A run of failed logins just before it, or none at all if the password was already known.</li>
+    <li><span class="where">VPN log</span>A login on an account that should not exist any more: a former employee, or a contractor whose contract has ended.</li>
+  </ul>
+</Signs>
+
+### Step 3: one remote worker touches dozens of machines
+
+The intruder now has an inside address and starts mapping the network. Email filtering and antivirus at the entrance record nothing, because nothing passed through them.
+
+<Signs lang="en" step={3} time="within 5 minutes">
+  <ul>
+    <li><span class="where">firewall</span>One VPN session connecting to dozens of internal addresses within minutes.</li>
+    <li><span class="where">servers</span>Remote desktop attempts to many servers from one machine. In the Osaka hospital case, the intruder collected information on about 240 addresses and tried remote desktop to about 70 from one server.</li>
+  </ul>
+  <SourceLine lang="en" ids={["arcticwolf-akira-2025", "osaka-report-2023"]} />
+</Signs>
+
+Arctic Wolf saw Akira operators start scanning the internal network "within five minutes" of logging in to a SonicWall VPN.
+
+### Step 4: a new administrator appears
+
+The intruder takes over or creates an administrator account in Active Directory. From here every inner door opens.
+
+<Signs lang="en" step={4} time="median 3.40 h">
+  <ul>
+    <li><span class="where">AD</span>A user account nobody requested, or an existing account added to the Domain Admins group.</li>
+    <li><span class="where">AD</span>An administrator account logging on from a VPN address.</li>
+    <li><span class="where">servers</span>Antivirus removed or switched off on a server. The Osaka intruder uninstalled it from the first hospital server it reached.</li>
+  </ul>
+  <SourceLine lang="en" ids={["sophos-aar-2026", "osaka-report-2023"]} />
+</Signs>
+
+In Sophos's 2025 case data, the median time from gaining access to the first attempt on Active Directory was 3.40 hours. In its 2024 data it was 11 hours.
+
+### Step 5: backup jobs start failing
+
+The backups are deleted or encrypted so the company cannot restore. This happens before encryption, in the same hours.
+
+<Signs lang="en" step={5} time="before encryption">
+  <ul>
+    <li><span class="where">backup</span>Backup jobs fail, or the backup server stops answering.</li>
+    <li><span class="where">backup</span>Someone logs in to the backup console at night.</li>
+    <li><span class="where">servers</span>Shadow copies, the restore points Windows keeps on each server, disappear.</li>
+  </ul>
+</Signs>
+
+### Step 6: one account reads everything
+
+Data is copied out, usually days into the attack. When the leak threat arrives, the data is long gone.
+
+<Signs lang="en" step={6} time="median 3 days">
+  <ul>
+    <li><span class="where">file server</span>One account reading thousands of files in a short time.</li>
+    <li><span class="where">servers</span>Large compressed archives appearing on a server.</li>
+    <li><span class="where">firewall</span>Outbound traffic far above normal, often to a cloud storage service.</li>
+  </ul>
+  <SourceLine lang="en" ids={["sophos-aar-2025", "sophos-aar-2026", "cisa-aa24-109a"]} />
+</Signs>
+
+Sophos measured a median of 72.98 hours from the start of an attack to exfiltration in 2024, and 78.83 hours in 2025. CISA reports one Akira case that took "just over two hours". In Sophos's 2024 data the attack was detected a median of 2.7 hours after exfiltration, so the data had usually left before anyone noticed.
+
+### Step 7: every file changes its name at once
+
+Encryption is the first step anyone notices without reading a log.
+
+<Signs lang="en" step={7} time="under 4 h, sometimes 55 min">
+  <ul>
+    <li><span class="where">file server</span>Thousands of files renamed with a new extension within minutes. The Osaka files ended in <code>.elbie</code>.</li>
+    <li><span class="where">printers</span>Ransom notes printing on every printer, as at Handa Hospital before dawn.</li>
+    <li><span class="where">servers</span>Servers and virtual machines stopping.</li>
+  </ul>
+  <SourceLine lang="en" ids={["arcticwolf-akira-2025", "osaka-report-2023", "handa-report-main"]} />
+</Signs>
+
+## <Scale s="1:100" /> The fastest cases fit inside one night
+
+In the fastest measured cases, the full route from VPN login to encryption takes a few hours; the medians for data theft run to days. Fig. 2-2 sets three sources on one time axis. Each lane starts its clock at a different point, written next to its name. The first four hours are drawn at full width; after the break, four hours to four days are compressed so the slower Sophos medians still fit.
+
+<Timeline lang="en" n="2-2" caption="Time from entry to each stage, three sources" />
+
+In the Akira campaign against SonicWall VPNs, encryption followed the VPN login in under four hours in almost all intrusions, and in some cases the interval was 55 minutes. At Handa Hospital, the first recorded remote desktop activity was at 23:57 on a Saturday and the ransom note was opened at 03:04. A weekday-only monitoring rota and a monthly patch cycle are both slower than this route.
+
+## <Scale s="1:100" /> One hospital followed the same route
+
+The route above is a composite. Osaka General Medical Center (大阪急性期・総合医療センター) went through each step in October 2022, and its investigation committee published what happened, with page numbers. The report names the companies only by letter (E社, C社) and does not name the VPN product; it does name the vulnerability. Fig. 2-3 maps each step of the scrolly to what the report says.
+
+<Fig lang="en" n="2-3" caption="Osaka General Medical Center, 2022: the scrolly's steps in the committee report" sources={["osaka-report-2023"]}>
+  <div class="table-scroll" tabindex="0">
+    <table>
+      <thead>
+        <tr><th scope="col">Step</th><th scope="col">What the report says</th><th scope="col" class="num">Page</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>The hospital noticed an electronic medical record failure at 07:45 on Monday 31 October 2022. Ransomware was confirmed at about 08:30.</td><td class="num">11</td></tr>
+        <tr><td>2</td><td>The hospital's catering contractor (E社) had a VPN appliance for remote maintenance. It carried CVE-2018-13379, and its global IP address, ID and password were on a publicly posted list. The committee finds it reasonable that the intruder logged in with those credentials.</td><td class="num">45</td></tr>
+        <tr><td>2</td><td>The appliance's firmware had never been updated. Before the emergency upgrade it was found to run version 5.4.2.</td><td class="num">18, 37</td></tr>
+        <tr><td>3</td><td>Inside the contractor's network, the intruder used a dictionary attack tool over remote desktop. The contractor's PCs shared one weak Built-In Administrator password that was in the tool's list.</td><td class="num">45</td></tr>
+        <tr><td>3</td><td>At the request of the catering system builder (C社), the hospital firewall allowed remote desktop from the contractor's network at all times. The report later found this access was not needed and not in use.</td><td class="num">18, 39, 46</td></tr>
+        <tr><td>4</td><td>The password of the first hospital server (server B) was cracked with Mimikatz. The intruder logged in over remote desktop and uninstalled the antivirus software.</td><td class="num">12, 45–46</td></tr>
+        <tr><td>4</td><td>The hospital servers shared the same Built-In Administrator password, which made lateral movement easy. No account lockout was configured.</td><td class="num">12, 19, 46</td></tr>
+        <tr><td>4</td><td>The intruder collected information on about 240 reachable IP addresses and tried remote desktop to about 70 from server B.</td><td class="num">47</td></tr>
+        <tr><td>5</td><td>The on-site LTO backup device was encrypted. The critical-care systems had online backups only and could not use them. Off-site LTO tapes were readable and restored the records to their state of 27 October.</td><td class="num">38, 40–41</td></tr>
+        <tr><td>6</td><td>No large transfer was seen. The largest were about 1.8 MB over remote desktop and 7.9 MB over SMB, whose content could not be determined because detailed logging was off. The committee judges a leak "extremely unlikely".</td><td class="num">12, 46</td></tr>
+        <tr><td>7</td><td>Most servers, including the medical record servers, were encrypted by the Elbie ransomware. Core systems restarted on day 43 and all clinical systems on day 73.</td><td class="num">11</td></tr>
+        <tr><td>After</td><td>C社 upgraded the VPN appliance firmware on the evening of 31 October without a backup, and the VPN syslog was lost. The committee could not determine whether the attack was a single event. Firewall logs showed remote desktop traffic from the contractor back to April 2022, and failed logons before 31 October.</td><td class="num">37, 39, 46</td></tr>
+      </tbody>
+    </table>
+  </div>
+</Fig>
+
+Two steps differ from the composite. Data did not leave in any volume the logs could show, so step 6 did not happen in a measurable way. The offline tapes held, so step 5 failed for the main records. That is why the hospital could restore at all.
+
+### Handa Hospital, a year earlier
+
+Tsurugi Town Handa Hospital (つるぎ町立半田病院) was hit in October 2021 through the same vulnerability. Its expert panel report, read against the same steps, gives the same pattern. Page numbers are the printed ones.
+
+<Fig lang="en" n="2-4" caption="Handa Hospital, 2021: cross-check against the expert panel report" sources={["handa-report-main", "handa-report-tech"]}>
+  <div class="table-scroll" tabindex="0">
+    <table>
+      <thead>
+        <tr><th scope="col">Step</th><th scope="col">What the report says</th><th scope="col">Page</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>2</td><td>A Fortinet FortiGate 60E VPN appliance for remote maintenance had not been updated since installation, leaving CVE-2018-13379 open.</td><td>main 16</td></tr>
+        <tr><td>2</td><td>The leaked data from about 87,000 devices contained the hospital's global IP address, ID and password. The appliance accepted connections from any address on the internet.</td><td>tech 10, 11</td></tr>
+        <tr><td>3</td><td>Remote desktop activity was recorded at 23:57 on 30 October, before the incident was found.</td><td>main 21</td></tr>
+        <tr><td>4</td><td>Active Directory allowed 5-character passwords and had lockout disabled. The Built-In Administrator account was common to every computer. Mimikatz and PsExec were noted.</td><td>tech 9, 15; main 22</td></tr>
+        <tr><td>5</td><td>The backup server's data from 2018 onward had been physically deleted. Backups kept offline up to 2018 were unaffected and used for recovery.</td><td>main 13, 22</td></tr>
+        <tr><td>7</td><td>Before dawn on 31 October, several printers printed the ransom note. At 03:04 a ransom note was opened. 40 computers were affected. Normal care resumed on 4 January 2022.</td><td>main 6, 7, 21, 22</td></tr>
+        <tr><td>After</td><td>The vendor updated the VPN appliance's firmware without preserving logs, so the logs could not be analyzed. Without logs and evidence, the entry route and the lateral movement method remain unknown.</td><td>main 16; tech 14</td></tr>
+      </tbody>
+    </table>
+  </div>
+</Fig>
+
+Both hospitals lost the VPN logs the same way: the box was upgraded before anyone copied them. The fix closed the door and erased the record of who had used it.
+
+<SectionCut lang="en" />
+
+## <Scale s="1:5" /> The route in ATT&CK terms, with the log that shows each step
+
+Fig. 2-5 maps the route to [MITRE ATT&CK](https://attack.mitre.org/techniques/enterprise/) techniques and, for each, the log or telemetry that records it. Event IDs link to Microsoft's reference pages for the Windows Security log; Sysmon, Defender and System log IDs are named without links. Most Security log events need the matching audit policy enabled, and nothing on the appliance side helps unless its logs leave the box before an upgrade.
+
+<AttackTable lang="en" n="2-5" caption="Intruder route mapped to ATT&CK techniques and their telemetry" />
+
+The table describes what defenders see, not how the techniques are carried out. For the appliance-side flaws behind step 2, see chapter 3. LockBit 3.0, as one documented example, deletes volume shadow copies and clears the Windows event logs, which is why steps 4 and 5 need logs that are shipped off each host as they are written.
+
+<SourceLine lang="en" ids={["cisa-aa23-165a"]} />

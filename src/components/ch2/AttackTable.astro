@@ -1,0 +1,171 @@
+---
+// Fig. 2-5: the route as ATT&CK techniques and the telemetry that shows each.
+// On phones each row stacks into a card so nothing scrolls sideways.
+import { ATTACK_ROWS, attackUrl, eventUrl } from "../../lib/ch2-attack";
+import type { Lang } from "../../lib/paths";
+import Fig from "../Fig.astro";
+
+interface Props {
+  lang: Lang;
+  n: string;
+  caption: string;
+}
+
+const { lang, n, caption } = Astro.props;
+const ja = lang === "ja";
+const h = {
+  step: ja ? "手順" : "Step",
+  tech: ja ? "ATT&CK 技術" : "ATT&CK technique",
+  tele: ja ? "それを示すログ・テレメトリ" : "Log or telemetry that shows it",
+  ev: ja ? "イベント ID" : "Event IDs",
+};
+---
+
+<Fig lang={lang} n={n} caption={caption} sources={["mitre-attack", "ms-audit-events", "osaka-report-2023"]}>
+  <table class="atk">
+    <thead>
+      <tr>
+        <th scope="col">{h.step}</th>
+        <th scope="col">{h.tech}</th>
+        <th scope="col">{h.tele}</th>
+        <th scope="col">{h.ev}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        ATTACK_ROWS.map((r, i) => (
+          <tr class:list={{ "atk-first": i === 0 || ATTACK_ROWS[i - 1]?.step !== r.step }}>
+            <td class="atk-step" data-k={h.step}>
+              <span class="atk-n num">{r.step}</span>
+            </td>
+            <td class="atk-tech" data-k={h.tech}>
+              {r.techniques.map((tq) => (
+                <span class="atk-t">
+                  <a class="mono" href={attackUrl(tq.id)}>
+                    {tq.id}
+                  </a>{" "}
+                  <span class="atk-name">{tq.name}</span>
+                </span>
+              ))}
+            </td>
+            <td class="atk-tele" data-k={h.tele}>
+              {r.telemetry[lang]}
+            </td>
+            <td class="atk-ev" data-k={h.ev}>
+              {r.events.length === 0 ? (
+                <span class="muted">{ja ? "なし（機器・通信のログ）" : "none (appliance or network logs)"}</span>
+              ) : (
+                r.events.map((e) => {
+                  const url = eventUrl(e);
+                  return (
+                    <span class="atk-e">
+                      <span class="atk-log">{e.log[lang]}</span>
+                      {url ? (
+                        <a class="mono" href={url}>
+                          {e.id}
+                        </a>
+                      ) : (
+                        <span class="mono">{e.id}</span>
+                      )}
+                    </span>
+                  );
+                })
+              )}
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</Fig>
+
+<style>
+  .atk {
+    font-size: 0.9375rem;
+  }
+  .atk th:nth-child(1),
+  .atk td:nth-child(1) {
+    inline-size: 3.5rem;
+  }
+  .atk th:nth-child(2) {
+    inline-size: 15rem;
+  }
+  .atk th:nth-child(4) {
+    inline-size: 9.5rem;
+  }
+  .atk-first td {
+    border-block-start: 1.5px solid var(--ink-3);
+  }
+  .atk-n {
+    display: inline-grid;
+    place-items: center;
+    inline-size: 1.6rem;
+    block-size: 1.6rem;
+    border: 1.5px solid var(--intruder);
+    border-radius: 50%;
+    color: var(--intruder-text);
+    font-weight: 700;
+  }
+  tr:not(.atk-first) .atk-n {
+    visibility: hidden;
+  }
+  .atk-t {
+    display: block;
+    margin-block-end: 0.35rem;
+  }
+  .atk-name {
+    color: var(--ink-2);
+  }
+  .atk-e {
+    display: inline-flex;
+    gap: 0.3rem;
+    margin: 0 0.6rem 0.3rem 0;
+    white-space: nowrap;
+  }
+  .atk-log {
+    color: var(--ink-3);
+    font-size: 0.875rem;
+  }
+  .muted {
+    color: var(--ink-3);
+    font-size: 0.875rem;
+  }
+  @media (max-width: 44em) {
+    .atk thead {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+    .atk,
+    .atk tbody,
+    .atk tr,
+    .atk td {
+      display: block;
+      inline-size: auto;
+    }
+    .atk tr {
+      padding-block: 0.75rem;
+      border-block-end: 1px solid var(--hair);
+    }
+    .atk-first {
+      border-block-start: 1.5px solid var(--ink-3);
+    }
+    .atk-first td {
+      border-block-start: 0;
+    }
+    .atk td {
+      border: 0;
+      padding: 0.2rem 0;
+    }
+    tr:not(.atk-first) .atk-step {
+      display: none;
+    }
+    .atk-ev::before {
+      content: attr(data-k) ": ";
+      color: var(--ink-3);
+      font-size: 0.875rem;
+    }
+  }
+</style>

@@ -1,0 +1,107 @@
+[
+  {
+    "id": "osaka-report-2023",
+    "publisher": {
+      "en": "Osaka General Medical Center, Information Security Incident Investigation Committee",
+      "ja": "地方独立行政法人大阪府立病院機構 大阪急性期・総合医療センター 情報セキュリティインシデント調査委員会"
+    },
+    "title": "調査報告書",
+    "date": "2023-03-28",
+    "url": "https://www.gh.opho.jp/pdf/report_v01.pdf",
+    "locator": "pp.11–12, 18–19, 36–41, 45–47"
+  },
+  {
+    "id": "handa-report-main",
+    "publisher": {
+      "en": "Tsurugi Town Handa Hospital, expert panel on the computer virus incident",
+      "ja": "徳島県つるぎ町立半田病院 コンピュータウイルス感染事案有識者会議"
+    },
+    "title": "徳島県つるぎ町立半田病院 コンピュータウイルス感染事案 有識者会議調査報告書",
+    "date": "2022-06-07",
+    "url": "https://www.handa-hospital.jp/topics/2022/0616/report_01.pdf",
+    "locator": "printed pp.6–7, 13, 16, 21–22"
+  },
+  {
+    "id": "handa-report-tech",
+    "publisher": {
+      "en": "Tsurugi Town Handa Hospital, expert panel on the computer virus incident",
+      "ja": "徳島県つるぎ町立半田病院 コンピュータウイルス感染事案有識者会議"
+    },
+    "title": "徳島県つるぎ町立半田病院 コンピュータウイルス感染事案 有識者会議調査報告書 技術編",
+    "date": "2022-06-07",
+    "url": "https://www.handa-hospital.jp/topics/2022/0616/report_02.pdf",
+    "locator": "printed pp.9–11, 14–15"
+  },
+  {
+    "id": "sophos-aar-2025",
+    "publisher": {
+      "en": "Sophos",
+      "ja": "Sophos"
+    },
+    "title": "It takes two: The 2025 Sophos Active Adversary Report",
+    "date": "2025",
+    "url": "https://www.sophos.com/en-us/blog/2025-sophos-active-adversary-report",
+    "locator": "2024 case data"
+  },
+  {
+    "id": "sophos-aar-2026",
+    "publisher": {
+      "en": "Sophos",
+      "ja": "Sophos"
+    },
+    "title": "Nowhere, man: The 2026 Active Adversary Report",
+    "date": "2026",
+    "url": "https://www.sophos.com/en-us/blog/2026-sophos-active-adversary-report",
+    "locator": "2025 case data"
+  },
+  {
+    "id": "arcticwolf-akira-2025",
+    "publisher": {
+      "en": "Arctic Wolf",
+      "ja": "Arctic Wolf"
+    },
+    "title": "Smash and Grab: Aggressive Akira Campaign Targets SonicWall VPNs, Deploys Ransomware in an Hour or Less",
+    "date": "2025-09-26",
+    "url": "https://arcticwolf.com/resources/blog/smash-and-grab-aggressive-akira-campaign-targets-sonicwall-vpns/"
+  },
+  {
+    "id": "cisa-aa24-109a",
+    "publisher": {
+      "en": "CISA, FBI and partners",
+      "ja": "CISA・FBI ほか（米国）"
+    },
+    "title": "#StopRansomware: Akira Ransomware (AA24-109A)",
+    "date": "2025-11-13",
+    "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-109a"
+  },
+  {
+    "id": "cisa-aa23-165a",
+    "publisher": {
+      "en": "CISA and partners",
+      "ja": "CISA ほか（米国）"
+    },
+    "title": "Understanding Ransomware Threat Actors: LockBit (AA23-165A)",
+    "date": "2023-06-14",
+    "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-165a"
+  },
+  {
+    "id": "mitre-attack",
+    "publisher": {
+      "en": "MITRE",
+      "ja": "MITRE"
+    },
+    "title": "ATT&CK Enterprise Techniques",
+    "date": "2026",
+    "url": "https://attack.mitre.org/techniques/enterprise/"
+  },
+  {
+    "id": "ms-audit-events",
+    "publisher": {
+      "en": "Microsoft",
+      "ja": "Microsoft"
+    },
+    "title": "Advanced security audit policy settings: event reference (Windows 10)",
+    "date": "2021-09-07",
+    "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4720"
+  }
+]
