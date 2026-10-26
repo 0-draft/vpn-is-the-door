@@ -33,13 +33,13 @@
   {
     "id": "doors-mivd-coathanger",
     "publisher": {
-      "en": "MIVD and AIVD (Netherlands), copy hosted by Agilicus",
-      "ja": "オランダ MIVD・AIVD（Agilicus による写し）"
+      "en": "MIVD and AIVD (Netherlands), published by NCSC-NL",
+      "ja": "オランダ MIVD・AIVD（NCSC-NL 掲載）"
     },
     "title": "Ministry of Defence of the Netherlands uncovers COATHANGER, a stealthy Chinese FortiGate RAT",
     "date": "2024-02-06",
-    "url": "https://www.agilicus.com/www/TLP-CLEAR+MIVD+AIVD+Advisory+COATHANGER.pdf",
-    "locator": "p.1, p.2 §3.1; p.1 (third-party mirror; title from the file name)"
+    "url": "https://web.archive.org/web/20240206154138/https://www.ncsc.nl/binaries/ncsc/documenten/publicaties/2024/februari/6/mivd-aivd-advisory-coathanger-tlp-clear/TLP-CLEAR+MIVD+AIVD+Advisory+COATHANGER.pdf",
+    "locator": "p.1, p.2 §3.1; p.1 (Wayback Machine capture of the NCSC-NL PDF of 2024-02-06; ncsc.nl no longer serves it)"
   },
   {
     "id": "doors-fortinet-fg-ir-25-934",
@@ -88,7 +88,7 @@
       "en": "NCSC (Netherlands)",
       "ja": "NCSC（オランダ）"
     },
-    "title": "Casus: Citrix kwetsbaarheid (Update 13-08-2025)",
+    "title": "Casus: Citrix kwetsbaarheid",
     "date": "2025-08-13",
     "url": "https://www.ncsc.nl/actueel/nieuws/2025/07/22/casus-citrix-kwetsbaarheid"
   },

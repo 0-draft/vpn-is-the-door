@@ -71,7 +71,7 @@
       "en": "National Police Agency",
       "ja": "警察庁"
     },
-    "title": "ランサムウェア被害防止対策（アンケート調査結果及び対策）",
+    "title": "サイバー攻撃の被害に係る企業・団体を対象としたアンケート調査結果及び対策",
     "date": "2026-01",
     "url": "https://www.npa.go.jp/bureau/cyber/pdf/R7countermeasures_leaflet.pdf",
     "locator": "p.1"
@@ -115,8 +115,8 @@
       "en": "JPCERT/CC",
       "ja": "JPCERT/CC"
     },
-    "title": "Incident Handling Report [July 1, 2024 - September 30, 2024]",
-    "date": "2024-10",
+    "title": "JPCERT/CC Incident Handling Report: July 1, 2024 - September 30, 2024",
+    "date": "2024-10-17",
     "url": "https://www.jpcert.or.jp/english/doc/IR_Report2024Q2_en.pdf",
     "locator": "p.14"
   }

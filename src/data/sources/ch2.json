@@ -39,7 +39,7 @@
       "ja": "Sophos"
     },
     "title": "It takes two: The 2025 Sophos Active Adversary Report",
-    "date": "2025",
+    "date": "2025-04-02",
     "url": "https://www.sophos.com/en-us/blog/2025-sophos-active-adversary-report",
     "locator": "2024 case data"
   },
@@ -50,7 +50,7 @@
       "ja": "Sophos"
     },
     "title": "Nowhere, man: The 2026 Active Adversary Report",
-    "date": "2026",
+    "date": "2026-02-23",
     "url": "https://www.sophos.com/en-us/blog/2026-sophos-active-adversary-report",
     "locator": "2025 case data"
   },
@@ -70,9 +70,10 @@
       "en": "CISA, FBI and partners",
       "ja": "CISA・FBI ほか（米国）"
     },
-    "title": "#StopRansomware: Akira Ransomware (AA24-109A)",
+    "title": "#StopRansomware: Akira Ransomware",
     "date": "2025-11-13",
-    "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-109a"
+    "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-109a",
+    "locator": "AA24-109A"
   },
   {
     "id": "cisa-aa23-165a",
@@ -80,9 +81,10 @@
       "en": "CISA and partners",
       "ja": "CISA ほか（米国）"
     },
-    "title": "Understanding Ransomware Threat Actors: LockBit (AA23-165A)",
+    "title": "Understanding Ransomware Threat Actors: LockBit",
     "date": "2023-06-14",
-    "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-165a"
+    "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-165a",
+    "locator": "AA23-165A"
   },
   {
     "id": "mitre-attack",
@@ -90,7 +92,7 @@
       "en": "MITRE",
       "ja": "MITRE"
     },
-    "title": "ATT&CK Enterprise Techniques",
+    "title": "Enterprise Techniques",
     "date": "2026",
     "url": "https://attack.mitre.org/techniques/enterprise/"
   },
@@ -100,8 +102,9 @@
       "en": "Microsoft",
       "ja": "Microsoft"
     },
-    "title": "Advanced security audit policy settings: event reference (Windows 10)",
-    "date": "2021-09-07",
-    "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4720"
+    "title": "Advanced security audit policy settings",
+    "date": "2021-09-06",
+    "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/advanced-security-audit-policy-settings",
+    "locator": "per-event pages linked from this reference: 4624, 4625, 4672, 4720, 4728, 4732, 4798, 4799, 5140, 5145, 4663, 1102"
   }
 ]
