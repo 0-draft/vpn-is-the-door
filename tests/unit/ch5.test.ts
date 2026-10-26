@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { byClass, KEV_VPN } from "../../src/lib/ch5-classes";
+import { VULNS } from "../../src/data/doors";
+import { byClass, CLASS_OF, PREAUTH, TOTAL } from "../../src/lib/ch5-classes";
 import {
   ACTIONS,
   actionFromHash,
@@ -54,16 +55,23 @@ describe("ch5 evidence survival", () => {
 });
 
 describe("ch5 KEV bug classes", () => {
-  it("covers the 32 catalogued CVEs once each", () => {
-    expect(KEV_VPN).toHaveLength(32);
-    expect(new Set(KEV_VPN.map((r) => r.cve)).size).toBe(32);
-    expect(byClass().reduce((n, g) => n + g.cves.length, 0)).toBe(32);
+  it("classifies every door-schedule row, and no CVE outside it", () => {
+    const rows = new Set(VULNS.map((v) => v.cve));
+    for (const v of VULNS) expect(CLASS_OF[v.cve], `${v.cve} has no class`).toBeDefined();
+    for (const cve of Object.keys(CLASS_OF)) expect(rows.has(cve), `${cve} is not in doors.json`).toBe(true);
   });
 
-  it("puts memory corruption first with 13 entries", () => {
+  it("counts match the dataset", () => {
+    expect(TOTAL).toBe(VULNS.length);
+    expect(TOTAL).toBe(31);
+    expect(PREAUTH).toBe(29);
+    expect(byClass().reduce((n, g) => n + g.cves.length, 0)).toBe(TOTAL);
+  });
+
+  it("puts memory corruption first with 12 entries", () => {
     const g = byClass();
     expect(g[0]?.cls).toBe("memory");
-    expect(g[0]?.cves).toHaveLength(13);
+    expect(g[0]?.cves).toHaveLength(12);
   });
 });
 

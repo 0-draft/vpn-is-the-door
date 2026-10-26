@@ -1,8 +1,9 @@
+import { VULNS } from "../data/doors";
 import type { Lang } from "./paths";
 
-// Fig. 5-3: the 32 KEV-listed VPN / remote-access CVEs in research/vulns.json,
-// grouped by bug class. The grouping is this site's, from the NVD CWE and the
-// vendor advisory wording recorded in vulns.json.
+// Fig. 5-3: the KEV-listed VPN / remote-access CVEs of the door schedule
+// (src/data/doors.json), grouped by bug class. The grouping is this site's,
+// from the NVD CWE and the vendor advisory wording.
 
 export type BugClass = "memory" | "auth" | "inject" | "read";
 
@@ -38,41 +39,52 @@ export const CLASS_NOTE: Record<Lang, Record<BugClass, string>> = {
 
 export const ORDER: BugClass[] = ["memory", "auth", "inject", "read"];
 
-export const KEV_VPN: { cve: string; cls: BugClass }[] = [
-  { cve: "CVE-2018-13379", cls: "read" },
-  { cve: "CVE-2019-11510", cls: "read" },
-  { cve: "CVE-2019-19781", cls: "read" },
-  { cve: "CVE-2021-20016", cls: "inject" },
-  { cve: "CVE-2021-22893", cls: "memory" },
-  { cve: "CVE-2022-42475", cls: "memory" },
-  { cve: "CVE-2023-27997", cls: "memory" },
-  { cve: "CVE-2023-3519", cls: "inject" },
-  { cve: "CVE-2023-20269", cls: "auth" },
-  { cve: "CVE-2023-4966", cls: "memory" },
-  { cve: "CVE-2023-46805", cls: "auth" },
-  { cve: "CVE-2024-21887", cls: "inject" },
-  { cve: "CVE-2024-21762", cls: "memory" },
-  { cve: "CVE-2024-3400", cls: "inject" },
-  { cve: "CVE-2024-24919", cls: "read" },
-  { cve: "CVE-2024-40766", cls: "auth" },
-  { cve: "CVE-2024-53704", cls: "auth" },
-  { cve: "CVE-2025-0282", cls: "memory" },
-  { cve: "CVE-2025-22457", cls: "memory" },
-  { cve: "CVE-2025-5777", cls: "memory" },
-  { cve: "CVE-2025-6543", cls: "memory" },
-  { cve: "CVE-2025-7775", cls: "memory" },
-  { cve: "CVE-2025-20362", cls: "auth" },
-  { cve: "CVE-2025-20333", cls: "memory" },
-  { cve: "CVE-2026-24858", cls: "auth" },
-  { cve: "CVE-2025-68686", cls: "read" },
-  { cve: "CVE-2026-3055", cls: "memory" },
-  { cve: "CVE-2026-0257", cls: "auth" },
-  { cve: "CVE-2026-50751", cls: "auth" },
-  { cve: "CVE-2026-15409", cls: "inject" },
-  { cve: "CVE-2026-8452", cls: "memory" },
-  { cve: "CVE-2026-104935", cls: "auth" },
-];
+// Bug class per CVE, keyed by id. The rows themselves come from src/data/doors.json
+// (chapter 3's dataset); tests fail if a row has no class or a class has no row.
+export const CLASS_OF: Record<string, BugClass> = {
+  "CVE-2018-13379": "read",
+  "CVE-2019-11510": "read",
+  "CVE-2019-19781": "read",
+  "CVE-2021-20016": "inject",
+  "CVE-2021-22893": "memory",
+  "CVE-2022-42475": "memory",
+  "CVE-2023-27997": "memory",
+  "CVE-2023-3519": "inject",
+  "CVE-2023-20269": "auth",
+  "CVE-2023-4966": "memory",
+  "CVE-2023-46805": "auth",
+  "CVE-2024-21887": "inject",
+  "CVE-2024-21762": "memory",
+  "CVE-2024-3400": "inject",
+  "CVE-2024-24919": "read",
+  "CVE-2024-40766": "auth",
+  "CVE-2024-53704": "auth",
+  "CVE-2025-0282": "memory",
+  "CVE-2025-22457": "memory",
+  "CVE-2025-5777": "memory",
+  "CVE-2025-6543": "memory",
+  "CVE-2025-7775": "memory",
+  "CVE-2025-20362": "auth",
+  "CVE-2025-20333": "memory",
+  "CVE-2026-24858": "auth",
+  "CVE-2025-68686": "read",
+  "CVE-2026-3055": "memory",
+  "CVE-2026-0257": "auth",
+  "CVE-2026-50751": "auth",
+  "CVE-2026-15409": "inject",
+  "CVE-2026-104935": "auth",
+};
+
+export function classOf(cve: string): BugClass {
+  const c = CLASS_OF[cve];
+  if (!c) throw new Error(`no bug class for ${cve}`);
+  return c;
+}
+
+export const ROWS = VULNS.map((v) => ({ cve: v.cve, preauth: v.preauth, cls: classOf(v.cve) }));
+export const TOTAL = ROWS.length;
+export const PREAUTH = ROWS.filter((r) => r.preauth).length;
 
 export function byClass(): { cls: BugClass; cves: string[] }[] {
-  return ORDER.map((cls) => ({ cls, cves: KEV_VPN.filter((r) => r.cls === cls).map((r) => r.cve) }));
+  return ORDER.map((cls) => ({ cls, cves: ROWS.filter((r) => r.cls === cls).map((r) => r.cve) }));
 }

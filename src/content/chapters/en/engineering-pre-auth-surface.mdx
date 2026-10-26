@@ -14,7 +14,10 @@ import SourceLine from "../../../components/SourceLine.astro";
 import Summary from "../../../components/Summary.astro";
 import BugClasses from "../../../components/ch5/BugClasses.astro";
 import PreauthLifecycle from "../../../components/ch5/PreauthLifecycle.astro";
-import { byClass, CLASS_LABEL } from "../../../lib/ch5-classes";
+import { byClass, CLASS_LABEL, PREAUTH, TOTAL } from "../../../lib/ch5-classes";
+
+export const groups = byClass();
+export const n = (c) => groups.find((g) => g.cls === c).cves.length;
 
 <Summary lang="en">
   <p>Before anyone logs in, the appliance already handles their connection: TLS, the web request, the login page, the files it loads, SAML messages. Anyone on the internet can send it that traffic. A flaw in this code needs no password, and MFA never sees the request.</p>
@@ -27,7 +30,7 @@ import { byClass, CLASS_LABEL } from "../../../lib/ch5-classes";
 
 Follow one connection down Fig. 5-2. The appliance terminates TLS, then a web daemon reads the request and hands it to a handler. On FortiOS that daemon is `sslvpnd`, the process Fortinet names in its advisory for CVE-2022-42475 ([FG-IR-22-398](https://www.fortiguard.com/psirt/FG-IR-22-398)). Everything in the shaded zone runs at this point: the login portal, the static files it loads, the VPN client download, the SAML or SSO endpoints, the clientless web mode, and on many deployments the management interface. Only below the zone does the appliance check a password, a second factor or a SAML assertion.
 
-A pre-auth flaw sits inside that zone. The red line in the figure shows what exploitation does: the request goes from the web daemon to the operating system and on into the network without passing the authentication box. MFA settings make no difference to it. Of the 32 KEV-listed VPN and remote-access CVEs this site catalogues, 30 are reachable before login. The other two were exploited in the wild chained behind one that is.
+A pre-auth flaw sits inside that zone. The red line in the figure shows what exploitation does: the request goes from the web daemon to the operating system and on into the network without passing the authentication box. MFA settings make no difference to it. Of the {TOTAL} KEV-listed VPN and remote-access CVEs in the [door schedule](../../the-doors/), {PREAUTH} are reachable before login. The other {TOTAL - PREAUTH} were exploited in the wild chained behind one that is.
 
 <Fig lang="en" n="5-2" caption="One request through an SSL-VPN appliance; the pre-auth zone is shaded" sources={["ch5-fg-ir-22-398", "ch5-vulns-classes"]} nts>
   <PreauthLifecycle lang="en" label="An SSL-VPN appliance from top to bottom: TLS termination, a web daemon that parses every request, a shaded pre-auth zone with login portal, static files, client download, SAML and SSO, clientless mode and management UI marked exposed, then authentication, session cookie, tunnel and the internal network. A red dashed route leaves the pre-auth zone into the appliance OS and reaches the internal network without passing authentication." />
@@ -37,14 +40,14 @@ A pre-auth flaw sits inside that zone. The red line in the figure shows what exp
 
 Pre-auth code has to accept input from anyone, so it cannot rely on account limits or on who the sender is. In most SSL-VPN products the same web stack serves the login page and the logged-in portal. A bug anywhere in that request path is reachable from the internet.
 
-Fig. 5-3 groups the 32 catalogued CVEs by bug class. Memory corruption is the largest group: buffer overflows, out-of-bounds reads and writes, one use-after-free. These bugs occur in code written in memory-unsafe languages such as C and C++. CISA and the FBI list CVE-2025-0282 (Ivanti Connect Secure) and CVE-2023-6549 (Citrix NetScaler) as buffer-overflow examples and say: "Threat actors frequently exploit these vulnerabilities to gain initial access to an organization's network and then move laterally to the wider network." The alert adds that the class "can be addressed by using memory safe languages". That much of this code is old C inside one large web daemon is this site's inference from the bug classes and from product lineages such as Pulse Secure to Ivanti; vendors do not publish it.
+Fig. 5-3 groups the {TOTAL} CVEs by bug class. Memory corruption is the largest group: buffer overflows, out-of-bounds reads and writes, one use-after-free. These bugs occur in code written in memory-unsafe languages such as C and C++. CISA and the FBI list CVE-2025-0282 (Ivanti Connect Secure) and CVE-2023-6549 (Citrix NetScaler) as buffer-overflow examples and say: "Threat actors frequently exploit these vulnerabilities to gain initial access to an organization's network and then move laterally to the wider network." The alert adds that the class "can be addressed by using memory safe languages". That much of this code is old C inside one large web daemon is this site's inference from the bug classes and from product lineages such as Pulse Secure to Ivanti; vendors do not publish it.
 
-<Fig lang="en" n="5-3" caption="32 KEV-listed VPN and remote-access CVEs, 2018–2026, one square per CVE, by bug class" sources={["ch5-vulns-classes", "ch5-cisa-sbd-buffer-overflow"]}>
-  <BugClasses lang="en" label="Unit chart. Memory corruption 13, authentication or authorization bypass 9, injection 5, file read or path traversal 5." />
+<Fig lang="en" n="5-3" caption={`${TOTAL} KEV-listed VPN and remote-access CVEs, 2018–2026, one square per CVE, by bug class`} sources={["ch5-vulns-classes", "ch5-cisa-sbd-buffer-overflow"]}>
+  <BugClasses lang="en" label={`Unit chart. Memory corruption ${n("memory")}, authentication or authorization bypass ${n("auth")}, injection ${n("inject")}, file read or path traversal ${n("read")}.`} />
   <table slot="data">
     <thead><tr><th>Class</th><th class="num">CVEs</th><th>IDs</th></tr></thead>
     <tbody>
-      {byClass().map((g) => (
+      {groups.map((g) => (
         <tr><td>{CLASS_LABEL.en[g.cls]}</td><td class="num">{g.cves.length}</td><td class="mono">{g.cves.join(", ")}</td></tr>
       ))}
     </tbody>
