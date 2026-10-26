@@ -12,6 +12,15 @@ export interface Revision {
 
 export const REVISIONS: Revision[] = [
   {
+    rev: 4,
+    date: "2026-10-27",
+    change: {
+      en: "CVSS scores of the 2026-numbered rows checked against NVD; CVE-2026-15409 now shows 10.0 (CISA-ADP), and score sources corrected for four rows.",
+      ja: "2026年番号の行の CVSS を NVD と照合。CVE-2026-15409 に 10.0（CISA-ADP）を記載し、4行の採点元を訂正。",
+    },
+    pages: ["/the-doors/"],
+  },
+  {
     rev: 3,
     date: "2026-10-26",
     change: {

@@ -223,6 +223,7 @@ Research notes for the "VPN is the door" explainer. Compiled 2026-10-25. Every r
 - Travelex via CVE-2019-11510 is press-reported only.
 - CVE-2026-8452 CVSS v3 is unconfirmed.
 - CVE-2026-15409 CVSS 10.0 comes from secondary coverage (Tenable).
+  - _訂正 2026-10-27: NVD (Analyzed) lists CVSS 3.1 10.0 from CISA-ADP. The 2026-numbered rows were re-checked against the NVD API the same day: published dates and scores match; score sources corrected to Fortinet (CVE-2025-68686), Ivanti (CVE-2026-104935) and CISA-ADP (CVE-2026-15409, CVE-2026-50751)._
 - CVE-2026-24858 CVSS: 9.8 on NVD (Fortinet CNA) vs 9.4 in some coverage.
 - CVE-2025-68686: KEV lists it as exploited, but Fortinet's page says "Known Exploited: No".
 - CVE-2026-0257 ransomware actors (Qilin, Inc, Settra) come via secondary coverage of Unit 42. The brief itself was not read.
