@@ -96,7 +96,7 @@ export const NODES: FlowNode[] = [
     step: 6,
     lines: {
       en: ["Factory reset or", "rebuild; restore a", "reviewed config;", "reset credentials", "again"],
-      ja: ["初期化または", "再構築。確認済み", "の設定を戻し、", "認証情報を再度", "リセット"],
+      ja: ["初期化または", "再構築。確認済み", "の設定を戻し、", "認証情報を改めて", "再設定"],
     },
   },
   {

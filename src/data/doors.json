@@ -324,7 +324,7 @@
       ],
       "class": {
         "en": "Information exposure: bypass of the cleanup for an earlier symlink implant",
-        "ja": "情報漏えい（以前のシンボリックリンクの除去策を回避する）"
+        "ja": "情報漏洩（以前のシンボリックリンクの除去策を回避する）"
       },
       "preauth": true,
       "chainedBehind": null,
@@ -859,7 +859,7 @@
       "chainedBehind": null,
       "gets": {
         "en": "Session tokens from memory, so sessions can be hijacked past MFA",
-        "ja": "メモリからセッショントークンを読み、多要素認証を飛ばしてセッションを乗っ取れる"
+        "ja": "メモリからセッショントークンを読み、多要素認証を経ずにセッションを乗っ取れる"
       },
       "part": ["intercom", "keys"],
       "disclosed": "2025-06-17",
@@ -1240,7 +1240,7 @@
       "chainedBehind": null,
       "gets": {
         "en": "A logged-in user's SSL VPN session, bypassing password and MFA, and a tunnel into the network",
-        "ja": "ログイン中の利用者の SSL VPN セッション。パスワードと多要素認証を飛ばして社内へのトンネルを開ける"
+        "ja": "ログイン中の利用者の SSL VPN セッション。パスワードと多要素認証を経ずに社内へのトンネルを開ける"
       },
       "part": ["lock", "keys"],
       "disclosed": "2025-01-07",
@@ -1275,7 +1275,7 @@
       "cvss": [],
       "class": {
         "en": "Server-side request forgery, chained with a code injection (CVE-2026-15410)",
-        "ja": "サーバーサイドリクエストフォージェリ（コードインジェクション CVE-2026-15410 と連鎖）"
+        "ja": "サーバサイドリクエストフォージェリ（コードインジェクション CVE-2026-15410 と連鎖）"
       },
       "preauth": true,
       "chainedBehind": null,
@@ -1489,7 +1489,7 @@
         "before": false,
         "note": {
           "en": "2024-04-07, as a zero-day (Check Point, revised from 04-30)",
-          "ja": "2024年4月7日、ゼロデイ（Check Point が4月30日から修正）"
+          "ja": "2024年4月7日、ゼロデイ（Check Point が当初の4月30日から訂正）"
         }
       },
       "kevAdded": "2024-05-30",

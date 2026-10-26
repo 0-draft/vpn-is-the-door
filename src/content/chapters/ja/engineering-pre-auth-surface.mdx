@@ -98,7 +98,7 @@ export const n = (c) => groups.find((g) => g.cls === c).cves.length;
 
 | 変更 | 認証前の範囲から外れるもの | 根拠 |
 | --- | --- | --- |
-| 管理画面を別の管理用ネットワークに移す | 管理用 Web 画面とその API | CCCS は管理インタフェースを「should not be directly exposed to the Internet.」としている |
+| 管理画面を別の管理用ネットワークに移す | 管理用 Web 画面とその API | CCCS は管理インターフェースを「should not be directly exposed to the Internet.」としている |
 | 利用者が固定の拠点から接続する場合、ポータルへの接続元アドレスを限定する | 一覧外の相手から見た全処理 | 半田病院の機器には接続元の制限がなく、「インターネット上のすべてのシステムからの接続が可能であった。」（技術編 p.11）。移動する利用者の接続元は固定できないため、取引先や拠点間の接続に向く |
 | 使っていない機能を止める（クライアントレス接続、使っていない SSO 連携、古いプロトコル版） | その機能の裏にあるコード | CCCS は「Deactivate any functionality that is not required.」と求めている。CVE-2026-24858 の影響を受けたのは FortiCloud SSO を有効にした機器だけだった |
 | 未修正の KEV がある間の応急策として、SSL-VPN 機能自体を止める | ポータル全体 | JPCERT/CC は CVE-2024-21762 について「SSL VPN機能を無効にすることで本脆弱性の回避が可能です。」としている |

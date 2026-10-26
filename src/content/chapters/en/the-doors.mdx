@@ -94,7 +94,7 @@ Logs on the appliance are short, rotate quickly and can be erased by an intruder
   <PatchClock lang="en" />
 </Fig>
 
-### Patching closes the door for everyone
+### An update takes remote work offline
 
 Updating the appliance stops remote work while it restarts, so the update is postponed. Verizon found that only about 54% of edge-device and VPN flaws were fully fixed within the year, with a median of 32 days. In Japan, NPA's survey found that 52% of organizations using VPN appliances had not applied the latest patch. Figure 3-3 puts those 32 days next to the attackers' days.
 
@@ -108,7 +108,7 @@ An appliance past end of support gets no more fixes but keeps working, so it sta
 
 ## <Scale s="1:100" /> A pre-auth flaw never meets the lock
 
-This is the point of the chapter. Multi-factor authentication is part of the lock. It stops someone who arrives with a stolen password. A flaw in the intercom or the frame is used before the lock is ever consulted, so MFA has nothing to stop.
+Multi-factor authentication is part of the lock. It stops someone who arrives with a stolen password. A flaw in the intercom or the frame is used before the lock is ever consulted, so MFA has nothing to stop.
 
 <Fig lang="en" n="3-4" caption="Two ways in: a stolen password meets MFA at the lock; a pre-auth flaw goes from the intercom straight to the frame" nts>
   <DoorDetail lang="en" uid="f34" labels="metaphor" path={["intercom", "frame"]} compare label="The red route goes from the street to the intercom and on to the frame; the lock stays intact and is marked MFA: not reached. A grey route ends at the lock." />
@@ -268,9 +268,9 @@ Zero-trust network access (ZTNA) products are often sold as the replacement for 
         <tr><th scope="col">Product</th><th scope="col">Affected before version</th><th scope="col">Role</th></tr>
       </thead>
       <tbody>
-        <tr><td>Ivanti Connect Secure</td><td class="num">22.7R2.5</td><td>SSL VPN</td></tr>
-        <tr><td>Ivanti Policy Secure</td><td class="num">22.7R1.2</td><td>Network access control</td></tr>
-        <tr><td>Ivanti Neurons for ZTA gateways</td><td class="num">22.7R2.3</td><td>ZTNA gateway</td></tr>
+        <tr><td>Ivanti Connect Secure</td><td><code>22.7R2.5</code></td><td>SSL VPN</td></tr>
+        <tr><td>Ivanti Policy Secure</td><td><code>22.7R1.2</code></td><td>Network access control</td></tr>
+        <tr><td>Ivanti Neurons for ZTA gateways</td><td><code>22.7R2.3</code></td><td>ZTNA gateway</td></tr>
       </tbody>
     </table>
   </div>

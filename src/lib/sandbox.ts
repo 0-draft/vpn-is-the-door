@@ -178,7 +178,7 @@ type T = Record<Lang, string>;
 export const NOTE_TEXT: Record<NoteId, T> = {
   "patch.cut": {
     en: "Patched within {d} days. Exploitation in this scenario starts on day 5, so the flaw is gone first.",
-    ja: "{d}日以内に修正した。この想定では悪用が5日目に始まるので、先に穴がふさがる。",
+    ja: "{d}日以内に修正した。この想定では悪用が5日目に始まるので、先に穴が塞がる。",
   },
   "patch.late": {
     en: "Exploitation starts on day 5. A {d}-day deadline leaves the door open in the meantime.",

@@ -44,7 +44,7 @@ export const ATTACK_ROWS: AttackRow[] = [
     techniques: [{ id: "T1078", name: "Valid Accounts" }],
     telemetry: {
       en: "On internal hosts, successful logons whose source is the VPN address pool, by accounts that are dormant, belong to a contractor, or have never used the VPN. A run of failed logons before the first success.",
-      ja: "社内の機器で、VPN のアドレス帯からのログオン成功を見る。休眠アカウント、業者のアカウント、VPN を使ったことのないアカウントであれば要注意。最初の成功の前に失敗が続いていることもある。",
+      ja: "社内の機器で、VPN のアドレス帯からのログオン成功を見る。休眠アカウント、業者のアカウント、VPN を使ったことのないアカウントであれば特に疑う。最初の成功の前に失敗が続いていることもある。",
     },
     events: [sec("4624"), sec("4625")],
   },
@@ -148,7 +148,7 @@ export const ATTACK_ROWS: AttackRow[] = [
     techniques: [{ id: "T1486", name: "Data Encrypted for Impact" }],
     telemetry: {
       en: "Thousands of file writes and renames per minute on file servers, a new file extension on everything (.elbie in Osaka), ransom notes in every folder or on every printer, and virtual machines shutting down on the hypervisor. By this point the signal is loud, and it is late.",
-      ja: "ファイルサーバで毎分数千件の書き込みと名前の変更が起き、すべてのファイルに新しい拡張子が付く（大阪の事例では .elbie）。各フォルダやプリンターに身代金要求文書が出て、ハイパーバイザ上の仮想マシンが止まる。ここまで来ると兆候ははっきりしているが、もう遅い。",
+      ja: "ファイルサーバで毎分数千件の書き込みと名前の変更が起き、すべてのファイルに新しい拡張子が付く（大阪の事例では .elbie）。各フォルダやプリンタに身代金要求文書が出て、ハイパーバイザ上の仮想マシンが止まる。この段階で兆候は明らかだが、被害を止めるには遅い。",
     },
     events: [],
   },
