@@ -9,9 +9,11 @@ interface Props {
   title?: string;
   description?: string;
   chapter?: string;
+  // false on pages with no twin in the other language (the bilingual 404)
+  alternate?: boolean;
 }
 
-const { lang, title, description, chapter } = Astro.props;
+const { lang, title, description, chapter, alternate = true } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const siteTitle = t(lang, "site.title");
 const fullTitle = title ? `${title} · ${siteTitle}` : siteTitle;
@@ -31,9 +33,15 @@ const home = localePath(lang, "/", base);
     <title>{fullTitle}</title>
     <meta name="description" content={desc} />
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang="en" href={new URL(enHref, Astro.site)} />
-    <link rel="alternate" hreflang="ja" href={new URL(jaHref, Astro.site)} />
-    <link rel="alternate" hreflang="x-default" href={new URL(enHref, Astro.site)} />
+    {
+      alternate && (
+        <>
+          <link rel="alternate" hreflang="en" href={new URL(enHref, Astro.site)} />
+          <link rel="alternate" hreflang="ja" href={new URL(jaHref, Astro.site)} />
+          <link rel="alternate" hreflang="x-default" href={new URL(enHref, Astro.site)} />
+        </>
+      )
+    }
     <meta property="og:type" content="article" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={desc} />
@@ -79,9 +87,13 @@ const home = localePath(lang, "/", base);
             <input type="checkbox" data-motion-toggle />
             <span>{t(lang, "nav.motion")}</span>
           </label>
-          <a class="ctl lang" href={alt.href} hreflang={alt.lang} lang={alt.lang} aria-label={t(lang, "nav.langLabel")}
-            >{t(lang, "nav.lang")}</a
-          >
+          {
+            alternate && (
+              <a class="ctl lang" href={alt.href} hreflang={alt.lang} lang={alt.lang} aria-label={t(lang, "nav.langLabel")}>
+                {t(lang, "nav.lang")}
+              </a>
+            )
+          }
         </div>
       </div>
       <nav class="strip" aria-label={t(lang, "nav.chapters")}>
