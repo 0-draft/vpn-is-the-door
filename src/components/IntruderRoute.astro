@@ -105,16 +105,31 @@ const tag = lang === "ja" ? "複合事例（実在しない会社）" : "Composi
     const win = root.querySelector<HTMLElement>(".scrolly-win");
     const tall = plan.querySelector<SVGSVGElement>(".plan-tall");
     let current = -1;
+    // Labels and station marks the window would cut in half are hidden for that step.
+    const marks = tall ? [...tall.querySelectorAll<SVGGraphicsElement>("text:not(.station text), .station")] : [];
+    const clearCuts = () => {
+      for (const m of marks) m.removeAttribute("data-edge-cut");
+    };
     const pan = () => {
       if (!win || !tall) return;
       if (!narrow.matches || getComputedStyle(tall).display === "none") {
         tall.style.removeProperty("--pan");
+        clearCuts();
         return;
       }
       const vb = tall.viewBox.baseVal;
       const focus = STEP_FOCUS_TALL[Math.max(0, current)] ?? STEP_FOCUS_TALL[0]!;
-      const px = panOffset(focus, [vb.y, vb.height], tall.getBoundingClientRect().height, win.clientHeight);
+      const svgPx = tall.getBoundingClientRect().height;
+      const px = panOffset(focus, [vb.y, vb.height], svgPx, win.clientHeight);
       tall.style.setProperty("--pan", `${-px}px`);
+      const scale = svgPx / vb.height;
+      const y0 = vb.y + px / scale;
+      const y1 = y0 + win.clientHeight / scale;
+      for (const m of marks) {
+        const b = m.getBBox();
+        const overlaps = b.y + b.height > y0 && b.y < y1;
+        m.toggleAttribute("data-edge-cut", overlaps && (b.y < y0 || b.y + b.height > y1));
+      }
     };
     const set = (n: number) => {
       if (n === current) return;
@@ -370,6 +385,9 @@ const tag = lang === "ja" ? "複合事例（実在しない会社）" : "Composi
       block-size: auto;
       transform: translateY(var(--pan, 0px));
       transition: transform 400ms var(--ease);
+    }
+    .scrolly-win :global([data-edge-cut]) {
+      visibility: hidden;
     }
     .scrolly-sticky figcaption {
       flex: none;

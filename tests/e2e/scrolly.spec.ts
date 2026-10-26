@@ -123,3 +123,48 @@ test.describe("scrolly keeps the VPN door label in view on phones", () => {
     });
   }
 });
+
+test.describe("scrolly window on phones", () => {
+  for (const [w, h] of [
+    [360, 640],
+    [390, 844],
+  ] as const) {
+    test(`no label is cut in half at any step (${w}x${h})`, async ({ browser }) => {
+      const page = await browser.newPage({ viewport: { width: w, height: h } });
+      await page.goto("ja/after-the-door/");
+      for (const n of [2, 3, 4, 5, 6, 7]) {
+        await page.evaluate((n) => {
+          const el = document.getElementById(`step-${n}`);
+          if (el) window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.62 + 20);
+        }, n);
+        await page.waitForTimeout(700);
+        const cut = await page.evaluate(() => {
+          const win = document.querySelector(".scrolly-fig");
+          const svg = [...(win?.querySelectorAll<SVGSVGElement>("svg.plan-tall") ?? [])].find(
+            (x) => x.getBoundingClientRect().width > 0,
+          );
+          if (!win || !svg) return ["no plan"];
+          const wr = win.getBoundingClientRect();
+          const out: string[] = [];
+          for (const t of svg.querySelectorAll("text")) {
+            const r = t.getBoundingClientRect();
+            if (!r.width) continue;
+            let o: Element | null = t;
+            let hidden = false;
+            while (o && o !== svg) {
+              const cs = getComputedStyle(o);
+              if (cs.opacity === "0" || cs.display === "none" || cs.visibility === "hidden") hidden = true;
+              o = o.parentElement;
+            }
+            if (hidden) continue;
+            if (r.bottom > wr.top && r.top < wr.bottom && (r.top < wr.top - 0.5 || r.bottom > wr.bottom + 0.5))
+              out.push(t.textContent?.trim() ?? "");
+          }
+          return out;
+        });
+        expect(cut, `step ${n}`).toEqual([]);
+      }
+      await page.close();
+    });
+  }
+});
