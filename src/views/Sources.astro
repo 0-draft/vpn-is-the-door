@@ -1,5 +1,6 @@
 ---
 import { REVISIONS } from "../data/revisions";
+import { PAGE_SEO } from "../data/seo";
 import type { Source } from "../data/source-schema";
 import { SOURCES } from "../data/sources";
 import { t } from "../i18n/ui";
@@ -82,7 +83,7 @@ const method = ja
 const copy = ja
   ? {
       title: t(lang, "nav.sources"),
-      desc: "このサイトが読んだ資料、数字を出典と照合した方法、引用したすべての文書。文書ごとにリンクと該当ページ・シートを示す。",
+      desc: PAGE_SEO["/sources/"].ja.description,
       hMethod: "数字はすべて出典と照合した",
       cMethod: "資料の種類ごとの読み方と扱い",
       colWhat: "資料",
@@ -100,7 +101,7 @@ const copy = ja
     }
   : {
       title: t(lang, "nav.sources"),
-      desc: "What this site read, how each number was checked against its source, and every document cited, with a link and the page or sheet each figure comes from.",
+      desc: PAGE_SEO["/sources/"].en.description,
       hMethod: "Each number was checked against its source",
       cMethod: "How each kind of material was read and used",
       colWhat: "Material",
@@ -118,7 +119,7 @@ const copy = ja
     };
 ---
 
-<Chapter lang={lang} title={copy.title} description={copy.desc} chapter="sources">
+<Chapter lang={lang} title={copy.title} seoTitle={PAGE_SEO["/sources/"][lang].title} description={copy.desc} chapter="sources">
   <h2 id="method">{copy.hMethod}</h2>
   <div class="table-scroll" tabindex="0">
     <table class="method">

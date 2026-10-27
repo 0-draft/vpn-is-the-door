@@ -1,7 +1,8 @@
 ---
 import { getCollection, render } from "astro:content";
+import { routeDataset } from "../data/seo";
 import Chapter from "../layouts/Chapter.astro";
-import type { Lang } from "../lib/paths";
+import { type Lang, localePath } from "../lib/paths";
 
 interface Props {
   lang: Lang;
@@ -14,15 +15,19 @@ const entry = all.find((e) => e.id === `${lang}/${slug}`);
 if (!entry) throw new Error(`missing chapter ${lang}/${slug}`);
 const parent = entry.data.parent ? all.find((e) => e.id === `${lang}/${entry.data.parent}`) : undefined;
 const { Content } = await render(entry);
+const url = new URL(localePath(lang, entry.data.path, import.meta.env.BASE_URL), Astro.site).href;
+const jsonLd = entry.data.path === "/where-they-came-in/" ? [routeDataset(lang, url)] : [];
 ---
 
 <Chapter
   lang={lang}
   title={entry.data.title}
+  seoTitle={entry.data.seoTitle}
   description={entry.data.description}
   chapter={entry.data.chapter}
   parentTitle={parent?.data.title}
   parentPath={parent?.data.path}
+  jsonLd={jsonLd}
 >
   <Content />
 </Chapter>

@@ -12,6 +12,14 @@ export interface Revision {
 
 export const REVISIONS: Revision[] = [
   {
+    rev: 5,
+    date: "2026-10-27",
+    change: {
+      en: "Text cut to the facts on every page (no announcements, figure-building notes or advice outside the what-to-do page); page titles name what each page answers; the report number and per-section scale tags removed.",
+      ja: "全ページの本文を事実だけに削った（予告、図の作り方の説明、対策ページ以外での助言を削除）。ページの題名を各ページの内容を示すものに変更。報告書番号と節ごとの縮尺表示を削除。",
+    },
+  },
+  {
     rev: 4,
     date: "2026-10-27",
     change: {

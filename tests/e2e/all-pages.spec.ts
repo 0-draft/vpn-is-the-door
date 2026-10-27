@@ -28,6 +28,11 @@ for (const path of ALL) {
     });
     await page.goto(path);
     await expect(page.locator("h1")).toHaveCount(1);
+    const ld = await page.locator('script[type="application/ld+json"]').allTextContents();
+    const types = ld.map((t) => (JSON.parse(t) as { "@type": string })["@type"]);
+    expect(types).toContain("BreadcrumbList");
+    expect(types.includes("WebSite"), "WebSite on home only").toBe(path === "" || path === "ja/");
+    expect(types.includes("Dataset"), "Dataset on chapter 1 only").toBe(/^(ja\/)?where-they-came-in\/$/.test(path));
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     expect(overflow, "horizontal scroll").toBeLessThanOrEqual(0);
     const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();

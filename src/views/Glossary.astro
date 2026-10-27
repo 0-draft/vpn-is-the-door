@@ -1,6 +1,7 @@
 ---
 import Scale from "../components/Scale.astro";
 import { sortedTerms } from "../data/glossary";
+import { PAGE_SEO } from "../data/seo";
 import { source } from "../data/sources";
 import { t } from "../i18n/ui";
 import Chapter from "../layouts/Chapter.astro";
@@ -19,21 +20,21 @@ const srcHref = (id: string) => `${localePath(lang, "/sources/", base)}#src-${id
 const copy = ja
   ? {
       title: t(lang, "nav.glossary"),
-      desc: "このサイトで使う用語の意味。経営層向けの一文の説明と、技術者向けの補足を並べる。五十音順。",
+      desc: PAGE_SEO["/glossary/"].ja.description,
       legendShort: "一文の説明",
       legendLong: "技術者向けの補足",
       count: `全${terms.length}語`,
     }
   : {
       title: t(lang, "nav.glossary"),
-      desc: "The terms this site uses. Each has a one-sentence definition for executives and a short note for engineers. Alphabetical.",
+      desc: PAGE_SEO["/glossary/"].en.description,
       legendShort: "plain definition",
       legendLong: "engineer's note",
       count: `${terms.length} terms`,
     };
 ---
 
-<Chapter lang={lang} title={copy.title} description={copy.desc} chapter="glossary">
+<Chapter lang={lang} title={copy.title} seoTitle={PAGE_SEO["/glossary/"][lang].title} description={copy.desc} chapter="glossary">
   <p class="legend">
     <span><Scale s="1:500" /> {copy.legendShort}</span>
     <span><Scale s="1:5" /> {copy.legendLong}</span>

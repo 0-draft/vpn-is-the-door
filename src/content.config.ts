@@ -8,6 +8,8 @@ const chapters = defineCollection({
   loader: glob({ pattern: "**/*.mdx", base: "./src/content/chapters" }),
   schema: z.object({
     title: z.string().min(1),
+    // the <title> element, used as-is (no site-name suffix); title stays the H1
+    seoTitle: z.string().min(1).optional(),
     description: z.string().min(1).max(220),
     chapter: z.enum(["where", "after", "doors", "cases", "engineering", "what", "sources", "glossary"]),
     path: z.string().regex(/^\/[a-z0-9-/]+\/$/),

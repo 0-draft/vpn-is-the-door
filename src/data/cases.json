@@ -10,6 +10,18 @@
       "en": "Handa Hospital",
       "ja": "半田病院"
     },
+    "h1": {
+      "en": "Handa Hospital ransomware attack: the way in and timeline",
+      "ja": "つるぎ町立半田病院のランサムウェア被害：侵入経路と経過"
+    },
+    "seoTitle": {
+      "en": "Handa Hospital ransomware (2021): report names FortiGate VPN",
+      "ja": "半田病院（徳島）ランサムウェア被害 報告書の侵入経路は VPN"
+    },
+    "seoDescription": {
+      "en": "Oct 31, 2021: the Tokushima hospital's medical records stopped. The expert panel found entry most likely via an unpatched FortiGate VPN (CVE-2018-13379).",
+      "ja": "2021年10月31日に電子カルテが停止。有識者会議は、保守用 VPN 機器（FortiGate、CVE-2018-13379 未修正）からの侵入と考えるのが合理的と結論した。通常診療の再開は2022年1月4日。"
+    },
     "country": "JP",
     "sector": {
       "en": "Hospital, municipal, 120 beds",
@@ -239,6 +251,18 @@
     "short": {
       "en": "Osaka General Medical Center",
       "ja": "大阪急性期・総合医療センター"
+    },
+    "h1": {
+      "en": "Osaka General Medical Center ransomware attack: the way in",
+      "ja": "大阪急性期・総合医療センターのランサムウェア被害：侵入経路と経過"
+    },
+    "seoTitle": {
+      "en": "Osaka General Medical Center ransomware: a contractor's VPN",
+      "ja": "大阪急性期・総合医療センター ランサムウェアの侵入経路"
+    },
+    "seoDescription": {
+      "en": "Oct 31, 2022: records down, emergency admissions stopped. The committee presumes entry via a catering contractor's VPN, then RDP. Full recovery: 73 days.",
+      "ja": "2022年10月31日に電子カルテが停止。調査委員会は、給食委託事業者側の VPN 機器から入り RDP で病院に侵入したと推定した。基幹システム再稼働まで43日、全体の復旧まで73日。"
     },
     "country": "JP",
     "sector": {
@@ -489,6 +513,18 @@
       "en": "Port of Nagoya",
       "ja": "名古屋港"
     },
+    "h1": {
+      "en": "Port of Nagoya ransomware attack: the way in and timeline",
+      "ja": "名古屋港のランサムウェア被害：侵入経路と経過"
+    },
+    "seoTitle": {
+      "en": "Port of Nagoya ransomware (2023): a remote connection device",
+      "ja": "名古屋港ランサムウェア被害 侵入経路はリモート接続機器"
+    },
+    "seoDescription": {
+      "en": "July 4, 2023: Nagoya's terminals stopped. The association cited a vulnerable remote connection device; a ministry panel leaned to a maintenance VPN.",
+      "ja": "2023年7月4日、NUTS が停止し全サーバが暗号化された。協会は脆弱性のあるリモート接続機器からの不正アクセスと報告。国土交通省の委員会は保守用 VPN 機器と見るのが適切としつつ、断定していない。"
+    },
     "country": "JP",
     "sector": {
       "en": "Port, container terminals",
@@ -734,6 +770,18 @@
       "en": "Okayama Psychiatric Medical Center",
       "ja": "岡山県精神科医療センター"
     },
+    "h1": {
+      "en": "Okayama Psychiatric Medical Center ransomware: the way in",
+      "ja": "岡山県精神科医療センターのランサムウェア被害：侵入経路と経過"
+    },
+    "seoTitle": {
+      "en": "Okayama Psychiatric Medical Center ransomware: SSL-VPN entry",
+      "ja": "岡山県精神科医療センターのランサムウェア 侵入経路は SSL-VPN"
+    },
+    "seoDescription": {
+      "en": "May 2024: entry via a maintenance Cisco ASA SSL-VPN with no source-IP limit; records stopped six days later. Personal data of up to 40,000 people leaked.",
+      "ja": "2024年5月19日に電子カルテが停止。侵入は5月13日からだった。調査委員会は接続元の制限がない保守用 SSL-VPN 機器（Cisco ASA）を侵入口とした。最大4万人分の個人情報が漏洩した。"
+    },
     "country": "JP",
     "sector": {
       "en": "Hospital, prefectural, psychiatric",
@@ -961,6 +1009,18 @@
       "en": "Kantsu",
       "ja": "関通"
     },
+    "h1": {
+      "en": "Kantsu ransomware attack: the way in and the timeline",
+      "ja": "関通のランサムウェア被害：侵入経路と経過"
+    },
+    "seoTitle": {
+      "en": "Kantsu ransomware: entry via an external network connection",
+      "ja": "関通のサイバー攻撃（ランサムウェア）侵入経路と経過"
+    },
+    "seoDescription": {
+      "en": "Sept 12, 2024: servers encrypted, client shipments stopped or delayed. Kantsu says the intruder came in via its connection point with external networks.",
+      "ja": "2024年9月12日、関通のシステムが次々に止まりサーバが暗号化された。会社は侵入を「外部ネットワークとの接続口」からと発表した。環境を作り直し、PC 約450台とサーバを入れ替えた。"
+    },
     "country": "JP",
     "sector": {
       "en": "Logistics outsourcing",
@@ -1126,6 +1186,18 @@
     "short": {
       "en": "ASKUL",
       "ja": "アスクル"
+    },
+    "h1": {
+      "en": "ASKUL ransomware attack: the way in and the timeline",
+      "ja": "アスクルのランサムウェア被害：侵入経路と経過"
+    },
+    "seoTitle": {
+      "en": "ASKUL ransomware attack: a contractor admin account, no MFA",
+      "ja": "アスクルのランサムウェア被害 原因は委託先の管理者アカウント"
+    },
+    "seoDescription": {
+      "en": "Detected Oct 19, 2025. First entry June 5, with a contractor's admin account exempted from MFA. About 740,000 records leaked. Web orders resumed Dec 3.",
+      "ja": "2025年10月19日に発覚。最初の侵入は6月5日で、多要素認証を例外的に外していた業務委託先の管理者アカウントが使われた。約74万件が流出した。Web での受注再開は12月3日。"
     },
     "country": "JP",
     "sector": {
@@ -1316,6 +1388,18 @@
       "en": "Asahi Group",
       "ja": "アサヒグループ"
     },
+    "h1": {
+      "en": "Asahi Group ransomware attack: the way in and the timeline",
+      "ja": "アサヒグループのランサムウェア被害：侵入経路と経過"
+    },
+    "seoTitle": {
+      "en": "Asahi ransomware attack: entry via network equipment",
+      "ja": "アサヒのランサムウェア被害 侵入経路はネットワーク機器"
+    },
+    "seoDescription": {
+      "en": "Asahi found encrypted files on Sept 29, 2025. It says an attacker came in via network equipment at a group site about 10 days earlier; type not disclosed.",
+      "ja": "2025年9月29日に発覚。会社は、障害の約10日前に外部の攻撃者が拠点のネットワーク機器を経由して侵入したとし、機器の種類は公表していない。最大約191万件の個人情報が漏洩した可能性がある。"
+    },
     "country": "JP",
     "sector": {
       "en": "Beverages and food",
@@ -1483,6 +1567,18 @@
       "en": "Anabuki Kosan",
       "ja": "穴吹興産"
     },
+    "h1": {
+      "en": "Anabuki Kosan ransomware attack: the way in and the timeline",
+      "ja": "穴吹興産のランサムウェア被害：侵入経路と経過"
+    },
+    "seoTitle": {
+      "en": "Anabuki Kosan ransomware: a communications equipment flaw",
+      "ja": "穴吹興産のランサムウェア被害 通信機器の脆弱性から侵入"
+    },
+    "seoDescription": {
+      "en": "Feb 3, 2026: encryption detected. Investigators traced entry to a flaw in the company's communications equipment. Some data appeared on a leak site.",
+      "ja": "2026年2月3日に暗号化を検知。外部専門機関の調査で、通信機器の脆弱性を突かれて社内ネットワークに侵入されたと判明した。機器の種類は非公表。個人情報の一部がリークサイトで確認された。"
+    },
     "country": "JP",
     "sector": {
       "en": "Real estate",
@@ -1611,6 +1707,18 @@
     "short": {
       "en": "YCC Information System",
       "ja": "YCC情報システム"
+    },
+    "h1": {
+      "en": "YCC Information System ransomware: the way in and timeline",
+      "ja": "YCC情報システムのランサムウェア被害：侵入経路と経過"
+    },
+    "seoTitle": {
+      "en": "YCC Information System ransomware: network device login",
+      "ja": "YCC情報システムのサイバー攻撃 ネットワーク機器から侵入"
+    },
+    "seoDescription": {
+      "en": "Apr 2, 2026: file server encrypted. Entry presumed via a network device's admin credentials, guessed or obtained. Client data may have been seen.",
+      "ja": "2026年4月2日早朝、ファイルサーバの暗号化と脅迫文を確認。ネットワーク機器の管理者の認証情報が推測または取得され、侵入されたと推定されている。取引先の情報が閲覧された可能性は否定できない。"
     },
     "country": "JP",
     "sector": {
@@ -1762,6 +1870,18 @@
     "short": {
       "en": "Seidensha Electronics",
       "ja": "精電舎電子工業"
+    },
+    "h1": {
+      "en": "Seidensha Electronics ransomware: the way in and timeline",
+      "ja": "精電舎電子工業のランサムウェア被害：侵入経路と経過"
+    },
+    "seoTitle": {
+      "en": "Seidensha Electronics ransomware: entry through the VPN",
+      "ja": "精電舎電子工業のサイバー攻撃 VPN から侵入し2週間後に暗号化"
+    },
+    "seoDescription": {
+      "en": "A third party came in through the VPN on Apr 8, 2026; most servers were found encrypted on Apr 22. Data on the AD server is judged to have been sent out.",
+      "ja": "2026年4月22日に不正アクセスを確認し全社ネットワークを遮断。第三者は4月8日に VPN から侵入していた。AD サーバのデータは外部へ転送されたと判断されている。5月18日に仮システムで業務を再開。"
     },
     "country": "JP",
     "sector": {
@@ -1930,6 +2050,18 @@
       "en": "Ryomo Systems",
       "ja": "両毛システムズ"
     },
+    "h1": {
+      "en": "Ryomo Systems ransomware attack: the way in and the timeline",
+      "ja": "両毛システムズのランサムウェア被害：侵入経路と経過"
+    },
+    "seoTitle": {
+      "en": "Ryomo Systems ransomware (2026): a misused VPN account",
+      "ja": "両毛システムズの不正アクセス VPN 機器のアカウントを悪用"
+    },
+    "seoDescription": {
+      "en": "Aug 12, 2026: an outside party used an account on Ryomo Systems' VPN equipment to get in. Ransomware confirmed; sales and personal data may have leaked.",
+      "ja": "2026年8月12日、外部の第三者が VPN 機器のアカウントを悪用して社内ネットワークに侵入。14日未明に異常を検知し遮断した。ランサムウェア攻撃と確認され、営業・取引・個人の情報が漏洩したおそれがある。"
+    },
     "country": "JP",
     "sector": {
       "en": "IT services",
@@ -2063,6 +2195,18 @@
     "short": {
       "en": "Colonial Pipeline",
       "ja": "コロニアル・パイプライン"
+    },
+    "h1": {
+      "en": "Colonial Pipeline ransomware attack: how the attacker got in",
+      "ja": "コロニアル・パイプラインのランサムウェア被害：侵入経路と経過"
+    },
+    "seoTitle": {
+      "en": "Colonial Pipeline hack: a legacy VPN profile without MFA",
+      "ja": "コロニアル・パイプライン攻撃の侵入経路 古い VPN プロファイル"
+    },
+    "seoDescription": {
+      "en": "May 7, 2021: Colonial found ransomware and shut the largest US East Coast fuel pipeline. The CEO testified the attacker used a legacy VPN profile, no MFA.",
+      "ja": "2021年5月7日、米東海岸最大の燃料パイプラインが停止。CEO は上院で、攻撃者が使ったのは使う予定のない古い VPN プロファイルで、認証はパスワードだけだったと証言した。"
     },
     "country": "US",
     "sector": {
@@ -2200,6 +2344,18 @@
     "short": {
       "en": "Boeing Distribution",
       "ja": "ボーイング・ディストリビューション"
+    },
+    "h1": {
+      "en": "Boeing ransomware attack (2023): how LockBit got in",
+      "ja": "ボーイングのランサムウェア被害：侵入経路と経過"
+    },
+    "seoTitle": {
+      "en": "Boeing ransomware attack 2023: Citrix Bleed initial access",
+      "ja": "ボーイングのランサムウェア被害 侵入経路は Citrix Bleed"
+    },
+    "seoDescription": {
+      "en": "LockBit 3.0 affiliates used CVE-2023-4966 (Citrix Bleed) in NetScaler to get into Boeing Distribution, per joint advisory AA23-325A based on Boeing's data.",
+      "ja": "2023年10月下旬、LockBit がボーイングをリークサイトに掲載した。米豪の共同勧告 AA23-325A は、部品流通事業への初期アクセスが NetScaler の CVE-2023-4966（Citrix Bleed）によるとした。"
     },
     "country": "US",
     "sector": {
@@ -2344,6 +2500,18 @@
     "short": {
       "en": "US CISA (CSAT)",
       "ja": "米国 CISA"
+    },
+    "h1": {
+      "en": "CISA breach via Ivanti Connect Secure: the CSAT intrusion",
+      "ja": "米 CISA への不正アクセス：Ivanti Connect Secure 経由の侵入"
+    },
+    "seoTitle": {
+      "en": "CISA hacked via Ivanti Connect Secure: the CSAT breach",
+      "ja": "米 CISA への不正アクセス Ivanti Connect Secure 経由"
+    },
+    "seoDescription": {
+      "en": "Jan 2024: days after its Ivanti directive, an attacker put a webshell on CISA's own Ivanti Connect Secure device for CSAT. No evidence of data theft.",
+      "ja": "2024年1月、Ivanti の悪用について緊急指令を出した数日後、CISA 自身の CSAT 用 Ivanti Connect Secure 機器に Web シェルが置かれた。2つのシステムを停止した。持ち出しの証拠はない。"
     },
     "country": "US",
     "sector": {
@@ -2494,6 +2662,18 @@
     "short": {
       "en": "MITRE",
       "ja": "MITRE"
+    },
+    "h1": {
+      "en": "MITRE breach: Ivanti VPN zero-days that bypassed MFA",
+      "ja": "MITRE への侵入：Ivanti VPN のゼロデイと多要素認証の回避"
+    },
+    "seoTitle": {
+      "en": "MITRE breach via Ivanti VPN zero-days that bypassed MFA",
+      "ja": "MITRE への侵入 Ivanti VPN のゼロデイで多要素認証を回避"
+    },
+    "seoDescription": {
+      "en": "From Jan 2024, an attacker used two Ivanti Connect Secure zero-days to breach a MITRE VPN and reach its NERVE research network. Espionage, not ransomware.",
+      "ja": "2024年1月から、攻撃者は Ivanti Connect Secure の2つのゼロデイで MITRE の VPN に侵入し、研究用ネットワーク NERVE の VMware 基盤に入った。ランサムウェアではなく諜報型の侵入。"
     },
     "country": "US",
     "sector": {
