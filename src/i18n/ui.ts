@@ -11,7 +11,7 @@ export const dict = {
   en: {
     "site.title": "The door was the VPN",
     "site.desc":
-      "Why VPN appliances are the most common way ransomware gets into Japanese organizations, drawn as a break-in report: the statistics, what happens after entry, the products, real cases and what to do.",
+      "Why VPN appliances are the most common way ransomware gets into Japanese organizations: the statistics, what happens after entry, the products, real cases and what to do.",
     "nav.skip": "Skip to content",
     "nav.chapters": "Chapters",
     "nav.home": "Summary",
@@ -57,14 +57,14 @@ export const dict = {
     "search.kind.case": "Case",
     "search.kind.glossary": "Glossary",
     "search.kind.sources": "Sources",
-    "og.home": "Break-in investigation report",
+    "og.home": "Ransomware entry points in Japan, 2025",
     "og.vpn": "VPN",
     "og.nts": "NTS",
   },
   ja: {
     "site.title": "扉はVPNだった",
     "site.desc":
-      "ランサムウェアが日本の組織に入り込む経路で最も多いのは VPN 機器。その理由を侵入事案の調査報告書の形で図解する。統計、侵入後に起きること、製品と脆弱性、実際の事例、対策まで。",
+      "ランサムウェアが日本の組織に入り込む経路で最も多いのは VPN 機器。統計、侵入後に起きること、製品と脆弱性、実際の事例、対策を図で示す。",
     "nav.skip": "本文へ移動",
     "nav.chapters": "章",
     "nav.home": "要旨",
@@ -109,7 +109,7 @@ export const dict = {
     "search.kind.case": "事例",
     "search.kind.glossary": "用語集",
     "search.kind.sources": "出典",
-    "og.home": "侵入事案調査報告書",
+    "og.home": "2025年 ランサムウェアの侵入経路",
     "og.vpn": "VPN機器",
     "og.nts": "縮尺なし",
   },
