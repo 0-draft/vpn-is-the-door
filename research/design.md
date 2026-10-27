@@ -2,6 +2,8 @@
 
 Status: decided (research pass, 2026-10-25). One concept, no menu. Everything below is meant to be implementable without follow-up questions; items that still need a fact check are collected in the last section.
 
+> *Revised 2026-10-27 (site revision 5):* the owner judged the report costume as posturing. The report number and revision block in the header, the scale tag on every section heading, the "section A–A" divider and the "break-in investigation report" kicker were removed. The floor plan, the fictional company, the colour semantics and the depth order (executives first, engineers last) stay; the scale tag appears once, at each chapter's opening. Prose was cut to facts (`research/briefs/cut.md`).
+
 ## 0. Decision in one paragraph
 
 The site is a **break-in investigation report with a floor plan**: the genre of a police 実況見分調書 with its 見取図 and of a JTSB / NTSB accident report, applied to one company that got ransomware through its VPN. The company is drawn as an architectural floor plan (JIS A 0150 conventions). The VPN appliance is a door in the outer wall. The 2025 NPA statistic is drawn *on the building* as tallies stacked outside each opening (door = VPN, window = RDP, reception = mail, other). The reader goes deeper by **zooming the drawing scale**: S=1:500 site summary for executives, S=1:100 floor plan for IT managers, S=1:5 detail drawing of the door itself for engineers, where the building metaphor dissolves into the real components (sslvpnd, `/remote/...`, session cookies). The deepening boundary is drawn as a section-cut line (A–A).
