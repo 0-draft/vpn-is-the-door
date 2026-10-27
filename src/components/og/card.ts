@@ -135,13 +135,6 @@ export function cardTree(c: CardInput, jaFamilies = "Public Sans"): Node {
       el("div", { display: "flex", flexDirection: "column", padding: "52px 0 0 64px", width: 760 }, [
         el("div", { display: "flex", alignItems: "center", flexWrap: "wrap", gap: 12, fontSize: 26, color: C.ink3 }, [
           el("div", { fontWeight: 700 }, c.label),
-          ...c.scales.map((s) =>
-            el(
-              "div",
-              { fontFamily: mono, fontSize: 22, border: `2px solid ${C.ink3}`, padding: "2px 10px", color: C.ink3 },
-              `S=${s}`,
-            ),
-          ),
         ]),
         el(
           "div",

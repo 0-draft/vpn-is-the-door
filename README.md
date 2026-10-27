@@ -2,7 +2,7 @@
 
 **English** | [日本語](README.ja.md)
 
-In 2025, 61 of the 92 Japanese ransomware victims that could say how the attacker got in named their VPN appliance. Email accounted for two. This site explains why, drawn as a break-in investigation report about one fictional company, and is written for the executive who reads the first page and the engineer who reads the last.
+In 2025, 61 of the 92 Japanese ransomware victims that could say how the attacker got in named their VPN appliance. Email accounted for two. This site shows why, using the floor plan of one fictional company, from the summary for executives down to the logs engineers need.
 
 **Read it:** <https://0-draft.github.io/vpn-is-the-door/> (日本語: <https://0-draft.github.io/vpn-is-the-door/ja/>)
 
@@ -10,19 +10,11 @@ In 2025, 61 of the 92 Japanese ransomware victims that could say how the attacke
 
 The company is Minato Precision Co., Ltd. (港精密株式会社), 280 staff, drawn as an architectural floor plan. The VPN appliance is a door in the outer wall that lets staff in without passing reception. Every chapter returns to the same drawing.
 
-Depth is marked the way drawings mark it, by scale:
-
-| Scale | Reader | What changes |
-| --- | --- | --- |
-| `S=1:500` | Executives | The building and its openings. Plain words, one decision per section. |
-| `S=1:100` | IT managers | Rooms, the intruder's route, what the IT team would see. |
-| `S=1:5` | Engineers | The door cut open. Real component names, ATT&CK IDs, advisories, logs. |
-
 The chapters follow the order of an incident:
 
 | # | Chapter | Content |
 | --- | --- | --- |
-| 0 | Summary | The statistic drawn on the building, one square per case, and the three decisions that belong to leadership. |
+| 0 | Summary | The statistic drawn on the building, one square per case. |
 | 1 | Where they came in | What the National Police Agency counted, each opening in turn, 2021–2025. |
 | 2 | After the door opens | A scroll-driven plan of the route from the door to encryption, the timing, and one hospital's report mapped onto it. |
 | 3 | The doors | The products, the door detail drawing, and a filterable schedule of 31 KEV-listed vulnerabilities. |
