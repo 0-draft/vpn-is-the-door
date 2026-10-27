@@ -6,6 +6,7 @@ import RouteBars from "../components/RouteBars.astro";
 import Summary from "../components/Summary.astro";
 import { CHAPTERS } from "../data/chapters";
 import { PAGE_SEO } from "../data/seo";
+import { source } from "../data/sources";
 import { HEADLINE, latest, pct, ROUTE_YEARS, ROUTES_2026H1 } from "../data/stats";
 import { chapterLabel } from "../i18n/ui";
 import Base from "../layouts/Base.astro";
@@ -22,6 +23,17 @@ const vpnPct = pct(y.counts.vpn ?? 0, y.n);
 const ja = lang === "ja";
 const href = (p: string) => localePath(lang, p, base);
 const bf = HEADLINE.backupFail2025;
+// "2026-03" -> 2026年3月 / March 2026: when NPA published the figures shown
+const pubDate = (id: string) => {
+  const [yy, mm] = source(id).date.split("-").map(Number);
+  return ja
+    ? `${yy}年${mm}月`
+    : new Date(Date.UTC(yy ?? 0, (mm ?? 1) - 1)).toLocaleString("en-US", {
+        month: "long",
+        year: "numeric",
+        timeZone: "UTC",
+      });
+};
 
 const copy = {
   title: ja ? "扉はVPNだった" : "The door was the VPN",
@@ -29,8 +41,11 @@ const copy = {
     ? "日本でランサムウェアの被害に遭い、侵入経路を回答した組織の3分の2は、VPN 機器から侵入されていた。社外から社内に入るために設けた扉が、そのまま侵入口になっている。"
     : "Of the Japanese ransomware victims that could say how the attacker got in, two thirds were entered through their VPN appliance. The door they installed so staff could work from outside became the way in.",
   heroNote: ja
-    ? `侵入経路が判明した${y.n}件のうち${y.counts.vpn}件`
-    : `${y.counts.vpn} of the ${y.n} cases with a known route`,
+    ? `${y.year}年、侵入経路が判明した${y.n}件のうち${y.counts.vpn}件（最新の通年統計、${pubDate(y.source)}公表）`
+    : `${y.counts.vpn} of the ${y.n} cases with a known route in ${y.year} (latest full-year figures, published ${pubDate(y.source)})`,
+  halfNote: ja
+    ? `2026年上半期（${pubDate(ROUTES_2026H1.source)}公表）は回答${ROUTES_2026H1.n}件のうち${ROUTES_2026H1.counts.vpn}件（${pct(ROUTES_2026H1.counts.vpn ?? 0, ROUTES_2026H1.n)}%）`
+    : `First half of 2026 (published ${pubDate(ROUTES_2026H1.source)}): ${ROUTES_2026H1.counts.vpn} of ${ROUTES_2026H1.n} answers (${pct(ROUTES_2026H1.counts.vpn ?? 0, ROUTES_2026H1.n)}%)`,
   figCaption: ja
     ? "港精密 本社の侵入口。四角1つが被害1件（2025年、侵入経路が判明した92件）"
     : "Minato Precision head office, points of entry. One square per case (2025, the 92 cases with a known route)",
@@ -87,6 +102,7 @@ const copy = {
         <p class="numeral-note">
           <strong>{ja ? "VPN 機器" : "VPN appliance"}</strong>
           <span>{copy.heroNote}</span>
+          <span class="half">{copy.halfNote}</span>
         </p>
       </div>
       <Fig lang={lang} n="0-1" caption={copy.figCaption} sources={[y.source]} composite nts wide>
@@ -228,6 +244,10 @@ const copy = {
   .pct {
     font-size: 0.55em;
     margin-inline-start: 0.04em;
+  }
+  .numeral-note .half {
+    color: var(--ink-3);
+    font-size: 0.9375rem;
   }
   .numeral-note {
     margin: 0 0 0.6rem;
