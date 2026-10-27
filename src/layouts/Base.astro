@@ -7,26 +7,45 @@ import "@fontsource/atkinson-hyperlegible-mono/600.css";
 import "../styles/global.css";
 import psLatinExt from "@fontsource-variable/public-sans/files/public-sans-latin-ext-wght-normal.woff2?url";
 import psLatin from "@fontsource-variable/public-sans/files/public-sans-latin-wght-normal.woff2?url";
+import JsonLd from "../components/JsonLd.astro";
 import { ogImagePath } from "../components/og/pages";
 import { pageKind } from "../components/search/results";
 import Search from "../components/search/Search.astro";
 import { CHAPTERS } from "../data/chapters";
 import { chapterLabel, SITE, t } from "../i18n/ui";
 import { alternatePath, type Lang, localePath, stripBase, stripLocale } from "../lib/paths";
+import { article, breadcrumbList, webSite } from "../lib/seo";
 
 interface Props {
   lang: Lang;
   title?: string;
+  // the whole <title>, used as-is; without it the title gets the site name appended
+  seoTitle?: string | undefined;
   description?: string;
   chapter?: string;
   // false on pages with no twin in the other language (the bilingual 404)
   alternate?: boolean;
+  // breadcrumb trail after the home page: names in the page language, locale-free paths
+  crumbs?: { name: string; path: string }[];
+  // set on chapters and cases: the H1, emitted as an Article headline
+  headline?: string | undefined;
+  jsonLd?: unknown[];
 }
 
-const { lang, title, description, chapter, alternate = true } = Astro.props;
+const {
+  lang,
+  title,
+  seoTitle,
+  description,
+  chapter,
+  alternate = true,
+  crumbs = [],
+  headline,
+  jsonLd = [],
+} = Astro.props;
 const base = import.meta.env.BASE_URL;
 const siteTitle = t(lang, "site.title");
-const fullTitle = title ? `${title} · ${siteTitle}` : siteTitle;
+const fullTitle = seoTitle ?? (title ? `${title} · ${siteTitle}` : siteTitle);
 const desc = description ?? t(lang, "site.desc");
 const alt = alternatePath(Astro.url.pathname, base);
 const enHref = alt.lang === "en" ? alt.href : Astro.url.pathname;
@@ -34,6 +53,30 @@ const jaHref = alt.lang === "ja" ? alt.href : Astro.url.pathname;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const home = localePath(lang, "/", base);
 const ogImage = new URL(ogImagePath(Astro.url.pathname, base), Astro.site);
+const local = stripLocale(stripBase(Astro.url.pathname, base));
+const abs = (p: string) => new URL(localePath(lang, p, base), Astro.site).href;
+const structured = alternate
+  ? [
+      breadcrumbList([{ name: siteTitle, url: abs("/") }, ...crumbs.map((c) => ({ name: c.name, url: abs(c.path) }))]),
+      ...(chapter === "home"
+        ? [webSite({ name: siteTitle, alternateName: t(alt.lang, "site.title"), url: abs("/"), lang })]
+        : []),
+      ...(headline
+        ? [
+            article({
+              headline,
+              description: desc,
+              url: canonical.href,
+              image: ogImage.href,
+              lang,
+              path: local,
+              homeUrl: abs("/"),
+            }),
+          ]
+        : []),
+      ...jsonLd,
+    ]
+  : [];
 
 // @fontsource-variable names the family "Public Sans Variable"; the site's stacks
 // say "Public Sans", so declare the two subsets the pages use under that name.
@@ -61,7 +104,6 @@ const fontFace = [
 ].join("");
 
 // Search index: the 404 page stays out; every other page indexes its <main>.
-const local = stripLocale(stripBase(Astro.url.pathname, base));
 const kind = pageKind(chapter, local);
 const ch = CHAPTERS.find((c) => c.id === chapter);
 // One key per element: Pagefind does not split "a:x, b:y" when a value holds a colon.
@@ -102,6 +144,7 @@ const pfMeta = [
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={ogImage} />
     <meta name="twitter:image:alt" content={fullTitle} />
+    <JsonLd data={structured} />
     <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
     {lang === "en" && <link rel="preload" href={psLatin} as="font" type="font/woff2" crossorigin />}
     {lang === "ja" && <link rel="preload" href={bizFont(400)} as="font" type="font/woff2" crossorigin />}

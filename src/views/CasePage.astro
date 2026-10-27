@@ -83,13 +83,17 @@ const pub = (id: string) => source(id);
 
 <Chapter
   lang={lang}
-  title={c.org[lang]}
+  title={c.h1[lang]}
+  seoTitle={c.seoTitle[lang]}
   description={c.cause[lang]}
+  metaDescription={c.seoDescription[lang]}
   chapter="cases"
   parentTitle={parentTitle}
   parentPath={parentPath}
+  crumb={c.short[lang]}
 >
   <p class="case-meta">
+    <span>{c.org[lang]}</span>
     <span>{c.sector[lang]}</span>
     <span class="num">{c.country}</span>
     <span>{c.kindNote[lang]}</span>

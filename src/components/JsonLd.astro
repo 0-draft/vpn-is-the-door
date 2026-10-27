@@ -1,0 +1,12 @@
+---
+// schema.org JSON-LD for the page head; jsonLdText escapes "<" so a string cannot end the script.
+import { jsonLdText } from "../lib/seo";
+
+interface Props {
+  data: unknown[];
+}
+
+const { data } = Astro.props;
+---
+
+{data.map((d) => <script type="application/ld+json" is:inline set:html={jsonLdText(d)} />)}

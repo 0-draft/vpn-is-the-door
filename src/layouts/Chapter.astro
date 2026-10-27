@@ -3,25 +3,47 @@ import PageRevisions from "../components/PageRevisions.astro";
 import Scale from "../components/Scale.astro";
 import { CHAPTERS, neighbours } from "../data/chapters";
 import { chapterLabel, t } from "../i18n/ui";
-import { type Lang, localePath } from "../lib/paths";
+import { type Lang, localePath, stripBase, stripLocale } from "../lib/paths";
 import Base from "./Base.astro";
 
 interface Props {
   lang: Lang;
   title: string;
+  seoTitle?: string | undefined;
   description: string;
+  // meta description when it differs from the lede under the H1
+  metaDescription?: string | undefined;
   chapter: string;
   parentTitle?: string | undefined;
   parentPath?: string | undefined;
+  // last breadcrumb name when the H1 is too long for one
+  crumb?: string | undefined;
+  jsonLd?: unknown[];
 }
 
-const { lang, title, description, chapter, parentTitle, parentPath } = Astro.props;
+const { lang, title, seoTitle, description, metaDescription, chapter, parentTitle, parentPath, crumb, jsonLd } =
+  Astro.props;
 const base = import.meta.env.BASE_URL;
+const self = stripLocale(stripBase(Astro.url.pathname, base));
+const crumbs = [
+  ...(parentTitle && parentPath ? [{ name: parentTitle, path: parentPath }] : []),
+  { name: crumb ?? title, path: self },
+];
+const isArticle = chapter !== "glossary" && chapter !== "sources";
 const c = CHAPTERS.find((x) => x.id === chapter);
 const { prev, next } = c ? neighbours(c.id) : { prev: undefined, next: undefined };
 ---
 
-<Base lang={lang} title={title} description={description} chapter={chapter}>
+<Base
+  lang={lang}
+  title={title}
+  seoTitle={seoTitle}
+  description={metaDescription ?? description}
+  chapter={chapter}
+  crumbs={crumbs}
+  headline={isArticle ? title : undefined}
+  jsonLd={jsonLd ?? []}
+>
   <article class="chapter">
     <header class="ch-head">
       {

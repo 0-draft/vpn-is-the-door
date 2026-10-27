@@ -34,6 +34,10 @@ export const CaseSchema = z.object({
   region: z.enum(["jp", "global"]),
   org: L,
   short: L,
+  // page H1 and search-result title/description; tests/unit/seo.test.ts checks the wording rules
+  h1: L,
+  seoTitle: L,
+  seoDescription: L,
   country: z.enum(["JP", "US"]),
   sector: L,
   kind: z.enum(["ransomware", "not-ransomware"]),
