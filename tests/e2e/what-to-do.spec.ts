@@ -44,7 +44,7 @@ test.describe("chapter 6: close the door", () => {
   test("Japanese page has the same figure", async ({ page }) => {
     await page.goto("ja/what-to-do/?entry=zeroday&patch=3");
     await expect(sandbox(page)).toHaveAttribute("data-cut", "");
-    await expect(sandbox(page).locator("[data-sb-notes]")).toContainText("ゼロデイ");
+    await expect(sandbox(page).locator("[data-sb-notes]")).toContainText("修正版はなかった");
   });
 
   for (const path of ["what-to-do/?entry=password&tiered=1", "ja/what-to-do/"]) {
