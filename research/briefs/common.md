@@ -1,6 +1,6 @@
 # Brief: writing a part of vpn-is-the-door
 
-Repo: `/Users/takumaniwa/vpn-is-the-door` (Astro 7 static site, GitHub Pages under `/vpn-is-the-door/`, English at `/`, Japanese at `/ja/`). The owner demands two things above all: it must be visually obvious ("視覚的にわかりやすく"), and it must not look or read as AI-generated or templated.
+Repo: `~/vpn-is-the-door` (Astro 7 static site, GitHub Pages under `/vpn-is-the-door/`, English at `/`, Japanese at `/ja/`). The owner demands two things above all: it must be visually obvious ("視覚的にわかりやすく"), and it must not look or read as AI-generated or templated.
 
 ## Read first
 
@@ -42,7 +42,7 @@ Home (stat + summary) → 1 Where they came in (the 2025 NPA statistic) → 2 Af
 Use your own dev server for looking at pages; do not run `pnpm build` (another agent may be building, it overwrites `dist/`).
 
 ```bash
-cd /Users/takumaniwa/vpn-is-the-door
+cd ~/vpn-is-the-door
 pnpm exec astro dev --port <YOUR_PORT> --host 127.0.0.1   # background; stop it when done
 pnpm exec astro check
 pnpm exec biome check --write <your files> && pnpm exec biome ci <your files>
