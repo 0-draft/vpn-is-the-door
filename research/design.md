@@ -47,7 +47,7 @@ Not found / not verifiable in this pass (do not cite these as influences): a NYT
 
 ## 2. Relationship to athenz-man: share the rules, diverge on the surface
 
-The sibling ([design-direction.md](/Users/takumaniwa/.claude/skills/oss-visual-explainer/references/design-direction.md)) is a mechanical drawing set with a title block, LINE Seed JP + IBM Plex Mono and a crimson #C8241B. It serves engineers looking up an API.
+The sibling ([design-direction.md](~/.claude/skills/oss-visual-explainer/references/design-direction.md)) is a mechanical drawing set with a title block, LINE Seed JP + IBM Plex Mono and a crimson #C8241B. It serves engineers looking up an API.
 
 **Share (house rules):** line weight carries meaning (thick = main path, thin = labels, dashed = async/out-of-band, chain = boundary), real identifiers in deep sections, motion only when it encodes a change of state, JIS semantic colours, 16px floor, URL hash per state, Esc closes, no scroll-entrance animation, Pagefind command palette (reuse it, restyle only).
 
