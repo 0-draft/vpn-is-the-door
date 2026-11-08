@@ -215,7 +215,6 @@ const total = VULNS.filter((v) => matches(v, all)).length;
                       </span>
                     </td>
                     <td>
-                      <span class="ex-plabel" aria-hidden="true">{S.patchCol}</span>
                       {v.patch.enough ? (
                         <span class="ex-sub">{S.noReport}</span>
                       ) : (
@@ -578,7 +577,7 @@ const total = VULNS.filter((v) => matches(v, all)).length;
   .ex-row[data-selected] > td {
     background: var(--marker);
   }
-  .ex-row[data-selected] :is(.ex-sub, .ex-links, .ex-chain, .ex-plabel) {
+  .ex-row[data-selected] :is(.ex-sub, .ex-links, .ex-chain) {
     color: var(--ink-2);
   }
   .ex-row[data-selected] > td:first-child {
@@ -659,14 +658,8 @@ const total = VULNS.filter((v) => matches(v, all)).length;
       margin-block-end: 0.4rem;
     }
   }
-  .ex-plabel {
-    display: none;
-  }
+  /* KEV says ransomware campaigns used it: bold ink, not a boxed tag */
   .ex-ransom.is-known {
-    display: inline-block;
-    margin-block-start: 0.2rem;
-    padding: 0 0.4em;
-    border: 1px solid var(--ink-2);
     color: var(--ink);
     font-weight: 700;
   }
@@ -680,18 +673,35 @@ const total = VULNS.filter((v) => matches(v, all)).length;
     .ex-table td.num {
       white-space: normal;
     }
-    .ex-plabel {
-      display: inline;
-      margin-inline-end: 0.4em;
-      font-size: 0.8125rem;
-      color: var(--ink-3);
-    }
-    .ex-ransom.is-known {
-      display: table;
-      margin-inline-start: auto;
-    }
     .ex-table thead {
-      display: none;
+      display: block;
+    }
+    .ex-table thead tr {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas: "cve patch" "part kev";
+      column-gap: 0.75rem;
+      border-block-end: 2px solid var(--ink);
+      padding-block-end: 0.3rem;
+    }
+    .ex-table thead th {
+      border: 0;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    .ex-table thead th:nth-child(1) {
+      grid-area: cve;
+    }
+    .ex-table thead th:nth-child(2) {
+      grid-area: part;
+    }
+    .ex-table thead th:nth-child(3) {
+      grid-area: kev;
+      text-align: end;
+    }
+    .ex-table thead th:nth-child(4) {
+      grid-area: patch;
+      text-align: end;
     }
     .ex-table tbody,
     .ex-group,
