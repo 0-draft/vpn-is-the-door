@@ -137,32 +137,34 @@ test.describe("scrolly window on phones", () => {
           const el = document.getElementById(`step-${n}`);
           if (el) window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.62 + 20);
         }, n);
-        await page.waitForTimeout(700);
-        const cut = await page.evaluate(() => {
-          const win = document.querySelector(".scrolly-fig");
-          const svg = [...(win?.querySelectorAll<SVGSVGElement>("svg.plan-tall") ?? [])].find(
-            (x) => x.getBoundingClientRect().width > 0,
-          );
-          if (!win || !svg) return ["no plan"];
-          const wr = win.getBoundingClientRect();
-          const out: string[] = [];
-          for (const t of svg.querySelectorAll("text")) {
-            const r = t.getBoundingClientRect();
-            if (!r.width) continue;
-            let o: Element | null = t;
-            let hidden = false;
-            while (o && o !== svg) {
-              const cs = getComputedStyle(o);
-              if (cs.opacity === "0" || cs.display === "none" || cs.visibility === "hidden") hidden = true;
-              o = o.parentElement;
+        // the plan pans to each step; poll until it settles instead of a fixed wait,
+        // which flaked under parallel load. A label that stays cut still fails.
+        const cutLabels = () =>
+          page.evaluate(() => {
+            const win = document.querySelector(".scrolly-fig");
+            const svg = [...(win?.querySelectorAll<SVGSVGElement>("svg.plan-tall") ?? [])].find(
+              (x) => x.getBoundingClientRect().width > 0,
+            );
+            if (!win || !svg) return ["no plan"];
+            const wr = win.getBoundingClientRect();
+            const out: string[] = [];
+            for (const t of svg.querySelectorAll("text")) {
+              const r = t.getBoundingClientRect();
+              if (!r.width) continue;
+              let o: Element | null = t;
+              let hidden = false;
+              while (o && o !== svg) {
+                const cs = getComputedStyle(o);
+                if (cs.opacity === "0" || cs.display === "none" || cs.visibility === "hidden") hidden = true;
+                o = o.parentElement;
+              }
+              if (hidden) continue;
+              if (r.bottom > wr.top && r.top < wr.bottom && (r.top < wr.top - 0.5 || r.bottom > wr.bottom + 0.5))
+                out.push(t.textContent?.trim() ?? "");
             }
-            if (hidden) continue;
-            if (r.bottom > wr.top && r.top < wr.bottom && (r.top < wr.top - 0.5 || r.bottom > wr.bottom + 0.5))
-              out.push(t.textContent?.trim() ?? "");
-          }
-          return out;
-        });
-        expect(cut, `step ${n}`).toEqual([]);
+            return out;
+          });
+        await expect.poll(cutLabels, { message: `step ${n}`, timeout: 5000 }).toEqual([]);
       }
       await page.close();
     });
