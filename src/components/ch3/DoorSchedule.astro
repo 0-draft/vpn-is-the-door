@@ -157,7 +157,6 @@ const total = VULNS.filter((v) => matches(v, all)).length;
       <table>
         <colgroup>
           <col class="c-cve" />
-          <col class="c-part" />
           <col class="c-kev" />
           <col class="c-patch" />
         </colgroup>
@@ -218,9 +217,7 @@ const total = VULNS.filter((v) => matches(v, all)).length;
                       {v.patch.enough ? (
                         <span class="ex-sub">{S.noReport}</span>
                       ) : (
-                        <>
-                          <span class="tag-caution">{S.no}</span>
-                        </>
+                        <span class="tag-caution">{S.no}</span>
                       )}
                     </td>
                   </tr>
