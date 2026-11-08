@@ -19,8 +19,11 @@ import { HEADLINE, pct, ROUTE_YEARS, ROUTES_2026H1 } from "../../../data/stats";
 import { C1, PATCH_2026H1, PATCH_YEARS, remote, SIZE_2026H1, SIZE_YEARS, sizeTotal } from "../../../lib/ch1";
 
 <Summary lang="en">
-  <p>In 2025, {C1.n} answers to the National Police Agency (NPA) survey of ransomware victims named how the intruder got in. {C1.vpn} named the VPN appliance, {C1.rdp} remote desktop and {C1.mail} suspicious email.</p>
-  <p>Over 2021–2025, {C1.five.vpn} of {C1.five.n} cases came through VPN appliances and {C1.five.mail} through email. In {C1.unpatchedPct}% of the cases where NPA asked, the device used to get in was missing security patches.</p>
+  <ul class="kp">
+    <li><b class="hot">{C1.vpn}<small>/{C1.n}</small></b>2025 answers that named a route and named the VPN appliance. Remote desktop {C1.rdp}, email {C1.mail}</li>
+    <li><b>{C1.five.mail}<small>/{C1.five.n}</small></b>Cases that came in by email over 2021–2025. VPN: {C1.five.vpn}</li>
+    <li><b>{C1.unpatchedPct}<small>%</small></b>Entry devices that were missing patches (2022–2025)</li>
+  </ul>
 </Summary>
 
 ## 92 answers named a route

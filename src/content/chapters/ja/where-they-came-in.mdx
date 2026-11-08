@@ -19,8 +19,11 @@ import { HEADLINE, pct, ROUTE_YEARS, ROUTES_2026H1 } from "../../../data/stats";
 import { C1, PATCH_2026H1, PATCH_YEARS, remote, SIZE_2026H1, SIZE_YEARS, sizeTotal } from "../../../lib/ch1";
 
 <Summary lang="ja">
-  <p>2025年、警察庁のアンケートで侵入経路を挙げた回答は{C1.n}件。VPN 機器が{C1.vpn}件、リモートデスクトップが{C1.rdp}件で、不審メールは{C1.mail}件だった。</p>
-  <p>2021〜2025年の合計では{C1.five.n}件中 VPN 機器が{C1.five.vpn}件、メールは{C1.five.mail}件。侵入口になった機器の{C1.unpatchedPct}%には未適用のセキュリティパッチがあった。</p>
+  <ul class="kp">
+    <li><b class="hot">{C1.vpn}<small>/{C1.n}件</small></b>2025年、侵入経路を挙げた回答のうち VPN 機器。リモートデスクトップ{C1.rdp}件、不審メール{C1.mail}件</li>
+    <li><b>{C1.five.mail}<small>/{C1.five.n}件</small></b>2021〜2025年でメールが入口だった件数。VPN 機器は{C1.five.vpn}件</li>
+    <li><b>{C1.unpatchedPct}<small>%</small></b>侵入口の機器に未適用のパッチがあった割合（2022〜2025年）</li>
+  </ul>
 </Summary>
 
 ## 経路を挙げた回答は92件

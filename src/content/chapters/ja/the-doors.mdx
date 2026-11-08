@@ -21,8 +21,12 @@ import { scheduleStats } from "../../../data/doors";
 export const ST = scheduleStats();
 
 <Summary lang="ja">
-  <p>建具表には、7社の VPN 機器の欠陥{ST.total}件を載せた。どれも攻撃に使われたことを米国 CISA が確認している。{ST.preauth}件は誰もログインしていない段階で届き、その多くではパスワードも多要素認証も確認される機会がない。</p>
-  <p>{ST.zeroDay}件はベンダーの警告より前から使われていた。{ST.patchNotEnough}件では、盗まれたパスワードやセッション、仕込まれたものが更新後も残り、パッチだけでは足りなかったとベンダーか政府機関が述べている。</p>
+  <ul class="kp">
+    <li><b>{ST.total}<small>件</small></b>攻撃に使われた VPN 機器の欠陥（7社、米国 CISA が確認）</li>
+    <li><b class="hot">{ST.preauth}<small>件</small></b>ログイン前に届く。パスワードも多要素認証も確かめられない</li>
+    <li><b>{ST.zeroDay}<small>件</small></b>ベンダーの警告より前に使われていた</li>
+    <li><b>{ST.patchNotEnough}<small>件</small></b>パッチだけでは足りなかった（盗まれたパスワードやセッションが残る）</li>
+  </ul>
 </Summary>
 
 ## インターネットに面した扉
