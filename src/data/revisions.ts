@@ -15,8 +15,8 @@ export const REVISIONS: Revision[] = [
     rev: 6,
     date: "2026-11-08",
     change: {
-      en: "Made the pages easier to scan: key points as large numbers at the top of each page; chapter 1's four repeated floor plans merged into one plan with a card per opening; chapter 6's action tables turned into cards with owners as chips and the reason folded; the door schedule and case index cut to four columns; source lists folded into one line under each figure.",
-      ja: "流し読みしやすくした。各ページの冒頭の要旨を大きな数字の要点に変更。第1章で4回繰り返していた平面図を1枚にまとめ、開口部ごとのカードを付けた。第6章の対策の表を、担当をチップで示し理由を折りたたむカードに変更。建具表と事例の一覧を4列に削減。図の出典は1行にたたんだ。",
+      en: "Layout made easier to scan. Each page's summary cut to two or three sentences. In chapter 1, the four floor plans drawn per opening became one plan with a note for each opening. In chapter 2, the hospital report tables are laid out by step. In chapter 6, the measure tables became a two-column schedule with the evidence folded. The door schedule and the case index were cut to four columns. Each figure's sources fold into one line.",
+      ja: "流し読みしやすい配置に変えた。各ページの要旨を2〜3文に短縮。第1章で開口部ごとに4枚あった平面図を1枚にまとめ、開口部ごとの注記を付けた。第2章の病院の報告書の表を手順ごとに区切った。第6章の対策の表を2列にし、根拠をたたんだ。建具表と事例の一覧を4列に削減。図の出典を1行にたたんだ。",
     },
   },
   {
