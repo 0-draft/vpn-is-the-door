@@ -14,17 +14,19 @@ interface Props {
   lang: Lang;
   /** header of the side column: 担当, or 構成要素と識別子 */
   sideHead: string;
+  /** header of the main column; defaults to 対策 / Measure */
+  mainHead?: string;
   rows: Row[];
 }
 
-const { lang, sideHead, rows } = Astro.props;
+const { lang, sideHead, mainHead, rows } = Astro.props;
 const ja = lang === "ja";
 ---
 
 <table class="as" role="table">
   <thead role="rowgroup">
     <tr role="row">
-      <th scope="col" role="columnheader">{ja ? "対策" : "Measure"}</th>
+      <th scope="col" role="columnheader">{mainHead ?? (ja ? "対策" : "Measure")}</th>
       <th scope="col" role="columnheader">{sideHead}</th>
     </tr>
   </thead>
