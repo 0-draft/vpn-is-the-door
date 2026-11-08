@@ -12,6 +12,7 @@ import SectionCut from "../../../components/SectionCut.astro";
 import SourceLine from "../../../components/SourceLine.astro";
 import Summary from "../../../components/Summary.astro";
 import DoorMap from "../../../components/ch5/DoorMap.astro";
+import ActionSchedule from "../../../components/ch6/ActionSchedule.astro";
 
 <Summary lang="en">
   <p>The VPN appliance taken apart, one page per part: the code that answers before login, the access that outlives a patch, and the logs that disappear. It ends with ten questions about your own appliance that should be answerable from records.</p>
@@ -35,21 +36,17 @@ The lock itself, authentication including multi-factor authentication (MFA), is 
 
 An answer that depends on one person's memory counts as missing.
 
-<div class="table-scroll" tabindex="0">
-
-| # | Question | A complete answer | Why it is on the list |
-| --- | --- | --- | --- |
-| 1 | Who owns the appliance, and who patches it under the contract? | A named person, and a contract clause that makes the vendor pass on advisories and apply fixes | The Osaka committee found the responsibility split between the hospital and its vendors undefined (p.14). Handa's reseller never passed the vulnerability notices on (technical volume, printed p.15). |
-| 2 | Which firmware version is running, and when was it installed? | The exact version string, checked against the vendor's PSIRT advisories | NPA: in 2025, 40 of the 71 victims who answered had an intrusion device with security patches missing. |
-| 3 | When does vendor support end for this model and version? | A date, and a funded replacement before it | CISA, FBI and the UK NCSC: "Maintain an inventory of all edge devices and their respective support timelines." |
-| 4 | Can the management interface be reached from the internet? | No. Only from a separate management network | CCCS: "network management interfaces (NMIs) should not be directly exposed to the Internet." |
-| 5 | What second factor do VPN users and administrators use? | No password-only accounts; phishing-resistant MFA for administrators | 39.8% of Japanese organizations NPA surveyed use ID and password only. Arctic Wolf saw logins to accounts with one-time passwords enabled. |
-| 6 | Which accounts are local to the box, and when were their passwords last set? | A list with dates; nothing carried over from an old unit | SonicWall traced its 2025 wave to "local user passwords" that "were carried over during the migration and not reset." |
-| 7 | Where do the logs go, and how long are they kept? | Off the box to a SIEM, kept longer than a zero-day stays undisclosed | NPA: only 25 of 102 ransomware victims in 2025 kept all their logs; 18 answers named an expired retention period. |
-| 8 | When was the appliance last checked for compromise, and with what? | A date, the tool, and a check that does not rely on the appliance alone | CISA: "Ivanti's internal and previous external ICT failed to detect compromise." |
-| 9 | After the last KEV entry for this product, were credentials reset? | Yes, with a date, covering local accounts, the LDAP bind account, RADIUS secrets and users | Fortinet, on the 87,000 leaked devices: "if the passwords were not reset, they remain vulnerable." |
-| 10 | Is there a plan to stop exposing network-level VPN access? | A dated plan that treats ZTNA gateways as edge software too | CCCS encourages organizations "to move from overreliance on boundary protections like edge devices". [CVE-2025-0282](https://nvd.nist.gov/vuln/detail/CVE-2025-0282) also affected Ivanti Neurons for ZTA gateways. |
-
-</div>
+<ActionSchedule lang="en" mainHead="Question" sideHead="A complete answer" rows={[
+    { do: `Who owns the appliance, and who patches it under the contract?`, side: `A named person, and a contract clause that makes the vendor pass on advisories and apply fixes`, why: `The Osaka committee found the responsibility split between the hospital and its vendors undefined (p.14). Handa’s reseller never passed the vulnerability notices on (technical volume, printed p.15).` },
+    { do: `Which firmware version is running, and when was it installed?`, side: `The exact version string, checked against the vendor’s PSIRT advisories`, why: `NPA: in 2025, 40 of the 71 victims who answered had an intrusion device with security patches missing.` },
+    { do: `When does vendor support end for this model and version?`, side: `A date, and a funded replacement before it`, why: `CISA, FBI and the UK NCSC: “Maintain an inventory of all edge devices and their respective support timelines.”` },
+    { do: `Can the management interface be reached from the internet?`, side: `No. Only from a separate management network`, why: `CCCS: “network management interfaces (NMIs) should not be directly exposed to the Internet.”` },
+    { do: `What second factor do VPN users and administrators use?`, side: `No password-only accounts; phishing-resistant MFA for administrators`, why: `39.8% of Japanese organizations NPA surveyed use ID and password only. Arctic Wolf saw logins to accounts with one-time passwords enabled.` },
+    { do: `Which accounts are local to the box, and when were their passwords last set?`, side: `A list with dates; nothing carried over from an old unit`, why: `SonicWall traced its 2025 wave to “local user passwords” that “were carried over during the migration and not reset.”` },
+    { do: `Where do the logs go, and how long are they kept?`, side: `Off the box to a SIEM, kept longer than a zero-day stays undisclosed`, why: `NPA: only 25 of 102 ransomware victims in 2025 kept all their logs; 18 answers named an expired retention period.` },
+    { do: `When was the appliance last checked for compromise, and with what?`, side: `A date, the tool, and a check that does not rely on the appliance alone`, why: `CISA: “Ivanti’s internal and previous external ICT failed to detect compromise.”` },
+    { do: `After the last KEV entry for this product, were credentials reset?`, side: `Yes, with a date, covering local accounts, the LDAP bind account, RADIUS secrets and users`, why: `Fortinet, on the 87,000 leaked devices: “if the passwords were not reset, they remain vulnerable.”` },
+    { do: `Is there a plan to stop exposing network-level VPN access?`, side: `A dated plan that treats ZTNA gateways as edge software too`, why: `CCCS encourages organizations “to move from overreliance on boundary protections like edge devices”. <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-0282">CVE-2025-0282</a> also affected Ivanti Neurons for ZTA gateways.` },
+]} />
 
 <SourceLine lang="en" ids={["osaka-report-2023", "handa-report-tech", "npa-r8h1-data", "cisa-eos-edge-2026", "cccs-itsm-80-101", "npa-leaflet-r7", "arcticwolf-akira-2025", "doors-sonicwall-2025", "npa-r7-data", "cisa-aa24-060b", "doors-fortinet-87000"]} />

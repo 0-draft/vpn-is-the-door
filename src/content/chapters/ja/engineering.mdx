@@ -12,6 +12,7 @@ import SectionCut from "../../../components/SectionCut.astro";
 import SourceLine from "../../../components/SourceLine.astro";
 import Summary from "../../../components/Summary.astro";
 import DoorMap from "../../../components/ch5/DoorMap.astro";
+import ActionSchedule from "../../../components/ch6/ActionSchedule.astro";
 
 <Summary lang="ja">
   <p>VPN 機器を部品に分け、ログイン前に応答するコード、パッチ後も残るアクセス、消えるログを1ページずつ扱う。末尾に、自社の機器について記録で答えるべき10の問いを置いた。</p>
@@ -35,21 +36,17 @@ import DoorMap from "../../../components/ch5/DoorMap.astro";
 
 特定の担当者の記憶に頼る答えは、ないものとして数える。
 
-<div class="table-scroll" tabindex="0">
-
-| # | 問い | 十分な答え | 載せた理由 |
-| --- | --- | --- | --- |
-| 1 | 機器の責任者は誰か。契約上、誰がパッチを当てるか | 氏名と、ベンダーに脆弱性情報の連絡と修正適用を義務づける契約条項 | 大阪急性期・総合医療センターでは病院と事業者の責任分界が不明瞭だった（p.14）。半田病院には販売店から脆弱性情報が届いていなかった（技術編 p.15）。 |
-| 2 | 稼働中のファームウェアの版と、適用した日はいつか | 正確な版番号と、ベンダーの PSIRT 情報との照合結果 | 警察庁の2025年の調査で、回答71件のうち40件の侵入口の機器に未適用のパッチがあった。 |
-| 3 | この機種と版のサポートはいつ終わるか | 終了日と、それより前の更改予算 | CISA・FBI・英国 NCSC: 「Maintain an inventory of all edge devices and their respective support timelines.」 |
-| 4 | 管理画面にインターネットから到達できるか | できない。別の管理用ネットワークからのみ到達できる | カナダ CCCS: 管理インターフェースは「should not be directly exposed to the Internet.」 |
-| 5 | VPN 利用者と管理者の第2要素は何か | ID とパスワードだけのアカウントがない。管理者はフィッシング耐性のある多要素認証 | 警察庁の調査で、リモート接続の認証が ID とパスワードのみの組織は39.8%。Arctic Wolf はワンタイムパスワードを有効にしたアカウントへのログインも観測している。 |
-| 6 | 機器内のローカルアカウントは何か。パスワードを最後に設定したのはいつか | 日付付きの一覧。旧機種から引き継いだものがない | SonicWall は2025年の被害の多くを、移行時に「carried over during the migration and not reset」だったローカルユーザーのパスワードに結び付けた。 |
-| 7 | ログはどこに送られ、何日保存されるか | 機器の外の SIEM に送り、ゼロデイが公表されるまでの期間より長く保存する | 警察庁の2025年の集計で、ランサムウェア被害102件のうちログを全て保全できたのは25件。「保存期間経過」を挙げた回答が18件あった。 |
-| 8 | 侵害の有無を最後に確認したのはいつか。何を使ったか | 日付、ツール名、機器自身の自己診断だけに頼らない確認 | CISA: 「Ivanti's internal and previous external ICT failed to detect compromise.」 |
-| 9 | この製品の直近の KEV 登録後、認証情報を再設定したか | した。日付があり、ローカルアカウント、LDAP 連携用アカウント、RADIUS の共有鍵、利用者まで含む | 8万7,000台分の情報流出について、Fortinet は「if the passwords were not reset, they remain vulnerable.」と警告した。 |
-| 10 | ネットワーク単位の VPN 接続をやめる計画はあるか | 日付入りの計画。ZTNA のゲートウェイも境界機器として扱う | CCCS は境界機器への過度の依存から離れるよう勧めている。[CVE-2025-0282](https://nvd.nist.gov/vuln/detail/CVE-2025-0282) は Ivanti Neurons for ZTA のゲートウェイにも影響した。 |
-
-</div>
+<ActionSchedule lang="ja" mainHead="問い" sideHead="十分な答え" rows={[
+    { do: `機器の責任者は誰か。契約上、誰がパッチを当てるか`, side: `氏名と、ベンダーに脆弱性情報の連絡と修正適用を義務づける契約条項`, why: `大阪急性期・総合医療センターでは病院と事業者の責任分界が不明瞭だった（p.14）。半田病院には販売店から脆弱性情報が届いていなかった（技術編 p.15）。` },
+    { do: `稼働中のファームウェアの版と、適用した日はいつか`, side: `正確な版番号と、ベンダーの PSIRT 情報との照合結果`, why: `警察庁の2025年の調査で、回答71件のうち40件の侵入口の機器に未適用のパッチがあった。` },
+    { do: `この機種と版のサポートはいつ終わるか`, side: `終了日と、それより前の更改予算`, why: `CISA・FBI・英国 NCSC: 「Maintain an inventory of all edge devices and their respective support timelines.」` },
+    { do: `管理画面にインターネットから到達できるか`, side: `できない。別の管理用ネットワークからのみ到達できる`, why: `カナダ CCCS: 管理インターフェースは「should not be directly exposed to the Internet.」` },
+    { do: `VPN 利用者と管理者の第2要素は何か`, side: `ID とパスワードだけのアカウントがない。管理者はフィッシング耐性のある多要素認証`, why: `警察庁の調査で、リモート接続の認証が ID とパスワードのみの組織は39.8%。Arctic Wolf はワンタイムパスワードを有効にしたアカウントへのログインも観測している。` },
+    { do: `機器内のローカルアカウントは何か。パスワードを最後に設定したのはいつか`, side: `日付付きの一覧。旧機種から引き継いだものがない`, why: `SonicWall は2025年の被害の多くを、移行時に「carried over during the migration and not reset」だったローカルユーザーのパスワードに結び付けた。` },
+    { do: `ログはどこに送られ、何日保存されるか`, side: `機器の外の SIEM に送り、ゼロデイが公表されるまでの期間より長く保存する`, why: `警察庁の2025年の集計で、ランサムウェア被害102件のうちログを全て保全できたのは25件。「保存期間経過」を挙げた回答が18件あった。` },
+    { do: `侵害の有無を最後に確認したのはいつか。何を使ったか`, side: `日付、ツール名、機器自身の自己診断だけに頼らない確認`, why: `CISA: 「Ivanti's internal and previous external ICT failed to detect compromise.」` },
+    { do: `この製品の直近の KEV 登録後、認証情報を再設定したか`, side: `した。日付があり、ローカルアカウント、LDAP 連携用アカウント、RADIUS の共有鍵、利用者まで含む`, why: `8万7,000台分の情報流出について、Fortinet は「if the passwords were not reset, they remain vulnerable.」と警告した。` },
+    { do: `ネットワーク単位の VPN 接続をやめる計画はあるか`, side: `日付入りの計画。ZTNA のゲートウェイも境界機器として扱う`, why: `CCCS は境界機器への過度の依存から離れるよう勧めている。<a href="https://nvd.nist.gov/vuln/detail/CVE-2025-0282">CVE-2025-0282</a> は Ivanti Neurons for ZTA のゲートウェイにも影響した。` },
+]} />
 
 <SourceLine lang="ja" ids={["osaka-report-2023", "handa-report-tech", "npa-r8h1-data", "cisa-eos-edge-2026", "cccs-itsm-80-101", "npa-leaflet-r7", "arcticwolf-akira-2025", "doors-sonicwall-2025", "npa-r7-data", "cisa-aa24-060b", "doors-fortinet-87000"]} />
