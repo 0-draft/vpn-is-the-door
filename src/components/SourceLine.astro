@@ -11,19 +11,35 @@ interface Props {
 const { lang, ids } = Astro.props;
 const items = ids.map((id) => source(id));
 
-// Closed by default: one short line ("出典: 警察庁 ほか2件") instead of a paragraph of titles.
-// Publisher names are cut at the first space ("CISA（米国）", not the full agency line).
-const short = [...new Set(items.map((s) => s.publisher[lang].split(/\s/)[0] ?? s.publisher[lang]))];
-const shown = short.slice(0, 1);
-const rest = items.length - shown.length;
-const more = rest > 0 ? (lang === "ja" ? ` ほか${rest}件` : ` +${rest}`) : "";
+// Closed by default: one line ("出典: 警察庁 ほか2件 [+]") instead of a paragraph of titles.
+// Long committee names get a short form here; every other publisher is shown whole.
+const SHORT: Record<string, { ja: string; en: string }> = {
+  "地方独立行政法人大阪府立病院機構 大阪急性期・総合医療センター 情報セキュリティインシデント調査委員会": {
+    ja: "大阪急性期・総合医療センター",
+    en: "Osaka General Medical Center",
+  },
+  "徳島県つるぎ町立半田病院 コンピュータウイルス感染事案有識者会議": { ja: "半田病院", en: "Handa Hospital" },
+  "ソフトウェア協会 Software ISAC 岡山県精神科医療センター ランサムウェア事案調査委員会": {
+    ja: "岡山県精神科医療センター",
+    en: "Okayama Psychiatric Medical Center",
+  },
+  "米国上院 国土安全保障・政府問題委員会": { ja: "米国上院", en: "US Senate" },
+  "オランダ MIVD・AIVD（NCSC-NL 掲載）": { ja: "オランダ MIVD・AIVD", en: "MIVD and AIVD" },
+  "英国 国家サイバーセキュリティセンター（NCSC）": { ja: "英国 NCSC", en: "UK NCSC" },
+  "CISA・FBI・MS-ISAC・ASD's ACSC（共同）": { ja: "CISA ほか", en: "CISA and partners" },
+};
+const first = items[0];
+const shown = first ? (SHORT[first.publisher.ja]?.[lang] ?? first.publisher[lang]) : "";
+const rest = items.length - 1;
+const more = rest > 0 ? (lang === "ja" ? `ほか${rest}件` : `+${rest} more`) : "";
 ---
 
 <details class="src">
   <summary>
-    <span class="src-k">{t(lang, "source")}</span>
-    <span class="src-who">{shown[0]}</span>
-    {more && <span class="src-more">{more.trim()}</span>}
+    <span class="src-k">{t(lang, "source")}:</span>
+    <span class="src-who">{shown}</span>
+    {more && <span class="src-more">{more}</span>}
+    <span class="src-tog mono" aria-hidden="true"></span>
   </summary>
   <ul class="src-list">
     {
@@ -47,27 +63,22 @@ const more = rest > 0 ? (lang === "ja" ? ` ほか${rest}件` : ` +${rest}`) : ""
   .src summary {
     cursor: pointer;
     inline-size: fit-content;
+    max-inline-size: 100%;
     list-style: none;
     display: inline-flex;
-    max-inline-size: 100%;
-    gap: 0.4em;
+    gap: 0.35em;
     align-items: baseline;
   }
   .src summary::-webkit-details-marker {
     display: none;
   }
-  .src summary::before {
-    content: "";
-    inline-size: 0.45em;
-    block-size: 0.45em;
-    border-inline-end: 1.5px solid currentColor;
-    border-block-end: 1.5px solid currentColor;
-    transform: rotate(-45deg);
-    transition: transform 0.15s var(--ease);
-    align-self: center;
+  /* [+] / [−] in the mono face: a footnote toggle, not a UI chevron */
+  .src-tog::before {
+    content: "[+]";
+    color: var(--instruct);
   }
-  .src[open] summary::before {
-    transform: rotate(45deg);
+  .src[open] .src-tog::before {
+    content: "[−]";
   }
   .src-k {
     color: var(--ink-2);
@@ -83,7 +94,7 @@ const more = rest > 0 ? (lang === "ja" ? ` ほか${rest}件` : ` +${rest}`) : ""
   .src-more {
     white-space: nowrap;
   }
-  .src summary:hover .src-who {
+  .src summary:hover .src-tog::before {
     text-decoration: underline;
   }
   .src-list {

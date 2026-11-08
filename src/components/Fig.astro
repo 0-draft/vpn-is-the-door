@@ -38,7 +38,9 @@ const hasData = Astro.slots.has("data");
         {sources.length > 0 && <SourceLine lang={lang} ids={sources} />}
         {hasData && (
           <details class="fig-data">
-            <summary>{t(lang, "data")}</summary>
+            <summary>
+              {t(lang, "data")} <span class="data-tog mono" aria-hidden="true" />
+            </summary>
             <div class="table-scroll" tabindex="0">
               <slot name="data" />
             </div>
@@ -124,8 +126,21 @@ const hasData = Astro.slots.has("data");
   }
   .fig-data summary {
     cursor: pointer;
-    color: var(--instruct);
+    color: var(--ink-2);
+    font-weight: 700;
     inline-size: fit-content;
+    list-style: none;
+  }
+  .fig-data summary::-webkit-details-marker {
+    display: none;
+  }
+  .data-tog::before {
+    content: "[+]";
+    font-weight: 400;
+    color: var(--instruct);
+  }
+  .fig-data[open] .data-tog::before {
+    content: "[−]";
   }
   .fig-data :global(table) {
     margin-block-start: 0.5rem;
