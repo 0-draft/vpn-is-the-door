@@ -1,0 +1,136 @@
+---
+// The four openings as cards under one plan, replacing four near-identical plan figures.
+// Each card: the opening's name on the plan, the NPA category, a share bar, the count,
+// and one or two short sentences.
+import { latest, pct, type RouteKey } from "../../data/stats";
+import { openingsBySize } from "../../lib/ch1";
+import type { Lang } from "../../lib/paths";
+
+interface Props {
+  lang: Lang;
+  /** one or two short sentences per opening (may contain links) */
+  notes: Record<RouteKey, string>;
+}
+
+const { lang, notes } = Astro.props;
+const ja = lang === "ja";
+const y = latest();
+const NAME: Record<RouteKey, { plan: string; npa: string }> = ja
+  ? {
+      vpn: { plan: "VPN の扉", npa: "VPN機器" },
+      rdp: { plan: "窓", npa: "リモートデスクトップ" },
+      other: { plan: "搬入口", npa: "その他" },
+      mail: { plan: "正面玄関", npa: "不審メールやその添付ファイル" },
+    }
+  : {
+      vpn: { plan: "VPN door", npa: "VPN appliance" },
+      rdp: { plan: "Window", npa: "Remote desktop" },
+      other: { plan: "Loading door", npa: "Other" },
+      mail: { plan: "Main entrance", npa: "Suspicious email or attachments" },
+    };
+const unit = ja ? "件" : "";
+---
+
+<ul class="oc">
+  {
+    openingsBySize(y).map((k) => {
+      const n = y.counts[k] ?? 0;
+      const p = pct(n, y.n);
+      return (
+        <li class:list={["oc-card", { "oc-hot": k === "vpn" }]} id={`opening-${k}`}>
+          <p class="oc-name">
+            <strong>{NAME[k].plan}</strong>
+            <span class="oc-npa">{NAME[k].npa}</span>
+          </p>
+          <p class="oc-num">
+            <span class="oc-n num">
+              {n}
+              <small>{unit}</small>
+            </span>
+            <span class="oc-p num">{p}%</span>
+          </p>
+          <span class="oc-bar" aria-hidden="true">
+            <span style={`inline-size:${p}%`} />
+          </span>
+          <p class="oc-note" set:html={notes[k]} />
+        </li>
+      );
+    })
+  }
+</ul>
+
+<style>
+  .oc {
+    list-style: none;
+    margin: 1.25rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    gap: 0.75rem;
+  }
+  .oc-card {
+    padding: 0.9rem 1rem 1rem;
+    background: var(--paper);
+    border-block-start: 3px solid var(--ink-2);
+  }
+  .oc-hot {
+    border-color: var(--intruder);
+  }
+  .oc-name {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.4;
+  }
+  .oc-name strong {
+    font-size: 1.0625rem;
+  }
+  .oc-npa {
+    font-size: 0.8125rem;
+    color: var(--ink-3);
+  }
+  .oc-num {
+    margin: 0.5rem 0 0.35rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+  .oc-n {
+    font-family: var(--font-en);
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .oc-n small {
+    font-family: var(--font);
+    font-size: 1rem;
+    font-weight: 700;
+    margin-inline-start: 0.1em;
+  }
+  .oc-hot .oc-n {
+    color: var(--intruder-text);
+  }
+  .oc-p {
+    font-size: 1rem;
+    color: var(--ink-2);
+  }
+  .oc-bar {
+    display: block;
+    block-size: 6px;
+    background: var(--hair);
+  }
+  .oc-bar span {
+    display: block;
+    block-size: 100%;
+    background: var(--ink-2);
+  }
+  .oc-hot .oc-bar span {
+    background: var(--intruder);
+  }
+  .oc-note {
+    margin: 0.7rem 0 0;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: var(--ink-2);
+  }
+</style>

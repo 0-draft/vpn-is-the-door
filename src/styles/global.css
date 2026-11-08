@@ -529,3 +529,61 @@ svg.dg {
   transition-duration: 0s !important;
   animation-duration: 0s !important;
 }
+
+/* Yes / partly / no checklist: replaces two-column "question / answer" tables. */
+.prose .can {
+  list-style: none;
+  padding: 0;
+  margin: 1.25rem 0 1.75rem;
+  display: grid;
+  gap: 0.5rem;
+}
+.prose .can li {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1.75rem minmax(0, 1fr);
+  column-gap: 0.6rem;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+.prose .can li::before {
+  content: "";
+  grid-row: 1 / span 2;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-en);
+  font-weight: 800;
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  text-align: center;
+  color: var(--paper);
+}
+.prose .can li[data-can="yes"]::before {
+  content: "✓";
+  background: var(--safe);
+}
+.prose .can li[data-can="part"]::before {
+  content: "△";
+  background: var(--ink-3);
+}
+.prose .can li[data-can="no"]::before {
+  content: "✕";
+  /* red is reserved for the intruder: "no" is a hollow grey mark */
+  background: none;
+  border: 1.5px solid var(--line);
+  color: var(--ink-2);
+  line-height: calc(1.5rem - 3px);
+}
+.prose .can :is(strong, span) {
+  grid-column: 2;
+}
+.prose .can strong {
+  display: block;
+  color: var(--ink);
+  font-size: 1rem;
+}
+
