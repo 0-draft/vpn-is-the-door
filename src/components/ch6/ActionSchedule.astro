@@ -1,0 +1,136 @@
+---
+// The chapter 6 measures as a ruled schedule, in the door schedule's manner:
+// the measure in bold, the owner (or, for engineers, the component) in its own
+// column, and the evidence one click away under "根拠 [+]".
+import type { Lang } from "../../lib/paths";
+
+interface Row {
+  do: string;
+  side: string;
+  why: string;
+}
+interface Props {
+  lang: Lang;
+  /** header of the side column: 担当, or 構成要素と識別子 */
+  sideHead: string;
+  rows: Row[];
+}
+
+const { lang, sideHead, rows } = Astro.props;
+const ja = lang === "ja";
+---
+
+<table class="as">
+  <thead>
+    <tr>
+      <th scope="col">{ja ? "対策" : "Measure"}</th>
+      <th scope="col">{sideHead}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {
+      rows.map((r) => (
+        <tr>
+          <td class="as-do">
+            <p class="as-what" set:html={r.do} />
+            <details class="as-why">
+              <summary>
+                {ja ? "根拠" : "Evidence"} <span class="as-tog mono" aria-hidden="true" />
+              </summary>
+              <p set:html={r.why} />
+            </details>
+          </td>
+          <td class="as-side">
+            <span class="as-side-k" aria-hidden="true">
+              {sideHead}
+            </span>
+            <span set:html={r.side} />
+          </td>
+        </tr>
+      ))
+    }
+  </tbody>
+</table>
+
+<style>
+  .as {
+    font-size: 1rem;
+  }
+  .as th:last-child {
+    inline-size: 32%;
+  }
+  .as td {
+    padding-block: 0.75rem;
+  }
+  .as-what {
+    margin: 0;
+    font-weight: 700;
+    line-height: 1.6;
+  }
+  .as-why {
+    margin-block-start: 0.3rem;
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+  }
+  .as-why summary {
+    cursor: pointer;
+    inline-size: fit-content;
+    list-style: none;
+    font-size: 0.875rem;
+  }
+  .as-why summary::-webkit-details-marker {
+    display: none;
+  }
+  .as-tog::before {
+    content: "[+]";
+    color: var(--instruct);
+  }
+  .as-why[open] .as-tog::before {
+    content: "[−]";
+  }
+  .as-why p {
+    margin: 0.3rem 0 0;
+    line-height: 1.7;
+  }
+  .as-side {
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+  }
+  .as-side-k {
+    display: none;
+  }
+  /* phones: the side column drops under the measure, with its label */
+  @media (max-width: 45em) {
+    .as thead {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+    .as,
+    .as tbody,
+    .as tr,
+    .as td {
+      display: block;
+    }
+    .as tr {
+      padding-block: 0.75rem;
+      border-block-end: 1px solid var(--hair);
+    }
+    .as td {
+      padding: 0;
+      border: 0;
+    }
+    .as-side {
+      margin-block-start: 0.4rem;
+    }
+    .as-side-k {
+      display: inline;
+      margin-inline-end: 0.5em;
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--ink-3);
+    }
+  }
+</style>
