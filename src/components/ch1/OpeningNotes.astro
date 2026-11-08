@@ -30,8 +30,8 @@ const NAME: Record<RouteKey, { en: { plan: string; npa: string }; ja: { plan: st
       <div class:list={["on-item", { "on-hot": k === "vpn" }]} id={`opening-${k}`}>
         <dt>
           <span class="on-key" aria-hidden="true" />
-          <span class="on-name">{NAME[k][lang].plan}</span>
-          <span class="on-npa">{NAME[k][lang].npa}</span>
+          <span class="on-name">{NAME[k][lang].plan}</span>{" "}
+          <span class="on-npa">{NAME[k][lang].npa}</span>{" "}
         </dt>
         <dd set:html={notes[k]} />
       </div>
@@ -67,6 +67,10 @@ const NAME: Record<RouteKey, { en: { plan: string; npa: string }; ja: { plan: st
     block-size: 10px;
     background: var(--ink-2);
     align-self: center;
+  }
+  /* the plan fades the other openings' squares; the key matches */
+  .on-item:not(.on-hot) .on-key {
+    opacity: 0.3;
   }
   .on-hot .on-key {
     background: var(--intruder);

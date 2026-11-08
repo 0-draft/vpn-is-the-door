@@ -36,8 +36,8 @@ const more = rest > 0 ? (lang === "ja" ? `ほか${rest}件` : `+${rest} more`) :
 
 <details class="src">
   <summary>
-    <span class="src-k">{t(lang, "source")}:</span>
-    <span class="src-who">{shown}</span>
+    <span class="src-k">{t(lang, "source")}:</span>{" "}
+    <span class="src-who">{shown}</span>{" "}
     {more && <span class="src-more">{more}</span>}
     <span class="src-tog mono" aria-hidden="true"></span>
   </summary>

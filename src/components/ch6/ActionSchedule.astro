@@ -1,7 +1,8 @@
 ---
 // The chapter 6 measures as a ruled schedule, in the door schedule's manner:
 // the measure in bold, the owner (or, for engineers, the component) in its own
-// column, and the evidence one click away under "根拠 [+]".
+// column, and the evidence one click away under "根拠 [+]". Explicit table roles
+// because phones restyle the rows as blocks, which can drop table semantics.
 import type { Lang } from "../../lib/paths";
 
 interface Row {
@@ -20,18 +21,18 @@ const { lang, sideHead, rows } = Astro.props;
 const ja = lang === "ja";
 ---
 
-<table class="as">
-  <thead>
-    <tr>
-      <th scope="col">{ja ? "対策" : "Measure"}</th>
-      <th scope="col">{sideHead}</th>
+<table class="as" role="table">
+  <thead role="rowgroup">
+    <tr role="row">
+      <th scope="col" role="columnheader">{ja ? "対策" : "Measure"}</th>
+      <th scope="col" role="columnheader">{sideHead}</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody role="rowgroup">
     {
       rows.map((r) => (
-        <tr>
-          <td class="as-do">
+        <tr role="row">
+          <td class="as-do" role="cell">
             <p class="as-what" set:html={r.do} />
             <details class="as-why">
               <summary>
@@ -40,8 +41,8 @@ const ja = lang === "ja";
               <p set:html={r.why} />
             </details>
           </td>
-          <td class="as-side">
-            <span class="as-side-k" aria-hidden="true">
+          <td class="as-side" role="cell">
+            <span class="as-side-k" aria-hidden="true" data-pagefind-ignore>
               {sideHead}
             </span>
             <span set:html={r.side} />
