@@ -10,33 +10,100 @@ interface Props {
 
 const { lang, ids } = Astro.props;
 const items = ids.map((id) => source(id));
+
+// Closed by default: one line ("出典: 警察庁 ほか2件 [+]") instead of a paragraph of titles.
+// Long committee names get a short form here; every other publisher is shown whole.
+const SHORT: Record<string, { ja: string; en: string }> = {
+  "地方独立行政法人大阪府立病院機構 大阪急性期・総合医療センター 情報セキュリティインシデント調査委員会": {
+    ja: "大阪急性期・総合医療センター",
+    en: "Osaka General Medical Center",
+  },
+  "徳島県つるぎ町立半田病院 コンピュータウイルス感染事案有識者会議": { ja: "半田病院", en: "Handa Hospital" },
+  "ソフトウェア協会 Software ISAC 岡山県精神科医療センター ランサムウェア事案調査委員会": {
+    ja: "岡山県精神科医療センター",
+    en: "Okayama Psychiatric Medical Center",
+  },
+  "米国上院 国土安全保障・政府問題委員会": { ja: "米国上院", en: "US Senate" },
+  "オランダ MIVD・AIVD（NCSC-NL 掲載）": { ja: "オランダ MIVD・AIVD", en: "MIVD and AIVD" },
+  "英国 国家サイバーセキュリティセンター（NCSC）": { ja: "英国 NCSC", en: "UK NCSC" },
+  "CISA・FBI・MS-ISAC・ASD's ACSC（共同）": { ja: "CISA ほか", en: "CISA and partners" },
+};
+const first = items[0];
+const shown = first ? (SHORT[first.publisher.ja]?.[lang] ?? first.publisher[lang]) : "";
+const rest = items.length - 1;
+const more = rest > 0 ? (lang === "ja" ? `ほか${rest}件` : `+${rest} more`) : "";
 ---
 
-<p class="src">
-  <span class="src-k">{t(lang, "source")}:</span>{" "}
-  {
-    items.map((s, i) => (
-      <>
-        {i > 0 && <span aria-hidden="true">; </span>}
-        <span>
+<details class="src">
+  <summary>
+    <span class="src-k">{t(lang, "source")}:</span>{" "}
+    <span class="src-who">{shown}</span>{" "}
+    {more && <span class="src-more">{more}</span>}
+    <span class="src-tog mono" aria-hidden="true"></span>
+  </summary>
+  <ul class="src-list">
+    {
+      items.map((s) => (
+        <li>
           {s.publisher[lang]} <a href={s.url}>{lang === "ja" || /^[\x00-\x7F]*$/.test(s.title) ? s.title : `「${s.title}」`}</a>
           {s.locator && <span class="src-loc"> ({s.locator})</span>}
-        </span>
-      </>
-    ))
-  }
-</p>
+        </li>
+      ))
+    }
+  </ul>
+</details>
 
 <style>
   .src {
-    margin: 0.35rem 0 0;
-    font-size: 0.9375rem;
+    margin: 0.5rem 0 0;
+    font-size: 0.875rem;
     line-height: 1.5;
     color: var(--ink-3);
+  }
+  .src summary {
+    cursor: pointer;
+    inline-size: fit-content;
+    max-inline-size: 100%;
+    list-style: none;
+    display: inline-flex;
+    gap: 0.35em;
+    align-items: baseline;
+  }
+  .src summary::-webkit-details-marker {
+    display: none;
+  }
+  /* [+] / [−] in the mono face: a footnote toggle, not a UI chevron */
+  .src-tog::before {
+    content: "[+]";
+    color: var(--instruct);
+  }
+  .src[open] .src-tog::before {
+    content: "[−]";
   }
   .src-k {
     color: var(--ink-2);
     font-weight: 700;
+    white-space: nowrap;
+  }
+  .src-who {
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .src-more {
+    white-space: nowrap;
+  }
+  .src summary:hover .src-tog::before {
+    text-decoration: underline;
+  }
+  .src-list {
+    margin: 0.4rem 0 0;
+    padding-inline-start: 1.1em;
+    font-size: 0.875rem;
+  }
+  .src-list li {
+    margin-block: 0.2em;
   }
   .src-loc {
     font-variant-numeric: tabular-nums;

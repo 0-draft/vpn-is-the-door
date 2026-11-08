@@ -67,33 +67,6 @@ const copy = {
       <p class="dek">{copy.dek}</p>
     </header>
 
-    <Summary lang={lang}>
-      {
-        ja ? (
-          <ol>
-            <li>
-              2025年、侵入経路が判明したランサムウェア被害92件のうち61件（66.3%）が VPN 機器からの侵入だった。不審メールは2件。
-            </li>
-            <li>VPN 機器は、社員が受付を通らずに外から入るための外壁の扉にあたる。インターネット上の誰でもこの扉の前に立てる。</li>
-            <li>機器の欠陥の多くはログインの前に突かれ、パスワードも多要素認証も確かめられないことがある。</li>
-            <li>
-              侵入者は社内の鍵（Active Directory）を奪い、バックアップを消し、データを持ち出し、最後に暗号化する。2025年、バックアップから復元を試みた{bf.n}件のうち{bf.failed}件が元に戻せなかった。
-            </li>
-          </ol>
-        ) : (
-          <ol>
-            <li>
-              In 2025, 61 of the 92 Japanese ransomware victims that could say how the attacker got in named their VPN appliance (66.3%). Email accounted for two.
-            </li>
-            <li>A VPN appliance is a door in the outer wall that lets staff in without passing reception. Anyone on the internet can walk up to it.</li>
-            <li>Most flaws in the appliance can be used before login, so the password and multi-factor authentication (MFA) may never be checked.</li>
-            <li>
-              Once inside, intruders take the master keys (Active Directory), delete the backups, copy data out and encrypt last. In 2025, {bf.failed} of {bf.n} victims that tried to restore from backup could not.
-            </li>
-          </ol>
-        )
-      }
-    </Summary>
 
     <section class="hero" aria-labelledby="hero-h">
       <h2 id="hero-h" class="visually-hidden">{ja ? "侵入口図" : "Point-of-entry plan"}</h2>
@@ -141,6 +114,30 @@ const copy = {
         </table>
       </Fig>
     </section>
+
+    <Summary lang={lang}>
+      {
+        ja ? (
+          <>
+            <p>
+              VPN 機器は、社員が受付を通らずに外から入るための外壁の扉にあたる。欠陥の多くはログインの前に突かれ、パスワードも多要素認証も確かめられないことがある。
+            </p>
+            <p>
+              侵入者は社内の鍵（Active Directory）を奪い、バックアップを消し、データを持ち出してから暗号化する。2025年、バックアップから復元を試みた{bf.n}件のうち{bf.failed}件が元に戻せなかった。
+            </p>
+          </>
+        ) : (
+          <>
+            <p>
+              A VPN appliance is a door in the outer wall that lets staff in without passing reception. Most of its flaws can be used before login, so the password and multi-factor authentication (MFA) may never be checked.
+            </p>
+            <p>
+              Once inside, intruders take the master keys (Active Directory), delete the backups and copy data out, and encrypt last. In 2025, {bf.failed} of {bf.n} victims that tried to restore from backup could not.
+            </p>
+          </>
+        )
+      }
+    </Summary>
 
     <Fig
       lang={lang}

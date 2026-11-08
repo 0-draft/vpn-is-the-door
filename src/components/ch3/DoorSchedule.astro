@@ -157,8 +157,6 @@ const total = VULNS.filter((v) => matches(v, all)).length;
       <table>
         <colgroup>
           <col class="c-cve" />
-          <col class="c-part" />
-          <col />
           <col class="c-kev" />
           <col class="c-patch" />
         </colgroup>
@@ -166,7 +164,6 @@ const total = VULNS.filter((v) => matches(v, all)).length;
           <tr>
             <th scope="col">{S.cve}</th>
             <th scope="col">{S.part}</th>
-            <th scope="col">{S.gets}</th>
             <th scope="col">{S.kev}</th>
             <th scope="col">{S.patchCol}</th>
           </tr>
@@ -175,7 +172,7 @@ const total = VULNS.filter((v) => matches(v, all)).length;
           groups.map(({ p, rows }) => (
             <tbody data-group={p.id}>
               <tr class="ex-group">
-                <th scope="colgroup" colspan="5">
+                <th scope="colgroup" colspan="4">
                   <span class="mono ex-mark">{p.mark}</span> {p.name[lang]}
                 </th>
               </tr>
@@ -210,10 +207,9 @@ const total = VULNS.filter((v) => matches(v, all)).length;
                         <span class="ex-chain">{S.post(v.chainedBehind ?? "")}</span>
                       )}
                     </td>
-                    <td>{v.gets[lang]}</td>
                     <td class="num">
                       {v.kevAdded}
-                      <span class="ex-sub">
+                      <span class:list={["ex-sub", "ex-ransom", { "is-known": v.ransomware === "Known" }]}>
                         {S.ransom}: {ransom(v)}
                       </span>
                     </td>
@@ -221,16 +217,16 @@ const total = VULNS.filter((v) => matches(v, all)).length;
                       {v.patch.enough ? (
                         <span class="ex-sub">{S.noReport}</span>
                       ) : (
-                        <>
-                          <span class="tag-caution">{S.no}</span> <span class="ex-reason">{v.patch.reason[lang]}</span>
-                        </>
+                        <span class="tag-caution">{S.no}</span>
                       )}
                     </td>
                   </tr>
                   <tr class="ex-detail" id={`rec-${anchor(v.cve)}`} data-rec={v.cve}>
-                    <td colspan="5">
+                    <td colspan="4">
                       <div class="ex-slot" data-slot />
                       <dl class="ex-dl">
+                        <dt>{S.gets}</dt>
+                        <dd>{v.gets[lang]}</dd>
                         <dt>{S.product}</dt>
                         <dd>
                           {p.name[lang]}{" "}
@@ -354,6 +350,12 @@ const total = VULNS.filter((v) => matches(v, all)).length;
         const top = row.getBoundingClientRect().top;
         const below = drawing ? drawing.getBoundingClientRect().bottom - innerHeight + 8 : 0;
         if (below > 0) scrollBy(0, Math.min(below, top - 8));
+      }
+      // wide: near the end of the table the sticky column runs out and lifts the drawing
+      // above the viewport; scroll back just enough to show it whole
+      if (push && wide.matches && drawing) {
+        const t = drawing.getBoundingClientRect().top;
+        if (t < 0) scrollBy(0, t - 16);
       }
       if (push) history.replaceState(null, "", `#${cve.toLowerCase()}`);
     };
@@ -533,21 +535,18 @@ const total = VULNS.filter((v) => matches(v, all)).length;
     border-block-start: 0;
   }
   .ex-table table {
-    min-inline-size: 42rem;
+    min-inline-size: 30rem;
     font-size: 0.875rem;
     table-layout: fixed;
   }
   .c-cve {
     inline-size: 9.5rem;
   }
-  .c-part {
-    inline-size: 7.75rem;
-  }
   .c-kev {
-    inline-size: 6.5rem;
+    inline-size: 7rem;
   }
   .c-patch {
-    inline-size: 9.75rem;
+    inline-size: 6.5rem;
   }
   .ex-table td.num {
     text-align: start;
@@ -619,10 +618,6 @@ const total = VULNS.filter((v) => matches(v, all)).length;
   .ex-pre {
     margin-block-start: 0.1rem;
   }
-  .ex-reason {
-    display: block;
-    margin-block-start: 0.25rem;
-  }
   .ex-detail > td {
     background: var(--sheet);
     padding: 0.75rem 1rem 1rem;
@@ -658,6 +653,99 @@ const total = VULNS.filter((v) => matches(v, all)).length;
     }
     .ex-dl dd {
       margin-block-end: 0.4rem;
+    }
+  }
+  /* KEV says ransomware campaigns used it: bold ink, not a boxed tag */
+  .ex-ransom.is-known {
+    color: var(--ink);
+    font-weight: 700;
+  }
+  /* phones: each row becomes a two-line card, no sideways scrolling.
+     line 1: CVE | patch verdict; line 2: part + pre-auth | KEV date */
+  @media (max-width: 45em) {
+    .ex-table table {
+      display: block;
+      min-inline-size: 0;
+    }
+    .ex-table td.num {
+      white-space: normal;
+    }
+    .ex-table thead {
+      display: block;
+    }
+    .ex-table thead tr {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas: "cve patch" "part kev";
+      column-gap: 0.75rem;
+      border-block-end: 2px solid var(--ink);
+      padding-block-end: 0.3rem;
+    }
+    .ex-table thead th {
+      border: 0;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    .ex-table thead th:nth-child(1) {
+      grid-area: cve;
+    }
+    .ex-table thead th:nth-child(2) {
+      grid-area: part;
+    }
+    .ex-table thead th:nth-child(3) {
+      grid-area: kev;
+      text-align: end;
+    }
+    .ex-table thead th:nth-child(4) {
+      grid-area: patch;
+      text-align: end;
+    }
+    .ex-table tbody,
+    .ex-group,
+    .ex-group th {
+      display: block;
+    }
+    .ex-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas: "cve patch" "part kev";
+      column-gap: 0.75rem;
+      padding-block: 0.6rem;
+      border-block-end: 1px solid var(--hair);
+    }
+    .ex-row > td {
+      border: 0;
+      padding: 0;
+    }
+    .ex-row > td:nth-child(1) {
+      grid-area: cve;
+    }
+    .ex-row > td:nth-child(2) {
+      grid-area: part;
+      margin-block-start: 0.35rem;
+    }
+    .ex-row > td:nth-child(3) {
+      grid-area: kev;
+      margin-block-start: 0.35rem;
+      text-align: end;
+    }
+    .ex-row > td:nth-child(4) {
+      grid-area: patch;
+      text-align: end;
+    }
+    .ex-row[data-selected] > td {
+      background: none;
+    }
+    .ex-row[data-selected] > td:first-child {
+      box-shadow: none;
+    }
+    .ex-row[data-selected] {
+      background: var(--marker);
+      box-shadow: inset 3px 0 0 var(--intruder);
+    }
+    .ex-detail,
+    .ex-detail > td {
+      display: block;
     }
   }
   [hidden] {

@@ -12,6 +12,14 @@ export interface Revision {
 
 export const REVISIONS: Revision[] = [
   {
+    rev: 6,
+    date: "2026-11-08",
+    change: {
+      en: "Layout made easier to scan. Each page's summary cut to two or three sentences. In chapter 1, the four floor plans drawn per opening became one plan with a note for each opening. In chapter 2, the hospital report tables are laid out by step. In chapter 6, the measure tables became a two-column schedule with the evidence folded. The door schedule and the case index were cut to four columns. Each figure's sources fold into one line.",
+      ja: "流し読みしやすい配置に変えた。各ページの要旨を2〜3文に短縮。第1章で開口部ごとに4枚あった平面図を1枚にまとめ、開口部ごとの注記を付けた。第2章の病院の報告書の表を手順ごとに区切った。第6章の対策の表を2列にし、根拠をたたんだ。建具表と事例の一覧を4列に削減。図の出典を1行にたたんだ。",
+    },
+  },
+  {
     rev: 5,
     date: "2026-10-27",
     change: {

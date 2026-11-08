@@ -21,8 +21,8 @@ import { scheduleStats } from "../../../data/doors";
 export const ST = scheduleStats();
 
 <Summary lang="en">
-  <p>The door schedule on this page lists {ST.total} flaws in the VPN appliances of seven vendors, each confirmed by CISA as used by attackers. {ST.preauth} of them can be reached before anyone logs in, and for most of those a strong password and multi-factor authentication (MFA) never come into play.</p>
-  <p>{ST.zeroDay} were used before the vendor published a warning. For {ST.patchNotEnough}, the vendor or a government agency says the patch alone was not enough: stolen passwords, sessions or implants outlasted it.</p>
+  <p>{ST.total} flaws in seven vendors' VPN appliances, each confirmed by CISA as used by attackers. {ST.preauth} can be reached before login, and for most of those the password and MFA never come into play.</p>
+  <p>{ST.zeroDay} were used before the vendor published a warning. For {ST.patchNotEnough}, the vendor or a government agency says the patch alone was not enough.</p>
 </Summary>
 
 ## A door facing the internet

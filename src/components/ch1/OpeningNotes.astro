@@ -1,0 +1,91 @@
+---
+// Drawing notes under the opening plan: one note per opening, keyed by the same
+// tally square the plan uses, so the plan carries the counts and the notes carry
+// the words. Largest opening first.
+import type { RouteKey } from "../../data/stats";
+import { openingsBySize } from "../../lib/ch1";
+import type { Lang } from "../../lib/paths";
+
+interface Props {
+  lang: Lang;
+  /** one or two short sentences per opening (may contain links) */
+  notes: Record<RouteKey, string>;
+}
+
+const { lang, notes } = Astro.props;
+const NAME: Record<RouteKey, { en: { plan: string; npa: string }; ja: { plan: string; npa: string } }> = {
+  vpn: { ja: { plan: "VPN の扉", npa: "VPN機器" }, en: { plan: "VPN door", npa: "VPN appliance" } },
+  rdp: { ja: { plan: "窓", npa: "リモートデスクトップ" }, en: { plan: "Window", npa: "Remote desktop" } },
+  other: { ja: { plan: "搬入口", npa: "その他" }, en: { plan: "Loading door", npa: "Other" } },
+  mail: {
+    ja: { plan: "正面玄関", npa: "不審メールやその添付ファイル" },
+    en: { plan: "Main entrance", npa: "Suspicious email or attachments" },
+  },
+};
+---
+
+<dl class="on">
+  {
+    openingsBySize().map((k) => (
+      <div class:list={["on-item", { "on-hot": k === "vpn" }]} id={`opening-${k}`}>
+        <dt>
+          <span class="on-key" aria-hidden="true" />
+          <span class="on-name">{NAME[k][lang].plan}</span>{" "}
+          <span class="on-npa">{NAME[k][lang].npa}</span>{" "}
+        </dt>
+        <dd set:html={notes[k]} />
+      </div>
+    ))
+  }
+</dl>
+
+<style>
+  .on {
+    margin: 1.25rem 0 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 2rem;
+  }
+  @media (max-width: 45em) {
+    .on {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  .on-item {
+    padding-block: 0.6rem 0.8rem;
+    border-block-start: 1px solid var(--hair);
+  }
+  .on dt {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 0.5rem;
+  }
+  /* the plan's own tally square, as a legend key */
+  .on-key {
+    inline-size: 10px;
+    block-size: 10px;
+    background: var(--ink-2);
+    align-self: center;
+  }
+  /* the plan fades the other openings' squares; the key matches */
+  .on-item:not(.on-hot) .on-key {
+    opacity: 0.3;
+  }
+  .on-hot .on-key {
+    background: var(--intruder);
+  }
+  .on-name {
+    font-weight: 700;
+  }
+  .on-npa {
+    font-size: 0.875rem;
+    color: var(--ink-3);
+  }
+  .on dd {
+    margin: 0.3rem 0 0;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--ink-2);
+  }
+</style>

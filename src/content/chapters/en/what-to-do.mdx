@@ -6,6 +6,7 @@ chapter: what
 path: /what-to-do/
 ---
 
+import ActionSchedule from "../../../components/ch6/ActionSchedule.astro";
 import CloseTheDoor from "../../../components/ch6/CloseTheDoor.astro";
 import PatchClock from "../../../components/ch6/PatchClock.astro";
 import Fig from "../../../components/Fig.astro";
@@ -15,8 +16,8 @@ import Summary from "../../../components/Summary.astro";
 import { HEADLINE } from "../../../data/stats";
 
 <Summary lang="en">
-  <p>Every control works at one point on the intruder's route. A patch does nothing against a flaw exploited before the fix existed, multi-factor authentication (MFA) nothing against a flaw reached before login. An offline backup undoes the encryption but not the leak.</p>
-  <p>Leadership decides three things: an owner for every internet-facing device, how many days a fix may take, and the budget for a backup the intruder cannot reach. [Fig. 6-5](#fig-6-5) lets you switch each control on and see where the route stops.</p>
+  <p>Every control works at one point on the intruder's route. A patch does nothing against a flaw exploited before the fix existed, and MFA nothing against a flaw reached before login.</p>
+  <p>Leadership decides three things: an owner for every internet-facing device, how many days a fix may take, and the budget for a backup the intruder cannot reach. [Fig. 6-5](#fig-6-5) lets you try each control.</p>
 </Summary>
 
 ## What leadership decides
@@ -39,20 +40,15 @@ Exploitation of a published flaw starts within days; measured fixes take a month
 CISA's three-day tier comes with a forensic triage of the device to check whether it was already compromised. Put the deadline and the compromise check in the same rule.
 
 <Fig lang="en" n="6-2" caption="Decisions for leadership, with the reason for each and who owns it" sources={["osaka-report-2023", "handa-report-tech", "cisa-bod-26-04", "dbir-2025", "npa-leaflet-r7", "cisa-aa24-109a", "cisa-eos-edge-2026", "npa-r7-data", "handa-report-main", "cve-2025-0282"]}>
-  <div class="table-scroll" tabindex="0">
-    <table>
-      <thead><tr><th scope="col">Decision</th><th scope="col">Why</th><th scope="col">Owner</th></tr></thead>
-      <tbody>
-        <tr><td>Name an owner for every internet-facing device, including remote-maintenance appliances vendors install.</td><td>At Osaka, who maintained and patched the catering vendor's VPN appliance was unclear. At Handa, the vendors never passed on the VPN vulnerability notices.</td><td>CEO. Vendor contracts say who patches and who reports flaws.</td></tr>
-        <tr><td>Set a patch deadline in days for exploited flaws on internet-facing devices, with a compromise check.</td><td>CISA's tightest tier is 3 days. The measured median for edge devices is 32 days. NPA found 52% of Japanese organizations using VPN appliances had not applied the latest patch.</td><td>Leadership sets it; the IT team reports against it.</td></tr>
-        <tr><td>Fund MFA for all remote access.</td><td>39.8% of Japanese organizations authenticate remote access with an ID and password alone (NPA). CISA reports Akira entering through VPNs that had no MFA.</td><td>Leadership funds; the IT team rolls out.</td></tr>
-        <tr><td>Replace edge devices that are out of support, on a funded schedule.</td><td>A device past end of support gets no more fixes. The Osaka entry device had never been updated and was still on firmware 5.4.2.</td><td>Leadership, as a capital budget line.</td></tr>
-        <tr><td>Fund a backup the intruder cannot reach, and regular restore tests.</td><td>In 2025, {HEADLINE.backupFail2025.failed} of {HEADLINE.backupFail2025.n} victims that tried to restore from backup could not. In {HEADLINE.backupFail2025.encrypted} cases the backups were encrypted too.</td><td>Leadership funds; the IT team tests.</td></tr>
-        <tr><td>Sign an incident-response retainer in advance, and keep logs long enough to investigate.</td><td>At both hospitals, a maintenance vendor upgraded the firmware before the VPN logs were preserved, and the logs were lost.</td><td>Leadership.</td></tr>
-        <tr><td>Plan the move away from network-wide VPN access. The replacement is internet-facing software too.</td><td>CVE-2025-0282, a pre-auth flaw in Ivanti Connect Secure, also affected Ivanti Neurons for ZTA gateways.</td><td>Leadership, with the IT lead.</td></tr>
-      </tbody>
-    </table>
-  </div>
+  <ActionSchedule lang="en" sideHead="Owner" rows={[
+    { do: `Name an owner for every internet-facing device, including remote-maintenance appliances vendors install.`, side: `CEO. Vendor contracts say who patches and who reports flaws.`, why: `At Osaka, who maintained and patched the catering vendor’s VPN appliance was unclear. At Handa, the vendors never passed on the VPN vulnerability notices.` },
+    { do: `Set a patch deadline in days for exploited flaws on internet-facing devices, with a compromise check.`, side: `Leadership sets it; the IT team reports against it.`, why: `CISA’s tightest tier is 3 days. The measured median for edge devices is 32 days. NPA found 52% of Japanese organizations using VPN appliances had not applied the latest patch.` },
+    { do: `Fund MFA for all remote access.`, side: `Leadership funds; the IT team rolls out.`, why: `39.8% of Japanese organizations authenticate remote access with an ID and password alone (NPA). CISA reports Akira entering through VPNs that had no MFA.` },
+    { do: `Replace edge devices that are out of support, on a funded schedule.`, side: `Leadership, as a capital budget line.`, why: `A device past end of support gets no more fixes. The Osaka entry device had never been updated and was still on firmware 5.4.2.` },
+    { do: `Fund a backup the intruder cannot reach, and regular restore tests.`, side: `Leadership funds; the IT team tests.`, why: `In 2025, ${HEADLINE.backupFail2025.failed} of ${HEADLINE.backupFail2025.n} victims that tried to restore from backup could not. In ${HEADLINE.backupFail2025.encrypted} cases the backups were encrypted too.` },
+    { do: `Sign an incident-response retainer in advance, and keep logs long enough to investigate.`, side: `Leadership.`, why: `At both hospitals, a maintenance vendor upgraded the firmware before the VPN logs were preserved, and the logs were lost.` },
+    { do: `Plan the move away from network-wide VPN access. The replacement is internet-facing software too.`, side: `Leadership, with the IT lead.`, why: `CVE-2025-0282, a pre-auth flaw in Ivanti Connect Secure, also affected Ivanti Neurons for ZTA gateways.` },
+  ]} />
 </Fig>
 
 With zero-trust network access (ZTNA) products a stolen password reaches one application instead of the whole network. They still answer the internet, and get CVEs and patches like any VPN.
@@ -62,44 +58,34 @@ With zero-trust network access (ZTNA) products a stolen password reaches one app
 Most of these items cost staff time more than money.
 
 <Fig lang="en" n="6-3" caption="Work for the IT team, with the reason for each and who owns it" sources={["osaka-report-2023", "cisa-eos-edge-2026", "cisa-kev", "npa-r8h1-data", "jpcert-ir-2024q2", "cisa-aa24-109a", "handa-report-main"]}>
-  <div class="table-scroll" tabindex="0">
-    <table>
-      <thead><tr><th scope="col">Task</th><th scope="col">Why</th><th scope="col">Owner</th></tr></thead>
-      <tbody>
-        <tr><td>Keep a list of every internet-facing device: model, firmware version, end-of-support date, owner, maintaining vendor.</td><td>Osaka had no asset inventory. CISA, FBI and NCSC ask for one covering edge devices and their support timelines.</td><td>IT team. Vendors supply the data for their devices.</td></tr>
-        <tr><td>Check the CISA KEV catalog and vendor advisories every working day; patch to the deadline.</td><td>KEV lists flaws already used in attacks. In NPA's data for 2022 to 2025, the entry device was missing patches in {HEADLINE.unpatched.yes} of {HEADLINE.unpatched.n} cases.</td><td>IT team.</td></tr>
-        <tr><td>After any flaw in the VPN appliance, change every password it held and end all sessions, even if it is patched.</td><td>JPCERT/CC handled intrusions into patched SSL-VPN appliances with credentials stolen before the patch.</td><td>IT team. Vendors reset their own accounts.</td></tr>
-        <tr><td>MFA on every VPN account. Delete unused accounts, contractors' included.</td><td>CISA's Akira advisory names VPN access without MFA as an entry point.</td><td>IT team.</td></tr>
-        <tr><td>Separate admin accounts for administrators; a different local administrator password on every server.</td><td>At Osaka, one built-in Administrator password shared across servers made lateral movement easy.</td><td>IT team.</td></tr>
-        <tr><td>One backup copy offline or immutable, under separate credentials; test a restore.</td><td>Osaka's critical-care backups were online only and could not be used. Offline tapes restored the rest. At Handa, offline backups up to 2018 survived; later data was recovered by the forensics vendor.</td><td>IT team.</td></tr>
-        <tr><td>Before touching a suspect device, export its logs and configuration.</td><td>At both hospitals, the firmware upgrade erased the VPN logs.</td><td>IT team, with the vendor.</td></tr>
-      </tbody>
-    </table>
-  </div>
+  <ActionSchedule lang="en" sideHead="Owner" rows={[
+    { do: `Keep a list of every internet-facing device: model, firmware version, end-of-support date, owner, maintaining vendor.`, side: `IT team. Vendors supply the data for their devices.`, why: `Osaka had no asset inventory. CISA, FBI and NCSC ask for one covering edge devices and their support timelines.` },
+    { do: `Check the CISA KEV catalog and vendor advisories every working day; patch to the deadline.`, side: `IT team.`, why: `KEV lists flaws already used in attacks. In NPA’s data for 2022 to 2025, the entry device was missing patches in ${HEADLINE.unpatched.yes} of ${HEADLINE.unpatched.n} cases.` },
+    { do: `After any flaw in the VPN appliance, change every password it held and end all sessions, even if it is patched.`, side: `IT team. Vendors reset their own accounts.`, why: `JPCERT/CC handled intrusions into patched SSL-VPN appliances with credentials stolen before the patch.` },
+    { do: `MFA on every VPN account. Delete unused accounts, contractors’ included.`, side: `IT team.`, why: `CISA’s Akira advisory names VPN access without MFA as an entry point.` },
+    { do: `Separate admin accounts for administrators; a different local administrator password on every server.`, side: `IT team.`, why: `At Osaka, one built-in Administrator password shared across servers made lateral movement easy.` },
+    { do: `One backup copy offline or immutable, under separate credentials; test a restore.`, side: `IT team.`, why: `Osaka’s critical-care backups were online only and could not be used. Offline tapes restored the rest. At Handa, offline backups up to 2018 survived; later data was recovered by the forensics vendor.` },
+    { do: `Before touching a suspect device, export its logs and configuration.`, side: `IT team, with the vendor.`, why: `At both hospitals, the firmware upgrade erased the VPN logs.` },
+  ]} />
 </Fig>
 
-In the remaining cases the device was patched and the intruder still got in. NPA's data does not say how. JPCERT/CC documents one way: a password copied before the patch.
+In the remaining cases the device was patched and the intruder still got in. NPA’s data does not say how. JPCERT/CC documents one way: a password copied before the patch.
 
 <SectionCut lang="en" />
 
 ## What engineers check
 
 <Fig lang="en" n="6-4" caption="Checks for engineers, with the component, the identifier and the evidence" sources={["cccs-itsm-80-101", "handa-report-tech", "fortinet-psirt-2025-04", "cisa-aa24-060b", "mandiant-ivanti-2025", "arcticwolf-akira-2025", "osaka-report-2023", "mitre-attack", "cve-2025-0282", "jpcert-at-2025-0001"]}>
-  <div class="table-scroll" tabindex="0">
-    <table>
-      <thead><tr><th scope="col">Check</th><th scope="col">Component and identifier</th><th scope="col">Evidence</th></tr></thead>
-      <tbody>
-        <tr><td>The management interface is not reachable from the internet. The portal is limited by source address where the use case allows.</td><td>Management plane; CCCS ITSM.80.101</td><td>CCCS: management interfaces "should not be directly exposed to the Internet." Handa's appliance accepted any address.</td></tr>
-        <tr><td>After a VPN KEV: preserve, then upgrade from a clean image or factory reset. Reset local users, admin accounts, the LDAP/AD bind account, RADIUS secrets, certificates and API tokens. Revoke sessions.</td><td>Credential store, session cache; <a href="https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-060b">AA24-060B</a></td><td>Fortinet: a symbolic link kept read-only file access after the fix. Mandiant: SPAWNANT persists across Ivanti upgrades. CISA: assume stored credentials are compromised.</td></tr>
-        <tr><td>Phishing-resistant MFA for admin access. One-time codes alone are not enough.</td><td>Authentication backend; T1078 Valid Accounts</td><td>Arctic Wolf saw OTP-protected SonicWall accounts logged into during the 2025 Akira campaign.</td></tr>
-        <tr><td>VPN users and vendors land in a restricted zone. No always-on RDP from vendor networks.</td><td>Address pool and firewall policy; T1021.001 Remote Desktop Protocol</td><td>At Osaka, always-on RDP from the vendor's server was the way in. The report found it was not needed.</td></tr>
-        <tr><td>Logs go off the appliance to a SIEM; admin logons and configuration changes raise alerts.</td><td>syslog forwarding; CCCS ITSM.80.101</td><td>CCCS: "Enable centralized (off-device) logging" and alert on successful administrative log-ons and configuration changes.</td></tr>
-        <tr><td>Check integrity from outside as well as with the on-box tool.</td><td>Integrity Checker Tool (Ivanti); running-config baseline</td><td>CISA found Ivanti's internal and earlier external integrity checks missed the compromise.</td></tr>
-        <tr><td>Backup server credentials separate from the domain; alerts on backup deletion.</td><td>Backup service accounts; T1490 Inhibit System Recovery</td><td>Arctic Wolf describes Akira reading Veeam Backup &amp; Replication credentials before encrypting.</td></tr>
-        <tr><td>A ZTNA gateway gets the same patch deadline and log checks as the VPN.</td><td><a href="https://www.cve.org/CVERecord?id=CVE-2025-0282">CVE-2025-0282</a>, Ivanti Neurons for ZTA gateways before 22.7R2.3</td><td>The same pre-auth flaw as Connect Secure. JPCERT/CC confirmed exploitation in Japan from late December 2024, before publication.</td></tr>
-      </tbody>
-    </table>
-  </div>
+  <ActionSchedule lang="en" sideHead="Component and identifier" rows={[
+    { do: `The management interface is not reachable from the internet. The portal is limited by source address where the use case allows.`, side: `Management plane; CCCS ITSM.80.101`, why: `CCCS: management interfaces “should not be directly exposed to the Internet.” Handa’s appliance accepted any address.` },
+    { do: `After a VPN KEV: preserve, then upgrade from a clean image or factory reset. Reset local users, admin accounts, the LDAP/AD bind account, RADIUS secrets, certificates and API tokens. Revoke sessions.`, side: `Credential store, session cache; <a href="https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-060b">AA24-060B</a>`, why: `Fortinet: a symbolic link kept read-only file access after the fix. Mandiant: SPAWNANT persists across Ivanti upgrades. CISA: assume stored credentials are compromised.` },
+    { do: `Phishing-resistant MFA for admin access. One-time codes alone are not enough.`, side: `Authentication backend; T1078 Valid Accounts`, why: `Arctic Wolf saw OTP-protected SonicWall accounts logged into during the 2025 Akira campaign.` },
+    { do: `VPN users and vendors land in a restricted zone. No always-on RDP from vendor networks.`, side: `Address pool and firewall policy; T1021.001 Remote Desktop Protocol`, why: `At Osaka, always-on RDP from the vendor’s server was the way in. The report found it was not needed.` },
+    { do: `Logs go off the appliance to a SIEM; admin logons and configuration changes raise alerts.`, side: `syslog forwarding; CCCS ITSM.80.101`, why: `CCCS: “Enable centralized (off-device) logging” and alert on successful administrative log-ons and configuration changes.` },
+    { do: `Check integrity from outside as well as with the on-box tool.`, side: `Integrity Checker Tool (Ivanti); running-config baseline`, why: `CISA found Ivanti’s internal and earlier external integrity checks missed the compromise.` },
+    { do: `Backup server credentials separate from the domain; alerts on backup deletion.`, side: `Backup service accounts; T1490 Inhibit System Recovery`, why: `Arctic Wolf describes Akira reading Veeam Backup &amp; Replication credentials before encrypting.` },
+    { do: `A ZTNA gateway gets the same patch deadline and log checks as the VPN.`, side: `<a href="https://www.cve.org/CVERecord?id=CVE-2025-0282">CVE-2025-0282</a>, Ivanti Neurons for ZTA gateways before 22.7R2.3`, why: `The same pre-auth flaw as Connect Secure. JPCERT/CC confirmed exploitation in Japan from late December 2024, before publication.` },
+  ]} />
 </Fig>
 
 After a VPN KEV: preserve, then patch or rebuild, then reset credentials, then hunt behind the device. Patching first destroys the logs that show whether a reset and a hunt are needed.
@@ -108,7 +94,7 @@ After a VPN KEV: preserve, then patch or rebuild, then reset credentials, then h
 
 On the plan from [chapter 2](../after-the-door/), choose how the intruder gets in, then switch on controls.
 
-The scenarios are fixed. The stolen password belongs to a VPN account nobody uses any more. The pre-auth flaw is first exploited on day 5 after the fix is published, close to Mandiant's 2023 average. The zero-day is exploited before any fix exists, as JPCERT/CC reported for CVE-2025-0282 in Japan.
+The scenarios are fixed. The stolen password belongs to a VPN account nobody uses any more. The pre-auth flaw is first exploited on day 5 after the fix is published, close to Mandiant’s 2023 average. The zero-day is exploited before any fix exists, as JPCERT/CC reported for CVE-2025-0282 in Japan.
 
 <SourceLine lang="en" ids={["mandiant-tte-2023", "jpcert-at-2025-0001"]} />
 

@@ -529,3 +529,64 @@ svg.dg {
   transition-duration: 0s !important;
   animation-duration: 0s !important;
 }
+
+/* Step-by-step record tables (ch. 2 hospital reports): the step number is shown
+   once, on the first row of each step, in the chapter's step marker; a rule
+   separates steps. Rows that continue a step (.cont) carry the number for
+   screen readers only. Kept as a real table so its semantics survive. */
+table.steps {
+  font-size: 0.9375rem;
+}
+table.steps thead {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+table.steps td {
+  border: 0;
+  border-block-start: 1px solid var(--ink-2);
+  padding: 0.5rem 0.75rem 0.5rem 0;
+  line-height: 1.65;
+}
+table.steps tr.cont td {
+  border-block-start: 0;
+  padding-block-start: 0;
+}
+table.steps td:first-child {
+  inline-size: 3.25rem;
+}
+table.steps .step-n {
+  display: inline-block;
+  min-inline-size: 1.75rem;
+  block-size: 1.75rem;
+  padding: 0 0.3rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--intruder);
+  color: var(--intruder-text);
+  font-family: var(--font-en);
+  font-weight: 800;
+  font-size: 0.875rem;
+  line-height: calc(1.75rem - 3px);
+  text-align: center;
+}
+/* "after the attack" is not a step of the route: a square tag in ink */
+table.steps tr.after .step-n {
+  white-space: nowrap;
+  border-radius: 0;
+  border-color: var(--ink-2);
+  color: var(--ink);
+  font-family: var(--font);
+}
+table.steps td:last-child {
+  padding-inline-end: 0;
+  font-size: 0.875rem;
+  color: var(--ink-3);
+  white-space: nowrap;
+  text-align: end;
+}
+/* a bare page number gets its "p." back once the header row is hidden */
+table.steps td.num:last-child::before {
+  content: "p. ";
+}
