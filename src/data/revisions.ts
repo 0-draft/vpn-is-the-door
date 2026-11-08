@@ -12,6 +12,14 @@ export interface Revision {
 
 export const REVISIONS: Revision[] = [
   {
+    rev: 6,
+    date: "2026-11-08",
+    change: {
+      en: "Made the pages easier to scan: key points as large numbers at the top of each page; chapter 1's four repeated floor plans merged into one plan with a card per opening; chapter 6's action tables turned into cards with owners as chips and the reason folded; the door schedule and case index cut to four columns; source lists folded into one line under each figure.",
+      ja: "流し読みしやすくした。各ページの冒頭の要旨を大きな数字の要点に変更。第1章で4回繰り返していた平面図を1枚にまとめ、開口部ごとのカードを付けた。第6章の対策の表を、担当をチップで示し理由を折りたたむカードに変更。建具表と事例の一覧を4列に削減。図の出典は1行にたたんだ。",
+    },
+  },
+  {
     rev: 5,
     date: "2026-10-27",
     change: {
