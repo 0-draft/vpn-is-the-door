@@ -1,0 +1,119 @@
+---
+// One card per action, replacing the three-column "action / reason / owner" tables.
+// The action is the only text shown at full size; owners are chips; the reason
+// (with its evidence) is one tap away, so the list scans as a checklist.
+import type { Lang } from "../../lib/paths";
+
+export type Owner = "exec" | "it" | "vendor" | "eng";
+interface Item {
+  do: string;
+  who: Owner[];
+  why: string;
+  /** engineer layer: the component or identifier, set in mono */
+  id?: string;
+}
+interface Props {
+  lang: Lang;
+  items: Item[];
+}
+
+const { lang, items } = Astro.props;
+const ja = lang === "ja";
+const OWNER: Record<Owner, string> = ja
+  ? { exec: "経営", it: "情シス", vendor: "保守ベンダー", eng: "技術者" }
+  : { exec: "Leadership", it: "IT", vendor: "Vendor", eng: "Engineers" };
+const why = ja ? "理由" : "Why";
+---
+
+<ol class="acts">
+  {
+    items.map((it, i) => (
+      <li class="act">
+        <span class="act-n" aria-hidden="true">{i + 1}</span>
+        <div class="act-main">
+          <p class="act-do" set:html={it.do} />
+          <div class="act-meta">
+            {it.who.map((w) => <span class:list={["act-who", `who-${w}`]}>{OWNER[w]}</span>)}
+            {it.id && <code class="act-id" set:html={it.id} />}
+          </div>
+          <details class="act-why">
+            <summary>{why}</summary>
+            <p set:html={it.why} />
+          </details>
+        </div>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .acts {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+    gap: 0.75rem;
+  }
+  .act {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 0.75rem;
+    padding: 1rem 1rem 0.75rem;
+    background: var(--paper);
+    border-block-start: 3px solid var(--ink);
+  }
+  .act-n {
+    font-family: var(--font-en);
+    font-weight: 800;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--ink-3);
+    font-variant-numeric: tabular-nums;
+  }
+  .act-do {
+    margin: 0 0 0.6rem;
+    font-weight: 700;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+  }
+  .act-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    align-items: center;
+  }
+  .act-who {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    line-height: 1.4;
+    padding: 0.1em 0.55em;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    color: var(--ink-2);
+    background: var(--sheet);
+  }
+  .who-exec {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+  .act-id {
+    font-size: 0.8125rem;
+  }
+  .act-why {
+    margin-block-start: 0.6rem;
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+  }
+  .act-why summary {
+    cursor: pointer;
+    inline-size: fit-content;
+    color: var(--instruct);
+    font-size: 0.875rem;
+  }
+  .act-why p {
+    margin: 0.35rem 0 0;
+    line-height: 1.65;
+  }
+</style>
