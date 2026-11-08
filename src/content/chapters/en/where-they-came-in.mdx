@@ -28,7 +28,7 @@ import { C1, PATCH_2026H1, PATCH_YEARS, remote, SIZE_2026H1, SIZE_YEARS, sizeTot
 
 Every number on this page comes from one question in NPA's survey of ransomware victims: the route the intruder used to get in (感染経路). NPA counts only answers that named a route; "unknown" and blank answers are left out.
 
-In 2025 NPA received {C1.reports} ransomware reports, and {C1.n} answers named a route. The shares on this page are shares of those {C1.n}.
+The shares on this page are shares of the {C1.n} answers that named a route.
 
 <Fig lang="en" n="1-1" caption="2025 ransomware reports, one square per report. Dark squares: the answers that named an intrusion route" sources={["npa-r7-data"]}>
   <UnitBlocks lang="en" total={C1.reports} groups={[
@@ -85,8 +85,6 @@ Email was the smallest of the four routes in every year from 2021 to 2025.
   </table>
 </Fig>
 
-VPN appliances and remote desktop together account for {C1.five.vpn + C1.five.rdp}.
-
 The table records the opening and not where a password came from. A password stolen with a phishing email and later used to log in to the VPN counts as VPN.
 
 ## VPN has been the largest opening every year since 2021
@@ -113,9 +111,9 @@ The table records the opening and not where a password came from. A password sto
   </table>
 </Fig>
 
-The VPN share has moved between {pct(ROUTE_YEARS[0]?.counts.vpn ?? 0, ROUTE_YEARS[0]?.n ?? 1)}% (2021) and {C1.vpnPct}% (2025), the largest in every year. In 2024 the share dipped while remote desktop rose to {ROUTE_YEARS[3]?.counts.rdp} cases; their combined share still rose.
+In 2024 the share dipped while remote desktop rose to {ROUTE_YEARS[3]?.counts.rdp} cases.
 
-NPA's 2026 first-half table has {ROUTES_2026H1.n} answers and no row for email. VPN appliances account for {ROUTES_2026H1.counts.vpn} of them ({pct(ROUTES_2026H1.counts.vpn ?? 0, ROUTES_2026H1.n)}%). Half-years differ from full years: NPA's leaflet gives 62.2% for the first half of 2025, against {C1.vpnPct}% for the whole year.
+NPA's 2026 first-half table has no row for email. Half-years differ from full years: NPA's leaflet gives 62.2% for the first half of 2025, against {C1.vpnPct}% for the whole year.
 
 NPA recorded {HEADLINE.reports2026h1} ransomware reports in the first half of 2026, the highest half-year since the series began.
 
@@ -148,7 +146,7 @@ NPA recorded {HEADLINE.reports2026h1} ransomware reports in the first half of 20
   </table>
 </Fig>
 
-In 2025, {C1.sme} of the {C1.reports} reported victims ({C1.smePct}%) were small and medium-sized enterprises. The SME share was about half in 2022 and 2023 and has been above 63% since 2024.
+The share of small and medium-sized enterprises was about half in 2022 and 2023 and has been above 63% since 2024.
 
 Minato Precision, the fictional company on the plans, has 280 staff, one head office and one factory, and stands for this group. NPA does not cross the route count with company size, so this page cannot say whether SMEs are entered through the VPN more often than large companies.
 
@@ -180,7 +178,7 @@ Minato Precision, the fictional company on the plans, has 280 staff, one head of
   </table>
 </Fig>
 
-NPA also asks whether the device used to get in had its security patches applied (「侵入経路とされる機器のセキュリティパッチの適用状況」). From 2022 to 2025, {C1.unpatched.yes} of {C1.unpatched.n} answers ({C1.unpatchedPct}%) said patches were missing. NPA does not split this by route.
+NPA also asks whether the device used to get in had its security patches applied (「侵入経路とされる機器のセキュリティパッチの適用状況」). NPA does not split this by route.
 
 The other {C1.unpatched.n - C1.unpatched.yes} devices ({C1.patchedPct}%) were fully patched. JPCERT/CC reports SSL-VPN cases where credentials stolen while the device was vulnerable still worked after the patch was applied.
 
@@ -213,7 +211,7 @@ The other {C1.unpatched.n - C1.unpatched.yes} devices ({C1.patchedPct}%) were fu
   </table>
 </Fig>
 
-In 2025 the two together account for {C1.remote} of {C1.n} cases ({C1.remotePct}%), up every year from {pct(remote(ROUTE_YEARS[0] ?? ROUTES_2026H1), ROUTE_YEARS[0]?.n ?? 1)}% in 2021. NPA's 2022 report groups them the same way, as intrusions that used flaws in devices for remote work or weak credentials (「テレワーク等に利用される機器等のぜい弱性や強度の弱い認証情報等を利用して侵入したと考えられるもの」), 81% of that year's cases.
+NPA's 2022 report groups them the same way, as intrusions that used flaws in devices for remote work or weak credentials (「テレワーク等に利用される機器等のぜい弱性や強度の弱い認証情報等を利用して侵入したと考えられるもの」), 81% of that year's cases.
 
 Both exist so that people outside can work on the inside, and both accept connections from the internet before they know who is connecting.
 
@@ -239,8 +237,6 @@ Verizon's Data Breach Investigations Report (DBIR) counts breaches worldwide. It
     </table>
   </div>
 </Fig>
-
-In the 2025 edition, edge devices and VPNs rose from 3% to 22% of the targets of vulnerability exploitation. In the 2026 edition, exploitation passed credential abuse as the most common way breaches started (31%). Of the flaws in CISA's [Known Exploited Vulnerabilities catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog), which lists flaws already used in attacks, 26% were fully remediated in 2025.
 
 ## What the NPA tables can answer
 
