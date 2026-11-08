@@ -48,45 +48,8 @@ const { lang, title } = Astro.props;
       font-size: 1.0625rem;
     }
   }
-  /* key points: one tile per point, the number (if any) set large on top */
-  .summary-body:has(:global(.kp)) {
-    max-inline-size: none;
-  }
-  .summary-body :global(ul.kp) {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 0.5rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
-    gap: 1rem 1.5rem;
-    font-size: 1rem;
-    line-height: 1.6;
-  }
-  .summary-body :global(ul.kp li) {
-    margin: 0;
-    padding-block-start: 0.6rem;
-    border-block-start: 1px solid var(--hair);
-  }
-  .summary-body :global(ul.kp b) {
-    display: block;
-    font-family: var(--font-en);
-    font-size: 2rem;
-    font-weight: 800;
-    line-height: 1.15;
-    margin-block-end: 0.2rem;
-    font-variant-numeric: tabular-nums;
-  }
-  .summary-body :global(ul.kp b.hot) {
-    color: var(--intruder-text);
-  }
-  .summary-body :global(ul.kp b small) {
-    font-family: var(--font);
-    font-size: 0.5em;
-    font-weight: 700;
-    margin-inline-start: 0.1em;
-  }
   .summary-body :global(ol),
-  .summary-body :global(ul:not(.kp)) {
+  .summary-body :global(ul) {
     padding-inline-start: 1.2em;
     margin: 0 0 0.75rem;
   }

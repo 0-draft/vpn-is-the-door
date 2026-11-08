@@ -20,11 +20,8 @@ export const groups = byClass();
 export const n = (c) => groups.find((g) => g.cls === c).cves.length;
 
 <Summary lang="ja">
-  <ul class="kp">
-    <li>ログイン前から、機器は TLS、Web の要求、ログイン画面、SAML を処理している</li>
-    <li>この処理はインターネット上の誰でも起動できる</li>
-    <li>ここに欠陥があればパスワードは要らず、多要素認証はその要求を見ない</li>
-  </ul>
+  <p>ログインの前から、機器は TLS、Web の要求、ログイン画面、SAML のメッセージを処理している。インターネット上の誰でもこの処理を起動できる。</p>
+  <p>ここに欠陥があればパスワードは要らず、多要素認証はその要求を見ない。</p>
 </Summary>
 
 <SectionCut lang="ja" />

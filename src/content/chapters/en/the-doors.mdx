@@ -21,12 +21,8 @@ import { scheduleStats } from "../../../data/doors";
 export const ST = scheduleStats();
 
 <Summary lang="en">
-  <ul class="kp">
-    <li><b>{ST.total}</b>VPN appliance flaws used by attackers (seven vendors, confirmed by CISA)</li>
-    <li><b class="hot">{ST.preauth}</b>Reachable before login: password and MFA never come into play</li>
-    <li><b>{ST.zeroDay}</b>Used before the vendor published a warning</li>
-    <li><b>{ST.patchNotEnough}</b>The patch alone was not enough: stolen passwords, sessions or implants outlasted it</li>
-  </ul>
+  <p>{ST.total} flaws in seven vendors' VPN appliances, each confirmed by CISA as used by attackers. {ST.preauth} can be reached before login, and for most of those the password and MFA never come into play.</p>
+  <p>{ST.zeroDay} were used before the vendor published a warning. For {ST.patchNotEnough}, the vendor or a government agency says the patch alone was not enough.</p>
 </Summary>
 
 ## A door facing the internet

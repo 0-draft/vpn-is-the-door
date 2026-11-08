@@ -15,13 +15,11 @@ import SectionCut from "../../../components/SectionCut.astro";
 import SourceLine from "../../../components/SourceLine.astro";
 import Step from "../../../components/Step.astro";
 import Summary from "../../../components/Summary.astro";
+import { HEADLINE } from "../../../data/stats";
 
 <Summary lang="ja">
-  <ul class="kp">
-    <li>扉から入り、管理者の鍵を奪い、バックアップを消し、データを持ち出す。暗号化は最後の一手</li>
-    <li><b class="hot">79<small>/99件</small></b>2025年、バックアップから復元を試みて戻せなかった組織</li>
-    <li><b>48<small>件</small></b>バックアップも暗号化されていた</li>
-  </ul>
+  <p>暗号化の時点で、侵入者はたいてい管理者の鍵を握り、バックアップを消し、データを外へ運び出している。</p>
+  <p>2025年、バックアップから復元を試みた{HEADLINE.backupFail2025.n}件のうち{HEADLINE.backupFail2025.failed}件が元に戻せず、{HEADLINE.backupFail2025.encrypted}件ではバックアップも暗号化されていた。</p>
 </Summary>
 
 <IntruderRoute lang="ja" n="2-1" caption="港精密 本社 平面図（侵入経路）">
