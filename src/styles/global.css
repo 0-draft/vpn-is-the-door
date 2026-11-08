@@ -587,3 +587,76 @@ svg.dg {
   font-size: 1rem;
 }
 
+/* Step-by-step record tables (ch. 2 hospital reports): drawn as a vertical
+   timeline with the step number as a badge, the page reference set small. */
+table.steps {
+  font-size: 0.9375rem;
+}
+table.steps thead {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+table.steps,
+table.steps tbody {
+  display: block;
+}
+table.steps tr {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+  column-gap: 0.75rem;
+  position: relative;
+}
+table.steps tr::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: calc(1.25rem - 1px);
+  border-inline-start: 2px solid var(--hair);
+}
+table.steps td {
+  border: 0;
+  padding: 0.5rem 0;
+  line-height: 1.65;
+}
+table.steps td:first-child {
+  position: relative;
+  justify-self: center;
+  align-self: start;
+  margin-block-start: 0.45rem;
+  padding: 0;
+  min-inline-size: 1.75rem;
+  block-size: 1.75rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--intruder);
+  background: var(--sheet);
+  color: var(--intruder-text);
+  font-family: var(--font-en);
+  font-weight: 800;
+  font-size: 0.8125rem;
+  line-height: calc(1.75rem - 3px);
+  text-align: center;
+  padding-inline: 0.3rem;
+}
+table.steps td:last-child {
+  font-size: 0.8125rem;
+  color: var(--ink-3);
+  white-space: nowrap;
+  text-align: end;
+}
+@media (max-width: 45em) {
+  table.steps tr {
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+  }
+  table.steps td:last-child {
+    grid-column: 2;
+    padding-block-start: 0;
+    text-align: start;
+  }
+}
+/* a bare page number gets its "p." back once the header row is hidden */
+table.steps td.num:last-child::before {
+  content: "p. ";
+}
