@@ -32,15 +32,19 @@ const hasData = Astro.slots.has("data");
       )
     }
   </figcaption>
-  {sources.length > 0 && <SourceLine lang={lang} ids={sources} />}
   {
-    hasData && (
-      <details class="fig-data">
-        <summary>{t(lang, "data")}</summary>
-        <div class="table-scroll" tabindex="0">
-          <slot name="data" />
-        </div>
-      </details>
+    (sources.length > 0 || hasData) && (
+      <div class="fig-meta">
+        {sources.length > 0 && <SourceLine lang={lang} ids={sources} />}
+        {hasData && (
+          <details class="fig-data">
+            <summary>{t(lang, "data")}</summary>
+            <div class="table-scroll" tabindex="0">
+              <slot name="data" />
+            </div>
+          </details>
+        )}
+      </div>
     )
   }
 </figure>
@@ -104,9 +108,19 @@ const hasData = Astro.slots.has("data");
     border: 1px solid var(--line);
     padding: 0 0.4em;
   }
+  /* source and data toggles share one line; whichever is opened takes the full width */
+  .fig-meta {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 1.5rem;
+    align-items: baseline;
+  }
+  .fig-meta > :global([open]) {
+    flex-basis: 100%;
+  }
   .fig-data {
-    margin-block-start: 0.75rem;
-    font-size: 0.9375rem;
+    margin-block-start: 0.5rem;
+    font-size: 0.875rem;
   }
   .fig-data summary {
     cursor: pointer;
