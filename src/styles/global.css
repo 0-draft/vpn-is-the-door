@@ -533,7 +533,7 @@ svg.dg {
 /* Step-by-step record tables (ch. 2 hospital reports): the step number is shown
    once, on the first row of each step, in the chapter's step marker; a rule
    separates steps. Rows that continue a step (.cont) carry the number for
-   screen readers only. */
+   screen readers only. Kept as a real table so its semantics survive. */
 table.steps {
   font-size: 0.9375rem;
 }
@@ -544,31 +544,24 @@ table.steps thead {
   overflow: hidden;
   clip-path: inset(50%);
 }
-table.steps,
-table.steps tbody {
-  display: block;
-}
-table.steps tr {
-  display: grid;
-  grid-template-columns: 3rem minmax(0, 1fr) auto;
-  column-gap: 0.75rem;
-  border-block-start: 1px solid var(--ink-2);
-}
-table.steps tr.cont {
-  border-block-start: 0;
-}
 table.steps td {
   border: 0;
-  padding: 0.5rem 0;
+  border-block-start: 1px solid var(--ink-2);
+  padding: 0.5rem 0.75rem 0.5rem 0;
   line-height: 1.65;
 }
-table.steps tr:not(.cont) td:first-child {
-  justify-self: start;
-  align-self: start;
-  margin-block-start: 0.45rem;
-  padding: 0 0.3rem;
+table.steps tr.cont td {
+  border-block-start: 0;
+  padding-block-start: 0;
+}
+table.steps td:first-child {
+  inline-size: 3.25rem;
+}
+table.steps .step-n {
+  display: inline-block;
   min-inline-size: 1.75rem;
   block-size: 1.75rem;
+  padding: 0 0.3rem;
   border-radius: 999px;
   border: 1.5px solid var(--intruder);
   color: var(--intruder-text);
@@ -579,8 +572,7 @@ table.steps tr:not(.cont) td:first-child {
   text-align: center;
 }
 /* "after the attack" is not a step of the route: a square tag in ink */
-table.steps tr.after td:first-child {
-  inline-size: max-content;
+table.steps tr.after .step-n {
   white-space: nowrap;
   border-radius: 0;
   border-color: var(--ink-2);
@@ -588,20 +580,11 @@ table.steps tr.after td:first-child {
   font-family: var(--font);
 }
 table.steps td:last-child {
+  padding-inline-end: 0;
   font-size: 0.875rem;
   color: var(--ink-3);
   white-space: nowrap;
   text-align: end;
-}
-@media (max-width: 45em) {
-  table.steps tr {
-    grid-template-columns: 3rem minmax(0, 1fr);
-  }
-  table.steps td:last-child {
-    grid-column: 2;
-    padding-block-start: 0;
-    text-align: start;
-  }
 }
 /* a bare page number gets its "p." back once the header row is hidden */
 table.steps td.num:last-child::before {
