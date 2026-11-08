@@ -7,7 +7,7 @@ path: /where-they-came-in/
 ---
 
 import Fig from "../../../components/Fig.astro";
-import OpeningCards from "../../../components/ch1/OpeningCards.astro";
+import OpeningNotes from "../../../components/ch1/OpeningNotes.astro";
 import OpeningPlan from "../../../components/ch1/OpeningPlan.astro";
 import RouteTable from "../../../components/ch1/RouteTable.astro";
 import ShareBars from "../../../components/ch1/ShareBars.astro";
@@ -47,18 +47,20 @@ In 2025 NPA received {C1.reports} ransomware reports, and {C1.n} answers named a
 
 ## The VPN door: 61 of 92
 
-<Fig lang="en" n="1-2" caption="Minato Precision head office and its four openings. 2025, 92 answers that named a route" sources={["npa-r7-data", "npa-r7-en", "npa-r5", "npa-r6-data"]} composite nts wide>
+<Fig lang="en" n="1-2" caption="Minato Precision head office and its four openings. 2025, 92 answers that named a route" sources={["npa-r7-data", "npa-r6-data"]} composite nts wide>
   <OpeningPlan lang="en" focus="vpn" uid="c1-vpn" label="Floor plan. VPN door 61, window 19, loading door 10, main entrance 2" />
-  <OpeningCards lang="en" notes={{
-    vpn: `How staff reach the network from outside. It answers anyone until login is done, and opens past reception into the back corridor. Products and flaws: <a href="../the-doors/">chapter 3</a>.`,
-    rdp: `Remote control of another PC's screen (RDP). Exposed to the internet, it opens straight into a room. Peak: ${ROUTE_YEARS[3]?.counts.rdp} in 2024.`,
+  <OpeningNotes lang="en" notes={{
+    vpn: `How staff reach the network from outside. Its login page answers anyone, and until login is done it cannot tell staff from strangers. The door opens past reception into the back corridor. Products and flaws: <a href="../the-doors/">chapter 3</a>.`,
+    rdp: `Remote control of another PC's screen (RDP). When the router forwards outside connections to it, the internet opens straight into a room. Peak: ${ROUTE_YEARS[3]?.counts.rdp} in 2024.`,
     other: "NPA does not say what is in it. More than email in every one of the five years.",
-    mail: "Mail passes filtering and antivirus before it reaches staff. NPA's label: suspicious email or attachments.",
+    mail: "Mail is filtered before it reaches staff, and the receiving PC runs antivirus.",
   }} />
   <RouteTable slot="data" lang="en" focus={["vpn"]} />
 </Fig>
 
-The label names the device. A VPN answer covers a leaked password and an exploited flaw in the appliance alike.
+NPA does not define its labels. The label names the device: a VPN answer covers a leaked password and an exploited flaw in the appliance alike. NPA's English edition lists "unpatched vulnerabilities, leaked credentials, weak passwords, and misconfigurations" as the ways attackers get through.
+
+<SourceLine lang="en" ids={["npa-r7-en"]} />
 
 ## Email was 24 of 485 cases in five years
 
@@ -244,14 +246,21 @@ In the 2025 edition, edge devices and VPNs rose from 3% to 22% of the targets of
 
 The {C1.vpn} VPN answers for 2025 mix at least two techniques that ATT&CK keeps apart: logging in with valid credentials through an external remote service ([T1133](https://attack.mitre.org/techniques/T1133/), [T1078](https://attack.mitre.org/techniques/T1078/)), and exploiting a flaw in the internet-facing appliance ([T1190](https://attack.mitre.org/techniques/T1190/)). Multi-factor authentication (MFA) stops a reused password but is never reached by a flaw that works before login.
 
-<ul class="can">
-  <li data-can="yes"><strong>Which opening was used</strong><span>Four categories, one per answer (R7 workbook <code>統計編P124</code>)</span></li>
-  <li data-can="part"><strong>Whether the device was missing patches</strong><span>A separate table (<code>統計編p153</code>), not split by route. A missing patch does not show it was the flaw used</span></li>
-  <li data-can="no"><strong>Stolen password or exploited flaw</strong><span>One VPN category covers both</span></li>
-  <li data-can="no"><strong>Which product, vendor or firmware version</strong></li>
-  <li data-can="no"><strong>What 「その他」 contains</strong></li>
-  <li data-can="no"><strong>Cases where the route was unknown</strong><span>Excluded. 2025 has {C1.n} named routes against {C1.reports} reports</span></li>
-</ul>
+<div class="table-scroll" tabindex="0">
+  <table>
+    <thead>
+      <tr><th scope="col">Question</th><th scope="col">Answered by the NPA tables?</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Which opening was used</td><td><strong>Yes</strong>. Four categories, one per answer (R7 workbook <code>統計編P124</code>).</td></tr>
+      <tr><td>Stolen password or exploited flaw</td><td><strong>No</strong>. One VPN category covers both.</td></tr>
+      <tr><td>Which product, vendor or firmware version</td><td><strong>No</strong>.</td></tr>
+      <tr><td>Whether the device was missing patches</td><td><strong>Separately</strong> (<code>統計編p153</code>), for the route device in general. A missing patch does not show that the missing patch was the flaw used.</td></tr>
+      <tr><td>What 「その他」 contains</td><td><strong>No</strong>.</td></tr>
+      <tr><td>Cases where the route was unknown</td><td><strong>Excluded</strong>. 2025 has {C1.n} named routes against {C1.reports} reports.</td></tr>
+    </tbody>
+  </table>
+</div>
 
 JPCERT/CC's incident handling report for July to September 2024 describes SSL-VPN intrusions where CVE-2023-27997 and CVE-2024-21762 "are presumed to be among the exploited vulnerabilities", and where "the attacker used credentials they had stolen before the fix was applied". In NPA's table, such a case is one VPN answer on a patched device. JPCERT/CC advises checking for signs of intrusion before updating the firmware and, if intrusion cannot be ruled out, considering a change of the passwords of the accounts in use.
 

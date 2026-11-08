@@ -1,8 +1,8 @@
 ---
-// The four openings as cards under one plan, replacing four near-identical plan figures.
-// Each card: the opening's name on the plan, the NPA category, a share bar, the count,
-// and one or two short sentences.
-import { latest, pct, type RouteKey } from "../../data/stats";
+// Drawing notes under the opening plan: one note per opening, keyed by the same
+// tally square the plan uses, so the plan carries the counts and the notes carry
+// the words. Largest opening first.
+import type { RouteKey } from "../../data/stats";
 import { openingsBySize } from "../../lib/ch1";
 import type { Lang } from "../../lib/paths";
 
@@ -13,124 +13,75 @@ interface Props {
 }
 
 const { lang, notes } = Astro.props;
-const ja = lang === "ja";
-const y = latest();
-const NAME: Record<RouteKey, { plan: string; npa: string }> = ja
-  ? {
-      vpn: { plan: "VPN の扉", npa: "VPN機器" },
-      rdp: { plan: "窓", npa: "リモートデスクトップ" },
-      other: { plan: "搬入口", npa: "その他" },
-      mail: { plan: "正面玄関", npa: "不審メールやその添付ファイル" },
-    }
-  : {
-      vpn: { plan: "VPN door", npa: "VPN appliance" },
-      rdp: { plan: "Window", npa: "Remote desktop" },
-      other: { plan: "Loading door", npa: "Other" },
-      mail: { plan: "Main entrance", npa: "Suspicious email or attachments" },
-    };
-const unit = ja ? "件" : "";
+const NAME: Record<RouteKey, { en: { plan: string; npa: string }; ja: { plan: string; npa: string } }> = {
+  vpn: { ja: { plan: "VPN の扉", npa: "VPN機器" }, en: { plan: "VPN door", npa: "VPN appliance" } },
+  rdp: { ja: { plan: "窓", npa: "リモートデスクトップ" }, en: { plan: "Window", npa: "Remote desktop" } },
+  other: { ja: { plan: "搬入口", npa: "その他" }, en: { plan: "Loading door", npa: "Other" } },
+  mail: {
+    ja: { plan: "正面玄関", npa: "不審メールやその添付ファイル" },
+    en: { plan: "Main entrance", npa: "Suspicious email or attachments" },
+  },
+};
 ---
 
-<ul class="oc">
+<dl class="on">
   {
-    openingsBySize(y).map((k) => {
-      const n = y.counts[k] ?? 0;
-      const p = pct(n, y.n);
-      return (
-        <li class:list={["oc-card", { "oc-hot": k === "vpn" }]} id={`opening-${k}`}>
-          <p class="oc-name">
-            <strong>{NAME[k].plan}</strong>
-            <span class="oc-npa">{NAME[k].npa}</span>
-          </p>
-          <p class="oc-num">
-            <span class="oc-n num">
-              {n}
-              <small>{unit}</small>
-            </span>
-            <span class="oc-p num">{p}%</span>
-          </p>
-          <span class="oc-bar" aria-hidden="true">
-            <span style={`inline-size:${p}%`} />
-          </span>
-          <p class="oc-note" set:html={notes[k]} />
-        </li>
-      );
-    })
+    openingsBySize().map((k) => (
+      <div class:list={["on-item", { "on-hot": k === "vpn" }]} id={`opening-${k}`}>
+        <dt>
+          <span class="on-key" aria-hidden="true" />
+          <span class="on-name">{NAME[k][lang].plan}</span>
+          <span class="on-npa">{NAME[k][lang].npa}</span>
+        </dt>
+        <dd set:html={notes[k]} />
+      </div>
+    ))
   }
-</ul>
+</dl>
 
 <style>
-  .oc {
-    list-style: none;
+  .on {
     margin: 1.25rem 0 0;
-    padding: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
-    gap: 0.75rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 2rem;
   }
-  .oc-card {
-    padding: 0.9rem 1rem 1rem;
-    background: var(--paper);
-    border-block-start: 3px solid var(--ink-2);
+  @media (max-width: 45em) {
+    .on {
+      grid-template-columns: minmax(0, 1fr);
+    }
   }
-  .oc-hot {
-    border-color: var(--intruder);
+  .on-item {
+    padding-block: 0.6rem 0.8rem;
+    border-block-start: 1px solid var(--hair);
   }
-  .oc-name {
-    margin: 0;
+  .on dt {
     display: flex;
-    flex-direction: column;
-    line-height: 1.4;
-  }
-  .oc-name strong {
-    font-size: 1.0625rem;
-  }
-  .oc-npa {
-    font-size: 0.8125rem;
-    color: var(--ink-3);
-  }
-  .oc-num {
-    margin: 0.5rem 0 0.35rem;
-    display: flex;
+    flex-wrap: wrap;
     align-items: baseline;
-    gap: 0.6rem;
+    column-gap: 0.5rem;
   }
-  .oc-n {
-    font-family: var(--font-en);
-    font-size: 2.25rem;
-    font-weight: 800;
-    line-height: 1;
-  }
-  .oc-n small {
-    font-family: var(--font);
-    font-size: 1rem;
-    font-weight: 700;
-    margin-inline-start: 0.1em;
-  }
-  .oc-hot .oc-n {
-    color: var(--intruder-text);
-  }
-  .oc-p {
-    font-size: 1rem;
-    color: var(--ink-2);
-  }
-  .oc-bar {
-    display: block;
-    block-size: 6px;
-    background: var(--hair);
-  }
-  .oc-bar span {
-    display: block;
-    block-size: 100%;
+  /* the plan's own tally square, as a legend key */
+  .on-key {
+    inline-size: 10px;
+    block-size: 10px;
     background: var(--ink-2);
+    align-self: center;
   }
-  .oc-hot .oc-bar span {
+  .on-hot .on-key {
     background: var(--intruder);
   }
-  .oc-note {
-    margin: 0.7rem 0 0;
+  .on-name {
+    font-weight: 700;
+  }
+  .on-npa {
+    font-size: 0.875rem;
+    color: var(--ink-3);
+  }
+  .on dd {
+    margin: 0.3rem 0 0;
     font-size: 0.9375rem;
-    line-height: 1.65;
+    line-height: 1.7;
     color: var(--ink-2);
   }
 </style>
