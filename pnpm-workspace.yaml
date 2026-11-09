@@ -10,6 +10,9 @@ overrides:
   "fflate@>=0.7.0 <0.7.5": 0.7.5
   # subset-font (font subsetting, build only) allows harfbuzzjs ^1.6.1; hold to a release older than two weeks
   "subset-font>harfbuzzjs": 1.6.3
+  # lighthouse (dev only) pulls glob 13 via @sentry/bundler-plugins: GHSA-3g3m-2fjr-6pw4 (glob, fixed in 14.0.2)
+  # and GHSA-g3hv-75wg-m249 (its minimatch 10, fixed in 11.0.1); glob 14 depends on minimatch ^11.0.2
+  "glob@>=9.0.0 <14.0.2": 14.0.3
 
 # A release must be 2 days old before it can enter the lockfile (minutes): most
 # hijacked npm releases are pulled within hours. Dependabot adds a 7-day cooldown on
