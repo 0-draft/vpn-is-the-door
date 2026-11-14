@@ -13,6 +13,10 @@ overrides:
   # lighthouse (dev only) pulls glob 13 via @sentry/bundler-plugins: GHSA-3g3m-2fjr-6pw4 (glob, fixed in 14.0.2)
   # and GHSA-g3hv-75wg-m249 (its minimatch 10, fixed in 11.0.1); glob 14 depends on minimatch ^11.0.2
   "glob@>=9.0.0 <14.0.2": 14.0.3
+  # rolldown's wasm binding accepts @emnapi 2.0.0-beta, which breaks astro check (astro2tsx):
+  # "this.bridge.setLastError is not a function". Hold both to the 1.x line.
+  "@emnapi/core": "^1.11.3"
+  "@emnapi/runtime": "^1.11.3"
 
 # A release must be 2 days old before it can enter the lockfile (minutes): most
 # hijacked npm releases are pulled within hours. Dependabot adds a 7-day cooldown on
